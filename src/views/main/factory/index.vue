@@ -1,144 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="工厂名称" prop="factoryName">
-        <el-input
-          v-model="queryParams.factoryName"
-          placeholder="请输入工厂名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工厂地址" prop="address">
-        <el-input
-          v-model="queryParams.address"
-          placeholder="请输入工厂地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createDateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createDateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入描述"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-        <el-form-item label="工厂类型" prop="factoryType">
-        <el-select v-model="queryParams.factoryType" placeholder="请选择工厂类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="纬度" prop="latitude">
-        <el-input
-          v-model="queryParams.latitude"
-          placeholder="请输入纬度"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="负责人" prop="leader">
-        <el-input
-          v-model="queryParams.leader"
-          placeholder="请输入负责人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="经度" prop="longitude">
-        <el-input
-          v-model="queryParams.longitude"
-          placeholder="请输入经度"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入手机号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="图片" prop="picture">
-        <el-input
-          v-model="queryParams.picture"
-          placeholder="请输入图片"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="省市区" prop="province">
-        <el-input
-          v-model="queryParams.province"
-          placeholder="请输入省市区"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="座机号" prop="tel">
-        <el-input
-          v-model="queryParams.tel"
-          placeholder="请输入座机号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改时间" prop="updateDateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateDateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择修改时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['main:factory:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['main:factory:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+    <div class="table-tool">
+      <el-button-group>
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -147,8 +10,13 @@
           @click="handleDelete"
           v-hasPermi="['main:factory:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['main:factory:add']"
+        >新增</el-button>
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -156,12 +24,43 @@
           @click="handleExport"
           v-hasPermi="['main:factory:export']"
         >导出</el-button>
-      </el-col>
-    </el-row>
+      </el-button-group>
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="工厂名称" prop="factoryName">
+              <el-input
+                v-model="queryParams.factoryName"
+                placeholder="请输入工厂名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-dropdown size="small" split-button @command="handleClick">
+            导出
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="csv">导出到 Csv 文件</el-dropdown-item>
+              <el-dropdown-item command="excel">导出到 Excel 文件</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
 
-    <el-table v-loading="loading" :data="factoryList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="factoryList"
+      border
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="factoryId" />
+      <el-table-column label="主键" fixed align="center" prop="factoryId" />
       <el-table-column label="工厂名称" align="center" prop="factoryName" />
       <el-table-column label="工厂地址" align="center" prop="address" />
       <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
@@ -171,9 +70,7 @@
       </el-table-column>
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="工厂类型" align="center" prop="factoryType" />
-      <el-table-column label="纬度" align="center" prop="latitude" />
       <el-table-column label="负责人" align="center" prop="leader" />
-      <el-table-column label="经度" align="center" prop="longitude" />
       <el-table-column label="手机号" align="center" prop="phone" />
       <el-table-column label="图片" align="center" prop="picture" />
       <el-table-column label="省市区" align="center" prop="province" />
@@ -183,7 +80,12 @@
           <span>{{ parseTime(scope.row.updateDateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        fixed="right"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -202,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -221,19 +123,22 @@
           <el-input v-model="form.address" placeholder="请输入工厂地址" />
         </el-form-item>
         <el-form-item label="创建时间" prop="createDateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.createDateTime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择创建时间">
-          </el-date-picker>
+            placeholder="选择创建时间"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入描述" />
         </el-form-item>
         <el-form-item label="工厂类型">
           <el-select v-model="form.factoryType" placeholder="请选择工厂类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option label="请选择字典生成" value />
           </el-select>
         </el-form-item>
         <el-form-item label="纬度" prop="latitude">
@@ -258,12 +163,15 @@
           <el-input v-model="form.tel" placeholder="请输入座机号" />
         </el-form-item>
         <el-form-item label="修改时间" prop="updateDateTime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.updateDateTime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择修改时间">
-          </el-date-picker>
+            placeholder="选择修改时间"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -275,7 +183,16 @@
 </template>
 
 <script>
-import { listFactory, getFactory, delFactory, addFactory, updateFactory, exportFactory } from "@/api/system/factory";
+import {
+  listFactory,
+  getFactory,
+  delFactory,
+  addFactory,
+  updateFactory,
+  exportFactory
+} from "@/api/main/factory";
+
+import MySearchTool from "@/components/SearchTool/index";
 
 export default {
   data() {
@@ -317,8 +234,7 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {}
     };
   },
   created() {
@@ -371,9 +287,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.factoryId)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.factoryId);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -384,7 +300,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const factoryId = row.factoryId || this.ids
+      const factoryId = row.factoryId || this.ids;
       getFactory(factoryId).then(response => {
         this.form = response.data;
         this.open = true;
@@ -422,30 +338,44 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const factoryIds = row.factoryId || this.ids;
-      this.$confirm('是否确认删除工厂信息编号为"' + factoryIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除工厂信息编号为"' + factoryIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delFactory(factoryIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有工厂信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有工厂信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportFactory(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
+        })
+        .catch(function() {});
+    },
+    handleClick() {}
+  },
+  components: {
+    MySearchTool
   }
 };
 </script>

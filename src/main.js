@@ -13,6 +13,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import permission from './directive/permission'
+import common from './directive/common'
 
 import './assets/icons' // icon
 import './permission' // permission control
@@ -46,7 +47,7 @@ Vue.prototype.msgInfo = function (msg) {
 Vue.component('Pagination', Pagination)
 
 Vue.use(permission)
-
+Vue.use(common)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
