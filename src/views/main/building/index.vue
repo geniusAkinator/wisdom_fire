@@ -8,29 +8,29 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['main:factory:remove']"
+          v-hasPermi="['main:building:remove']"
         >删除</el-button>
         <el-button
           type="primary"
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['main:factory:add']"
+          v-hasPermi="['main:building:add']"
         >新增</el-button>
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['main:factory:export']"
+          v-hasPermi="['main:building:export']"
         >导出</el-button>
       </el-button-group>
       <my-search-tool>
         <template slot="content">
           <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-            <el-form-item label="工厂名称" prop="factoryName">
+            <el-form-item label="工厂名称" prop="buildingName">
               <el-input
-                v-model="queryParams.factoryName"
+                v-model="queryParams.buildingName"
                 placeholder="请输入工厂名称"
                 clearable
                 size="small"
@@ -52,38 +52,23 @@
         </template>
       </my-search-tool>
     </div>
-
     <el-table
       v-loading="loading"
-      :data="factoryList"
       border
+      :data="buildingList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="factoryId" />
-      <el-table-column label="工厂名称" align="center" prop="factoryName" />
-      <el-table-column label="工厂地址" align="center" prop="address" />
-
-      <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="工厂类型" align="center" prop="factoryType" />
-      <el-table-column label="负责人" align="center" prop="leader" />
-      <el-table-column label="手机号" align="center" prop="phone" />
-      <el-table-column label="图片" align="center" prop="picture" />
-      <el-table-column label="省市区" align="center" prop="province" />
-      <el-table-column label="座机号" align="center" prop="tel" />
-      <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
-        <template slot-scope="scope">
-          <span v-if="scope.row.createDateTime">{{ parseTime(scope.row.createDateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="updateDateTime" width="180">
-        <template slot-scope="scope">
-          <span v-if="scope.row.updateDateTime">{{ parseTime(scope.row.updateDateTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column type="selection" width="55" fixed align="center" />
+      <el-table-column label="楼宇id" align="center" prop="buildingId" />
+      <el-table-column label="面积" align="center" prop="area" />
+      <el-table-column label="楼宇名称" align="center" prop="name" />
+      <el-table-column label="照片" align="center" prop="picture" />
+      <el-table-column label="楼下层数" align="center" prop="underLevel" />
+      <el-table-column label="楼上层数" align="center" prop="upperLevel" />
+      <el-table-column label="工厂id" align="center" prop="factoryId" />
       <el-table-column label="操作" align="center" fixed="right" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼宇</el-button>
+          <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼层</el-button>
           <el-button
             size="mini"
             icon="el-icon-edit"
@@ -108,23 +93,20 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <input type="file" ref="imgFile" name="file" multiple @change="upload" />
   </div>
 </template>
 
 <script>
 import {
-  listFactory,
-  delFactory,
-  updateFactory,
-  exportFactory
-} from "@/api/main/factory";
+  listBuilding,
+  getBuilding,
+  delBuilding,
+  exportBuilding
+} from "@/api/main/building";
 
 import MySearchTool from "@/components/SearchTool/index";
-import MyFactoryAdd from "@/views/main/factory/add";
-import MyFactoryEdit from "@/views/main/factory/edit";
-import http from "@/utils/http";
-import request from "@/utils/request";
+import MyBuildingAdd from "@/views/main/building/add";
+import MyBuildingEdit from "@/views/main/building/edit";
 export default {
   data() {
     return {
@@ -138,8 +120,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 工厂信息表格数据
-      factoryList: [],
+      // 楼宇数据表格数据
+      buildingList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -148,37 +130,32 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        factoryName: "",
-        address: "",
-        createDateTime: "",
-        description: "",
-        factoryType: "",
-        latitude: "",
-        leader: "",
-        longitude: "",
-        phone: "",
+        area: "",
+        createtime: "",
+        name: "",
         picture: "",
-        province: "",
-        tel: "",
-        updateDateTime: ""
+        underLevel: "",
+        updatetime: "",
+        upperLevel: "",
+        factoryId: ""
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
-      eid: 0,
-      layerId: ""
+      layerId: "",
+      eid: 0
     };
   },
   created() {
     this.getList();
   },
   methods: {
-    /** 查询工厂信息列表 */
+    /** 查询楼宇数据列表 */
     getList() {
       this.loading = true;
-      listFactory(this.queryParams).then(response => {
-        this.factoryList = response.rows;
+      listBuilding(this.queryParams).then(response => {
+        this.buildingList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -191,20 +168,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        factoryId: "",
-        factoryName: "",
-        address: "",
-        createDateTime: "",
-        description: "",
-        factoryType: "",
-        latitude: "",
-        leader: "",
-        longitude: "",
-        phone: "",
+        buildingId: "",
+        area: "",
+        createtime: "",
+        name: "",
         picture: "",
-        province: "",
-        tel: "",
-        updateDateTime: ""
+        underLevel: "",
+        updatetime: "",
+        upperLevel: "",
+        factoryId: ""
       };
       this.resetForm("form");
     },
@@ -220,7 +192,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.factoryId);
+      this.ids = selection.map(item => item.buildingId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -228,13 +200,13 @@ export default {
     handleAdd() {
       var index = this.$layer.iframe({
         content: {
-          content: MyFactoryAdd, //传递的组件对象
+          content: MyBuildingAdd, //传递的组件对象
           parent: this, //当前的vue对象
           data: {} //props
         },
         shade: false,
         area: ["600px", "600px"],
-        title: "新增工厂信息",
+        title: "新增楼宇信息",
         target: ".app-container"
       });
       this.$layer.full(index);
@@ -243,16 +215,16 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.eid = row.factoryId;
+      this.eid = row.buildingId;
       var index = this.$layer.iframe({
         content: {
-          content: MyFactoryEdit, //传递的组件对象
+          content: MyBuildingEdit, //传递的组件对象
           parent: this, //当前的vue对象
           data: {} //props
         },
         shade: false,
         area: ["600px", "600px"],
-        title: "编辑工厂信息",
+        title: "编辑楼宇信息",
         target: ".app-container"
       });
       this.$layer.full(index);
@@ -260,9 +232,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const factoryIds = row.factoryId || this.ids;
+      const buildingIds = row.buildingId || this.ids;
       this.$confirm(
-        '是否确认删除工厂信息编号为"' + factoryIds + '"的数据项?',
+        '是否确认删除楼宇数据编号为"' + buildingIds + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -271,7 +243,7 @@ export default {
         }
       )
         .then(function() {
-          return delFactory(factoryIds);
+          return delBuilding(buildingIds);
         })
         .then(() => {
           this.getList();
@@ -282,13 +254,13 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有工厂信息数据项?", "警告", {
+      this.$confirm("是否确认导出所有楼宇数据数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(function() {
-          return exportFactory(queryParams);
+          return exportBuilding(queryParams);
         })
         .then(response => {
           this.download(response.msg);
@@ -297,37 +269,7 @@ export default {
     },
     handleClick() {},
     handleJump(row) {
-      this.$router.push({ path: "/main/building" });
-    },
-    upload() {
-      let _this = this;
-      let imagesfile = _this.$refs.imgFile.files;
-      if (imagesfile.length == 0) {
-        return;
-      }
-      let fd = new FormData();
-      fd.append("files", imagesfile);
-      fd.append("deptId", "200");
-      // request({
-      //   url: "/system/common/images",
-      //   method: "post",
-      //   params: fd
-      // });
-      http
-        .getRequestUpload("/system/common/images", fd, res => {})
-        .then(res => {
-          // _this.isFail = false;
-          // _this.isLoading = false;
-          // console.log(res);
-          if (res.code == _this.AJAX_HELP.CODE_RESPONSE_SUCCESS) {
-            let _data = res.data;
-          }
-        })
-        .catch(_ => {
-          console.log("错误");
-          // _this.isLoading = false;
-          // _this.isFail = true;
-        });
+      this.$router.push({ path: "/main/floor" });
     }
   },
   components: {

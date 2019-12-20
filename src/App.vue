@@ -11,6 +11,15 @@ export default {
 </script>
 
 <style lang="scss">
+.container {
+  padding: 20px;
+}
+.container.form {
+  width: 100%;
+}
+.container.form .el-form {
+  padding-bottom: 70px;
+}
 .table-tool {
   position: relative;
   z-index: 15;
@@ -44,6 +53,39 @@ export default {
   .table-tool-others .el-inline:hover {
     background: #909399;
   }
-  
+}
+.vl-notify,
+.vl-notify-mask {
+  position: absolute !important;
+}
+.vl-notify-mask {
+  background-color: #000;
+  opacity: 0.2;
+  right: 0;
+  height: auto;
+  width: auto;
+  left: 0;
+  bottom: -9999px;
+}
+.vl-notify-content {
+  z-index: 2002 !important;
+}
+.vl-notify {
+  z-index: 2003 !important;
+}
+.add-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f8f8f8;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #eee;
+  z-index: 99;
+}
+.add-footer .el-button + .el-button {
+  margin-left: 10px;
 }
 </style>

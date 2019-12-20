@@ -242,8 +242,9 @@ export default {
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
     li {
       margin: 0;
-      padding: 7px 16px;
+      padding: 10px 20px;
       cursor: pointer;
+      font-size: 14px;
       &:hover {
         background: #eee;
       }

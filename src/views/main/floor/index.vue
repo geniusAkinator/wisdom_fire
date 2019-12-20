@@ -8,29 +8,29 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['main:factory:remove']"
+          v-hasPermi="['main:floor:remove']"
         >删除</el-button>
         <el-button
           type="primary"
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['main:factory:add']"
+          v-hasPermi="['main:floor:add']"
         >新增</el-button>
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['main:factory:export']"
+          v-hasPermi="['main:floor:export']"
         >导出</el-button>
       </el-button-group>
       <my-search-tool>
         <template slot="content">
           <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-            <el-form-item label="工厂名称" prop="factoryName">
+            <el-form-item label="工厂名称">
               <el-input
-                v-model="queryParams.factoryName"
+                v-model="queryParams.floorName"
                 placeholder="请输入工厂名称"
                 clearable
                 size="small"
@@ -52,50 +52,32 @@
         </template>
       </my-search-tool>
     </div>
-
     <el-table
       v-loading="loading"
-      :data="factoryList"
       border
+      :data="floorList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="factoryId" />
-      <el-table-column label="工厂名称" align="center" prop="factoryName" />
-      <el-table-column label="工厂地址" align="center" prop="address" />
-
-      <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="工厂类型" align="center" prop="factoryType" />
-      <el-table-column label="负责人" align="center" prop="leader" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column type="selection" width="55" fixed align="center" />
+      <el-table-column label="楼层id" align="center" prop="floorId" />
+      <el-table-column label="楼层名称" align="center" prop="floorName" />
       <el-table-column label="图片" align="center" prop="picture" />
-      <el-table-column label="省市区" align="center" prop="province" />
-      <el-table-column label="座机号" align="center" prop="tel" />
-      <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
+      <el-table-column label="建筑id" align="center" prop="buildingId" />
+      <el-table-column label="层级" align="center" prop="level" />
+      <el-table-column label="操作" align="center" fixed="right" width="180">
         <template slot-scope="scope">
-          <span v-if="scope.row.createDateTime">{{ parseTime(scope.row.createDateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="updateDateTime" width="180">
-        <template slot-scope="scope">
-          <span v-if="scope.row.updateDateTime">{{ parseTime(scope.row.updateDateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="250">
-        <template slot-scope="scope">
-          <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼宇</el-button>
           <el-button
             size="mini"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['main:factory:edit']"
+            v-hasPermi="['main:floor:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             icon="el-icon-delete"
             type="danger"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['main:factory:remove']"
+            v-hasPermi="['main:floor:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -108,23 +90,23 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <input type="file" ref="imgFile" name="file" multiple @change="upload" />
   </div>
 </template>
 
 <script>
 import {
-  listFactory,
-  delFactory,
-  updateFactory,
-  exportFactory
-} from "@/api/main/factory";
+  listFloor,
+  getFloor,
+  delFloor,
+  addFloor,
+  updateFloor,
+  exportFloor
+} from "@/api/main/floor";
 
 import MySearchTool from "@/components/SearchTool/index";
-import MyFactoryAdd from "@/views/main/factory/add";
-import MyFactoryEdit from "@/views/main/factory/edit";
-import http from "@/utils/http";
-import request from "@/utils/request";
+import MyFloorAdd from "@/views/main/floor/add";
+import MyFloorEdit from "@/views/main/floor/edit";
+
 export default {
   data() {
     return {
@@ -138,8 +120,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 工厂信息表格数据
-      factoryList: [],
+      // 楼层数据表格数据
+      floorList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -148,19 +130,12 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        factoryName: "",
-        address: "",
-        createDateTime: "",
-        description: "",
-        factoryType: "",
-        latitude: "",
-        leader: "",
-        longitude: "",
-        phone: "",
+        floorName: "",
         picture: "",
-        province: "",
-        tel: "",
-        updateDateTime: ""
+        createtime: "",
+        updatetime: "",
+        buildingId: "",
+        level: ""
       },
       // 表单参数
       form: {},
@@ -174,11 +149,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询工厂信息列表 */
+    /** 查询楼层数据列表 */
     getList() {
       this.loading = true;
-      listFactory(this.queryParams).then(response => {
-        this.factoryList = response.rows;
+      listFloor(this.queryParams).then(response => {
+        this.floorList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -191,20 +166,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        factoryId: "",
-        factoryName: "",
-        address: "",
-        createDateTime: "",
-        description: "",
-        factoryType: "",
-        latitude: "",
-        leader: "",
-        longitude: "",
-        phone: "",
+        floorId: "",
+        floorName: "",
         picture: "",
-        province: "",
-        tel: "",
-        updateDateTime: ""
+        createtime: "",
+        updatetime: "",
+        buildingId: "",
+        level: ""
       };
       this.resetForm("form");
     },
@@ -220,7 +188,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.factoryId);
+      this.ids = selection.map(item => item.floorId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -228,13 +196,13 @@ export default {
     handleAdd() {
       var index = this.$layer.iframe({
         content: {
-          content: MyFactoryAdd, //传递的组件对象
+          content: MyFloorAdd, //传递的组件对象
           parent: this, //当前的vue对象
           data: {} //props
         },
         shade: false,
         area: ["600px", "600px"],
-        title: "新增工厂信息",
+        title: "新增楼层信息",
         target: ".app-container"
       });
       this.$layer.full(index);
@@ -242,27 +210,28 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      this.eid = row.factoryId;
+      this.eid = row.floorId;
       var index = this.$layer.iframe({
         content: {
-          content: MyFactoryEdit, //传递的组件对象
+          content: MyFloorEdit, //传递的组件对象
           parent: this, //当前的vue对象
           data: {} //props
         },
         shade: false,
         area: ["600px", "600px"],
-        title: "编辑工厂信息",
+        title: "编辑楼层信息",
         target: ".app-container"
       });
       this.$layer.full(index);
       this.layerId = index;
     },
+    /** 提交按钮 */
+    submitForm: function() {},
     /** 删除按钮操作 */
     handleDelete(row) {
-      const factoryIds = row.factoryId || this.ids;
+      const floorIds = row.floorId || this.ids;
       this.$confirm(
-        '是否确认删除工厂信息编号为"' + factoryIds + '"的数据项?',
+        '是否确认删除楼层数据编号为"' + floorIds + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -271,7 +240,7 @@ export default {
         }
       )
         .then(function() {
-          return delFactory(factoryIds);
+          return delFloor(floorIds);
         })
         .then(() => {
           this.getList();
@@ -282,53 +251,20 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有工厂信息数据项?", "警告", {
+      this.$confirm("是否确认导出所有楼层数据数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(function() {
-          return exportFactory(queryParams);
+          return exportFloor(queryParams);
         })
         .then(response => {
           this.download(response.msg);
         })
         .catch(function() {});
     },
-    handleClick() {},
-    handleJump(row) {
-      this.$router.push({ path: "/main/building" });
-    },
-    upload() {
-      let _this = this;
-      let imagesfile = _this.$refs.imgFile.files;
-      if (imagesfile.length == 0) {
-        return;
-      }
-      let fd = new FormData();
-      fd.append("files", imagesfile);
-      fd.append("deptId", "200");
-      // request({
-      //   url: "/system/common/images",
-      //   method: "post",
-      //   params: fd
-      // });
-      http
-        .getRequestUpload("/system/common/images", fd, res => {})
-        .then(res => {
-          // _this.isFail = false;
-          // _this.isLoading = false;
-          // console.log(res);
-          if (res.code == _this.AJAX_HELP.CODE_RESPONSE_SUCCESS) {
-            let _data = res.data;
-          }
-        })
-        .catch(_ => {
-          console.log("错误");
-          // _this.isLoading = false;
-          // _this.isFail = true;
-        });
-    }
+    handleClick() {}
   },
   components: {
     MySearchTool

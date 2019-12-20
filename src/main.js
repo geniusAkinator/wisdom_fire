@@ -22,6 +22,11 @@ import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, download } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
 
+import layer from 'vue-layer'
+import 'vue-layer/lib/vue-layer.css'
+
+Vue.prototype.$layer = layer(Vue)
+
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
