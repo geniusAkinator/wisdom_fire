@@ -235,7 +235,7 @@ export default {
         shade: false,
         area: ["600px", "600px"],
         title: "新增工厂信息",
-        target: ".app-container"
+        target: ".app-main"
       });
       this.$layer.full(index);
       this.layerId = index;
@@ -253,7 +253,7 @@ export default {
         shade: false,
         area: ["600px", "600px"],
         title: "编辑工厂信息",
-        target: ".app-container"
+        target: ".app-main"
       });
       this.$layer.full(index);
       this.layerId = index;

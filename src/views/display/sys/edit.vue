@@ -16,13 +16,16 @@
 </template>
 
 <script>
-import { addSystem } from "@/api/display/sys";
+import { updateSystem, getSystem } from "@/api/display/sys";
+import { Loading } from "element-ui";
+
 export default {
   data() {
     return {
       form: {
         description: "",
-        name: ""
+        name: "",
+        systemId: this.$parent.eid
       },
       factoryList: [],
       rules: {}
@@ -30,7 +33,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      addSystem(this.form).then(response => {
+      updateSystem(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();
@@ -45,9 +48,27 @@ export default {
     },
     closeDialog() {
       this.$parent.$layer.closeAll();
+    },
+    initForm() {
+      let options = {
+        target: document.querySelector(`#${this.$parent.layerId}`),
+        text: "加载中"
+      };
+      let loadingInstance = Loading.service(options);
+      getSystem(this.form.systemId).then(response => {
+        if (response.code === 200) {
+          this.form = response.data;
+          console.log(response);
+        }
+      });
+      setTimeout(() => {
+        loadingInstance.close();
+      }, 300);
     }
   },
-  mounted() {}
+  mounted() {
+    this.initForm();
+  }
 };
 </script>
 

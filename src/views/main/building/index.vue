@@ -207,7 +207,7 @@ export default {
         shade: false,
         area: ["600px", "600px"],
         title: "新增楼宇信息",
-        target: ".app-container"
+        target: ".app-main"
       });
       this.$layer.full(index);
       this.layerId = index;
@@ -225,7 +225,7 @@ export default {
         shade: false,
         area: ["600px", "600px"],
         title: "编辑楼宇信息",
-        target: ".app-container"
+        target: ".app-main"
       });
       this.$layer.full(index);
       this.layerId = index;

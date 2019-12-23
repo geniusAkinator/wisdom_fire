@@ -2,7 +2,7 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="所属工厂" prop="factoryId">
-        <el-select v-model="form.factoryId" placeholder="请选择所属代理商">
+        <el-select v-model="form.factoryId" placeholder="请选择所属工厂">
           <el-option
             v-for="(item,index) in factoryList"
             :key="index"

@@ -1,24 +1,21 @@
 <template>
   <div class="container form">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="所属楼宇" prop="factoryId">
-        <el-select v-model="form.buildingId" placeholder="请选择所属楼宇">
+    <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form-item label="所属系统" prop="factoryId">
+        <el-select v-model="form.systemId" placeholder="请选择所属系统">
           <el-option
-            v-for="(item,index) in buildingList"
+            v-for="(item,index) in sysList"
             :key="index"
-            :label="item.buildingName"
-            :value="item.buildingId"
+            :label="item.name"
+            :value="item.systemId"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="楼层名称" prop="floorName">
-        <el-input v-model="form.floorName" placeholder="请输入楼层名称" />
+      <el-form-item label="类型名称" prop="name">
+        <el-input v-model="form.name" placeholder="请输入传感器类型名称" />
       </el-form-item>
-      <el-form-item label="图片" prop="picture">
-        <el-input v-model="form.picture" type="textarea" placeholder="请输入内容" />
-      </el-form-item>
-      <el-form-item label="层级" prop="level">
-        <el-input v-model="form.level" placeholder="请输入层级" />
+      <el-form-item label="传感器图片" prop="img">
+        <el-input v-model="form.img" placeholder="请输入传感器图片" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -29,28 +26,24 @@
 </template>
 
 <script>
-import { listBuilding } from "@/api/main/building";
-import { addFloor, getFloor } from "@/api/main/floor";
+import { listSystem } from "@/api/display/sys";
+import { updateTransducertype, getTransducertype } from "@/api/display/type";
 import { Loading } from "element-ui";
 export default {
   data() {
     return {
       form: {
-        floorId: this.$parent.eid,
-        floorName: "",
-        picture: "",
-        createtime: "",
-        updatetime: "",
-        buildingId: "",
-        level: ""
+        description: "",
+        name: "",
+        ttId: this.$parent.eid
       },
-      rules: {},
-      buildingList: []
+      sysList: [],
+      rules: {}
     };
   },
   methods: {
     handleSubmit() {
-      updateFloor(this.form).then(response => {
+      updateTransducertype(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();
@@ -71,12 +64,15 @@ export default {
         target: document.querySelector(`#${this.$parent.layerId}`),
         text: "加载中"
       };
+      console.log("aaa", this.form.ttId);
       let loadingInstance = Loading.service(options);
-      listBuilding(this.queryParams)
+      listSystem()
         .then(response => {
           if (response.code === 200) {
-            this.buildingList = response.rows;
-            return getFloor(this.form.floorId);
+            this.sysList = response.rows;
+            console.log(this.sysList);
+
+            return getTransducertype(this.form.ttId);
           }
         })
         .then(response => {
