@@ -99,7 +99,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         description: "",
         name: ""
       },
@@ -226,7 +226,7 @@ export default {
       console.log(row.systemId)
       this.$router.push({
         path: "/display/type",
-        params: { id: row.systemId }
+        query: { id: row.systemId }
       });
     }
   },

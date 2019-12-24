@@ -56,6 +56,11 @@ export default {
       factoryList: []
     };
   },
+  watch: {
+    factoryList() {
+      this.form.factoryId = this.$parent.pid * 1;
+    }
+  },
   methods: {
     handleSubmit() {
       updateBuilding(this.form).then(response => {

@@ -57,7 +57,7 @@
         <el-input v-model="form.picture" placeholder="请输入图片" />
       </el-form-item>
       <el-form-item label="省市区" prop="province">
-        <el-input v-model="form.province" placeholder="请输入省市区" />
+        <my-city-picker :pcd.sync="form.province" @sendPCD="getPCD"></my-city-picker>
       </el-form-item>
       <el-form-item label="座机号" prop="tel">
         <el-input v-model="form.tel" placeholder="请输入座机号" />
@@ -74,6 +74,9 @@
 import { updateFactory, getFactory } from "@/api/main/factory";
 import { listDept } from "@/api/system/dept";
 import { Loading } from "element-ui";
+import MyUploadImage from "@/components/UploadImage";
+import MyMapPicker from "@/components/MapPicker";
+import MyCityPicker from "@/components/CityPicker";
 export default {
   data() {
     return {
@@ -167,10 +170,18 @@ export default {
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getPCD(e) {
+      this.form.province = e;
     }
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    MyUploadImage,
+    MyMapPicker,
+    MyCityPicker
   }
 };
 </script>

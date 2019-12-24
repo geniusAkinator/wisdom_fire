@@ -35,7 +35,6 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="传感器id" align="center" prop="transducerId" />
-      <el-table-column label="电池电量" align="center" prop="batteryPercentage" />
       <el-table-column label="当前位置" align="center" prop="currlocation" />
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
@@ -99,7 +98,8 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20,
+        ttId: this.$route.query.id
       },
       // 表单参数
       form: {},
@@ -110,7 +110,8 @@ export default {
         ]
       },
       eid: 0,
-      layerId: ""
+      layerId: "",
+      pid: this.$route.query.id
     };
   },
   created() {

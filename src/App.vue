@@ -67,12 +67,12 @@ export default {
   left: 0;
   bottom: -9999px;
 }
-.vl-notify-content {
-  z-index: 2002 !important;
-}
-.vl-notify {
-  z-index: 2003 !important;
-}
+// .vl-notify-content {
+//   z-index: 2002 !important;
+// }
+// .vl-notify {
+//   z-index: 2003 !important;
+// }
 .add-footer {
   position: fixed;
   bottom: 0;
@@ -87,5 +87,47 @@ export default {
 }
 .add-footer .el-button + .el-button {
   margin-left: 10px;
+}
+
+.vl-notify.vl-notify-main + .vl-notify.vl-notify-main + .vl-notify-mask {
+  z-index: 503 !important;
+}
+.readonly > input {
+  background: #f5f7fa;
+  border-color: #e4e7ed;
+  color: #c0c4cc;
+}
+.readonly input[readonly="readonly"] {
+  background: #f5f7fa;
+  border-color: #e4e7ed;
+  color: #c0c4cc;
+}
+.toggleMap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  line-height: 38px;
+  margin-right: 10px;
+  text-align: center;
+  color: #333;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  -webkit-transition: 0.5s all;
+  transition: 0.5s all;
+  font-size: 16px;
+  margin-left: 20px;
+  border-radius: 4px;
+}
+.toggleMap.active {
+  color: #fff;
+  background: #409eff;
+  border: 1px solid #409eff;
+}
+.form-map-picker + .map-picker {
+  margin-top: 10px;
+}
+.form-map-picker .el-col:nth-child(2) {
+  margin-left: 20px;
 }
 </style>

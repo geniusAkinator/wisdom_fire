@@ -2,7 +2,7 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="所属楼宇" prop="factoryId">
-        <el-select v-model="form.buildingId" placeholder="请选择所属楼宇">
+        <el-select v-model="form.buildingId" placeholder="请选择所属楼宇" disabled>
           <el-option
             v-for="(item,index) in buildingList"
             :key="index"
@@ -15,10 +15,10 @@
         <el-input v-model="form.floorName" placeholder="请输入楼层名称" />
       </el-form-item>
       <el-form-item label="图片" prop="picture">
-        <el-input v-model="form.picture" type="textarea" placeholder="请输入内容" />
+        <el-input v-model="form.picture" placeholder="请输入内容" />
       </el-form-item>
       <el-form-item label="层级" prop="level">
-        <el-input v-model="form.level" placeholder="请输入层级" />
+        <el-input type="number" v-model="form.level" placeholder="请输入层级" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -30,7 +30,7 @@
 
 <script>
 import { listBuilding } from "@/api/main/building";
-import { addFloor, getFloor } from "@/api/main/floor";
+import { updateFloor, getFloor } from "@/api/main/floor";
 import { Loading } from "element-ui";
 export default {
   data() {
@@ -47,6 +47,11 @@ export default {
       rules: {},
       buildingList: []
     };
+  },
+  watch: {
+    buildingList() {
+      this.form.buildingId = this.$parent.pid * 1;
+    }
   },
   methods: {
     handleSubmit() {

@@ -24,10 +24,11 @@ import Pagination from "@/components/Pagination";
 
 import layer from 'vue-layer'
 import 'vue-layer/lib/vue-layer.css'
-
-Vue.prototype.$layer = layer(Vue)
+import global from '@/utils/global'
+// import vueJsonp from 'vue-jsonp'
 
 // 全局方法挂载
+Vue.prototype.$layer = layer(Vue)
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
@@ -35,6 +36,7 @@ Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.download = download
+Vue.prototype.GLOBAL = global
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
@@ -53,6 +55,7 @@ Vue.component('Pagination', Pagination)
 
 Vue.use(permission)
 Vue.use(common)
+// Vue.use(vueJsonp)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

@@ -2,7 +2,7 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="所属工厂" prop="factoryId">
-        <el-select v-model="form.factoryId" placeholder="请选择所属工厂">
+        <el-select v-model="form.factoryId" placeholder="请选择所属工厂" disabled>
           <el-option
             v-for="(item,index) in factoryList"
             :key="index"
@@ -38,8 +38,11 @@
 import { addBuilding } from "@/api/main/building";
 import { listFactory } from "@/api/main/factory";
 import { Loading } from "element-ui";
+import MyUploadImage from "@/components/UploadImage";
+
 export default {
   data() {
+    
     return {
       form: {
         area: "",
@@ -48,11 +51,19 @@ export default {
         picture: "",
         underLevel: "",
         updatetime: "",
-        upperLevel: ""
+        upperLevel: "",
+        factoryId: ""
       },
       factoryList: [],
-      rules: {}
+      rules: {
+
+      }
     };
+  },
+  watch: {
+    factoryList() {
+      this.form.factoryId = this.$parent.pid * 1;
+    }
   },
   methods: {
     handleSubmit() {
@@ -70,7 +81,7 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
-      this.$parent.$layer.closeAll();
+      this.$parent.$layer.close(`#${this.$parent.layerId}`);
     },
     initForm() {
       let options = {
@@ -81,7 +92,6 @@ export default {
       listFactory(this.queryParams).then(response => {
         this.factoryList = response.rows;
       });
-
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
@@ -89,6 +99,9 @@ export default {
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    MyUploadImage
   }
 };
 </script>

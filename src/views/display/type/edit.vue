@@ -2,7 +2,7 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="120px">
       <el-form-item label="所属系统" prop="factoryId">
-        <el-select v-model="form.systemId" placeholder="请选择所属系统">
+        <el-select v-model="form.systemId" placeholder="请选择所属系统" disabled>
           <el-option
             v-for="(item,index) in sysList"
             :key="index"
@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       form: {
+        systemId: this.$parent.pid,
         description: "",
         name: "",
         ttId: this.$parent.eid

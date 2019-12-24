@@ -129,20 +129,17 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         floorName: "",
-        picture: "",
-        createtime: "",
-        updatetime: "",
-        buildingId: "",
-        level: ""
+        buildingId: this.$route.query.id
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
       eid: 0,
-      layerId: ""
+      layerId: "",
+      pid: this.$route.query.id
     };
   },
   created() {
@@ -166,13 +163,8 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        floorId: "",
         floorName: "",
-        picture: "",
-        createtime: "",
-        updatetime: "",
-        buildingId: "",
-        level: ""
+        buildingId: this.$route.query.id
       };
       this.resetForm("form");
     },

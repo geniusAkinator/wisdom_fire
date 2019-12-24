@@ -63,12 +63,10 @@
       <el-table-column label="ID" fixed align="center" prop="factoryId" />
       <el-table-column label="工厂名称" align="center" prop="factoryName" />
       <el-table-column label="工厂地址" align="center" prop="address" />
-
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="工厂类型" align="center" prop="factoryType" />
       <el-table-column label="负责人" align="center" prop="leader" />
       <el-table-column label="手机号" align="center" prop="phone" />
-      <el-table-column label="图片" align="center" prop="picture" />
       <el-table-column label="省市区" align="center" prop="province" />
       <el-table-column label="座机号" align="center" prop="tel" />
       <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
@@ -108,7 +106,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <input type="file" ref="imgFile" name="file" multiple @change="upload" />
   </div>
 </template>
 
@@ -297,37 +294,10 @@ export default {
     },
     handleClick() {},
     handleJump(row) {
-      this.$router.push({ path: "/main/building" });
-    },
-    upload() {
-      let _this = this;
-      let imagesfile = _this.$refs.imgFile.files;
-      if (imagesfile.length == 0) {
-        return;
-      }
-      let fd = new FormData();
-      fd.append("files", imagesfile);
-      fd.append("deptId", "200");
-      // request({
-      //   url: "/system/common/images",
-      //   method: "post",
-      //   params: fd
-      // });
-      http
-        .getRequestUpload("/system/common/images", fd, res => {})
-        .then(res => {
-          // _this.isFail = false;
-          // _this.isLoading = false;
-          // console.log(res);
-          if (res.code == _this.AJAX_HELP.CODE_RESPONSE_SUCCESS) {
-            let _data = res.data;
-          }
-        })
-        .catch(_ => {
-          console.log("错误");
-          // _this.isLoading = false;
-          // _this.isFail = true;
-        });
+      this.$router.push({
+        path: "/main/building",
+        query: { id: row.factoryId }
+      });
     }
   },
   components: {

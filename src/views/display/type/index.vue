@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    {{pid}}
     <div class="table-tool">
       <el-button-group>
         <el-button
@@ -101,10 +100,8 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
-        name: "",
-        img: "",
-        systemId: ""
+        pageSize: 20,
+        systemId: this.$route.query.id
       },
       // 表单参数
       form: {},
@@ -112,7 +109,7 @@ export default {
       rules: {},
       eid: 0,
       layerId: "",
-      pid: this.$route.params.id
+      pid: this.$route.query.id
     };
   },
   created() {
@@ -228,7 +225,10 @@ export default {
         .catch(function() {});
     },
     handleJump(row) {
-      this.$router.push({ path: "/display/sensor" });
+      this.$router.push({
+        path: "/display/sensor",
+        query: { id: row.ttId }
+      });
     }
   }
 };

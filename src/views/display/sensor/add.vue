@@ -21,14 +21,25 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="楼层id" prop="floorId">
-        <el-input v-model="form.floorId" placeholder="请输入楼层id" />
+      <el-form-item label="所属楼层" prop="floorId">
+        <el-select v-model="form.floorId" placeholder="请选择所属楼层">
+          <el-option
+            v-for="(item,index) in floorList"
+            :key="index"
+            :label="item.floorName"
+            :value="item.floorId"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="传感器类型" prop="ttId">
-        <el-input v-model="form.ttId" placeholder="请输入传感器类型" />
-      </el-form-item>
-      <el-form-item label="设备类型" prop="deviceId">
-        <el-input v-model="form.deviceId" placeholder="请输入设备类型" />
+      <el-form-item label="设备型号" prop="ttId">
+        <el-select v-model="form.ttId" placeholder="请选择所属楼层" disabled>
+          <el-option
+            v-for="(item,index) in typeList"
+            :key="index"
+            :label="item.name"
+            :value="item.ttId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="设备编号" prop="deviceNumber">
         <el-input v-model="form.deviceNumber" placeholder="请输入设备编号" />
@@ -62,8 +73,10 @@
 </template>
 
 <script>
+import { listTransducertype } from "@/api/display/type";
 import { listFactory } from "@/api/main/factory";
 import { listBuilding } from "@/api/main/building";
+import { listFloor } from "@/api/main/floor";
 import { addTransducer } from "@/api/display/sensor";
 import { Loading } from "element-ui";
 export default {
@@ -74,17 +87,22 @@ export default {
         buildingId: "",
         floorId: "",
         description: "",
-        name: ""
+        name: "",
+        ttId: this.$parent.pid
       },
       factoryList: [],
       buildingList: [],
       floorList: [],
+      typeList: [],
       rules: {},
       bform: {
         factoryId: 0
       },
       fform: {
         buildingId: 0
+      },
+      tform: {
+        systemId: this.$route.query.id
       }
     };
   },
@@ -92,13 +110,19 @@ export default {
     "form.factoryId": function(nVal, oVal) {
       this.bform.factoryId = nVal;
       this.form.buildingId = "";
-      this.bform = [];
+      this.buildingList = [];
       this.getBuildingList();
+    },
+    "form.buildingId": function(nVal, oVal) {
+      this.fform.buildingId = nVal;
+      this.form.floorId = "";
+      this.floorList = [];
+      this.getFloorList();
     }
   },
   methods: {
     handleSubmit() {
-      addSystem(this.form).then(response => {
+      addTransducer(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();
@@ -121,12 +145,17 @@ export default {
       };
       let loadingInstance = Loading.service(options);
 
-      listFactory().then(response => {
-        if (response.code === 200) {
-          this.factoryList = response.rows;
-        }
-      });
-
+      listTransducertype(this.queryParams)
+        .then(response => {
+          this.typeList = response.rows;
+          console.log(this.typeList);
+          return listFactory();
+        })
+        .then(response => {
+          if (response.code === 200) {
+            this.factoryList = response.rows;
+          }
+        });
       setTimeout(() => {
         loadingInstance.close();
       }, 600);
@@ -135,6 +164,13 @@ export default {
       listBuilding(this.bform).then(response => {
         if (response.code === 200) {
           this.buildingList = response.rows;
+        }
+      });
+    },
+    getFloorList() {
+      listFloor(this.fform).then(response => {
+        if (response.code === 200) {
+          this.floorList = response.rows;
         }
       });
     }

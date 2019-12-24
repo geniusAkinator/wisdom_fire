@@ -129,22 +129,16 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
-        area: "",
-        createtime: "",
-        name: "",
-        picture: "",
-        underLevel: "",
-        updatetime: "",
-        upperLevel: "",
-        factoryId: ""
+        pageSize: 20,
+        factoryId: this.$route.query.id
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
       layerId: "",
-      eid: 0
+      eid: 0,
+      pid: this.$route.query.id
     };
   },
   created() {
@@ -269,7 +263,7 @@ export default {
     },
     handleClick() {},
     handleJump(row) {
-      this.$router.push({ path: "/main/floor" });
+      this.$router.push({ path: "/main/floor", query: { id: row.buildingId } });
     }
   },
   components: {
