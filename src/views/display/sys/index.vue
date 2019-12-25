@@ -77,6 +77,7 @@ import {
 import MySearchTool from "@/components/SearchTool/index";
 import MySysAdd from "@/views/display/sys/add";
 import MySysEdit from "@/views/display/sys/edit";
+import utils from "@/utils/utils";
 export default {
   data() {
     return {
@@ -108,8 +109,20 @@ export default {
       // 表单校验
       rules: {},
       eid: 0,
-      layerId: ""
+      layerId: "",
+      layerInitWidth: 0,
+      layerInitHeight: 0
     };
+  },
+  watch: {
+    layerId: function(newVal, oldVal) {
+      let layer = document.querySelector("#" + newVal);
+      console.log(layer)
+      if (layer != null) {
+        this.layerInitWidth = layer.offsetWidth;
+        this.layerInitHeight = layer.offsetHeight;
+      }
+    }
   },
   created() {
     this.getList();
@@ -223,12 +236,24 @@ export default {
         .catch(function() {});
     },
     handleJump(row) {
-      console.log(row.systemId)
+      console.log(row.systemId);
       this.$router.push({
         path: "/display/type",
         query: { id: row.systemId }
       });
     }
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      let _layerId = this.layerId;
+      if (_layerId == "") {
+        return;
+      }
+      let layer = document.querySelector("#" + _layerId);
+      if (layer != null) {
+        utils.resizeLayer(_layerId, this.layerInitWidth, this.layerInitHeight);
+      }
+    });
   },
   components: {
     MySearchTool

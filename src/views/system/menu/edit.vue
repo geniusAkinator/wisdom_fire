@@ -112,6 +112,7 @@ import { updateMenu, getMenu } from "@/api/system/menu";
 import { listFactory } from "@/api/main/factory";
 import { Loading } from "element-ui";
 import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
 import { treeselect } from "@/api/system/menu";
 export default {
@@ -125,7 +126,8 @@ export default {
         menuType: "M",
         orderNum: "",
         isFrame: "1",
-        visible: "0"
+        visible: "0",
+        status: "0"
       },
       rules: {},
       menuOptions: [],

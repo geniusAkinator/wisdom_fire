@@ -31,6 +31,9 @@ export default {
     };
   },
   watch: {
+    images(nVal, oVal) {
+      this.imgs = nVal;
+    },
     imgs(nVal, oVal) {
       this.$emit("sendImage", nVal);
       if (nVal == "") {
@@ -40,8 +43,8 @@ export default {
       }
     }
   },
-  props:{
-
+  props: {
+    images: ""
   },
   methods: {
     handleClick() {

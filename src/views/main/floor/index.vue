@@ -59,10 +59,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" fixed align="center" />
-      <el-table-column label="楼层id" align="center" prop="floorId" />
+      <el-table-column label="ID" align="center" prop="floorId" width="80"/>
       <el-table-column label="楼层名称" align="center" prop="floorName" />
-      <el-table-column label="图片" align="center" prop="picture" />
-      <el-table-column label="建筑id" align="center" prop="buildingId" />
       <el-table-column label="层级" align="center" prop="level" />
       <el-table-column label="操作" align="center" fixed="right" width="180">
         <template slot-scope="scope">

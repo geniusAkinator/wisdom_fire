@@ -15,16 +15,17 @@
         <el-input v-model="form.name" placeholder="请输入楼宇名称" />
       </el-form-item>
       <el-form-item label="面积" prop="area">
-        <el-input v-model="form.area" placeholder="请输入面积" />
+        <el-input v-model="form.area" type="number" placeholder="请输入面积" />
       </el-form-item>
-      <el-form-item label="照片" prop="picture">
-        <el-input v-model="form.picture" placeholder="请输入内容" />
+      <el-form-item label="图片" prop="picture" class="readonly">
+        <el-input v-model="form.picture" placeholder="请输入图片" readonly />
+        <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="楼上层数" prop="upperLevel">
-        <el-input v-model="form.upperLevel" placeholder="请输入楼上层数" />
+        <el-input v-model="form.upperLevel" type="number" placeholder="请输入楼上层数" />
       </el-form-item>
       <el-form-item label="楼下层数" prop="underLevel">
-        <el-input v-model="form.underLevel" placeholder="请输入楼下层数" />
+        <el-input v-model="form.underLevel" type="number" placeholder="请输入楼下层数" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -38,11 +39,10 @@
 import { addBuilding } from "@/api/main/building";
 import { listFactory } from "@/api/main/factory";
 import { Loading } from "element-ui";
-import MyUploadImage from "@/components/UploadImage";
+import MyImagePicker from "@/components/UploadImage";
 
 export default {
   data() {
-    
     return {
       form: {
         area: "",
@@ -55,9 +55,7 @@ export default {
         factoryId: ""
       },
       factoryList: [],
-      rules: {
-
-      }
+      rules: {}
     };
   },
   watch: {
@@ -81,7 +79,7 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
-      this.$parent.$layer.close(`#${this.$parent.layerId}`);
+      this.$parent.$layer.close(this.$parent.layerId);
     },
     initForm() {
       let options = {
@@ -95,13 +93,16 @@ export default {
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getImage(e) {
+      this.form.picture = e;
     }
   },
   mounted() {
     this.initForm();
   },
   components: {
-    MyUploadImage
+    MyImagePicker
   }
 };
 </script>

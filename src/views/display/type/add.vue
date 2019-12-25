@@ -14,8 +14,9 @@
       <el-form-item label="类型名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入传感器类型名称" />
       </el-form-item>
-      <el-form-item label="传感器图片" prop="img">
-        <el-input v-model="form.img" placeholder="请输入传感器图片" />
+      <el-form-item label="传感器图片" prop="picture" class="readonly">
+        <el-input v-model="form.img" placeholder="请选择传感器图片" readonly />
+        <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -29,6 +30,8 @@
 import { listSystem } from "@/api/display/sys";
 import { addTransducertype } from "@/api/display/type";
 import { Loading } from "element-ui";
+import MyImagePicker from "@/components/UploadImage";
+
 export default {
   data() {
     return {
@@ -74,10 +77,16 @@ export default {
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getImage(e) {
+      this.form.img = e;
     }
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    MyImagePicker
   }
 };
 </script>

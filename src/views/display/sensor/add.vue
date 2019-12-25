@@ -55,14 +55,43 @@
           placeholder="选择到期时间"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="经度" prop="longitude">
-        <el-input v-model="form.longitude" placeholder="请输入经度" />
+      <el-form-item label="经纬度" prop="pos">
+        <el-row class="form-map-picker">
+          <el-col :span="6">
+            <el-input
+              placeholder
+              v-model="form.latitude"
+              type="number"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              :readonly="true"
+            >
+              <template slot="prepend">经度</template>
+            </el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              placeholder
+              v-model="form.longitude"
+              type="number"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              :readonly="true"
+            >
+              <template slot="prepend">纬度</template>
+            </el-input>
+          </el-col>
+          <el-col :span="6">
+            <i
+              :class="isShow ? 'el-icon-map-location toggleMap active' : 'el-icon-map-location toggleMap'"
+              @click="isShow=!isShow"
+            ></i>
+          </el-col>
+        </el-row>
+        <el-collapse-transition>
+          <my-map-picker :region="nowRegion" v-show="isShow" @sendPoint="getPoint"></my-map-picker>
+        </el-collapse-transition>
       </el-form-item>
-      <el-form-item label="纬度" prop="latitude">
-        <el-input v-model="form.latitude" placeholder="请输入纬度" />
-      </el-form-item>
-      <el-form-item label="当前位置" prop="currlocation">
-        <el-input v-model="form.currlocation" placeholder="请输入当前位置" />
+      <el-form-item label="点位描述" prop="currlocation">
+        <el-input v-model="form.currlocation" placeholder="请输入点位描述" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -79,6 +108,8 @@ import { listBuilding } from "@/api/main/building";
 import { listFloor } from "@/api/main/floor";
 import { addTransducer } from "@/api/display/sensor";
 import { Loading } from "element-ui";
+import MyMapPicker from "@/components/MapPicker";
+
 export default {
   data() {
     return {
@@ -88,6 +119,11 @@ export default {
         floorId: "",
         description: "",
         name: "",
+        deviceNumber: "",
+        expirationDate: "",
+        currlocation: "",
+        longitude: 0,
+        latitude: 0,
         ttId: this.$parent.pid
       },
       factoryList: [],
@@ -103,7 +139,9 @@ export default {
       },
       tform: {
         systemId: this.$route.query.id
-      }
+      },
+      isShow:true,
+      nowRegion:"江苏"
     };
   },
   watch: {
@@ -173,10 +211,17 @@ export default {
           this.floorList = response.rows;
         }
       });
+    },
+    getPoint(e) {
+      this.form.latitude = e.lat;
+      this.form.longitude = e.lng;
     }
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    MyMapPicker
   }
 };
 </script>

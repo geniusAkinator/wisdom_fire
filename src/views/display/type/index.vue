@@ -36,11 +36,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" fixed align="center" prop="ttId" width="80" />
       <el-table-column label="传感器类型名称" align="center" prop="name" />
-      <el-table-column label="传感器图片" align="center" prop="img" />
       <el-table-column label="系统id" align="center" prop="systemId" />
-      <el-table-column label="操作" fixed="right" align="center" width="290">
+      <el-table-column label="操作" fixed="right" align="center" width="480">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">传感器管理</el-button>
+          <el-button size="mini" icon="el-icon-edit" @click="handleJumpThreshold(scope.row)">阈值管理</el-button>
           <el-button
             size="mini"
             icon="el-icon-edit"
@@ -105,8 +105,6 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {},
       eid: 0,
       layerId: "",
       pid: this.$route.query.id
@@ -227,6 +225,12 @@ export default {
     handleJump(row) {
       this.$router.push({
         path: "/display/sensor",
+        query: { id: row.ttId }
+      });
+    },
+    handleJumpThreshold(row) {
+      this.$router.push({
+        path: "/display/threshold",
         query: { id: row.ttId }
       });
     }

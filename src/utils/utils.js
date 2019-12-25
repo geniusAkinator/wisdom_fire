@@ -135,7 +135,7 @@ const Utils = {
         }
     },
     resizeLayer(layerIndex, layerInitWidth, layerInitHeight) { //layer自适应
-        let parentNode = document.querySelector(".el-main.app-body");
+        let parentNode = document.querySelector(".app-main");
         var docWidth = parentNode.offsetWidth;
         var docHeight = parentNode.offsetHeight;
         var minWidth = layerInitWidth > docWidth ? docWidth : layerInitWidth;

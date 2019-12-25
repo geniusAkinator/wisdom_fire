@@ -14,8 +14,9 @@
       <el-form-item label="楼层名称" prop="floorName">
         <el-input v-model="form.floorName" placeholder="请输入楼层名称" />
       </el-form-item>
-      <el-form-item label="图片" prop="picture">
-        <el-input v-model="form.picture" placeholder="请输入内容" />
+      <el-form-item label="图片" prop="picture" class="readonly">
+        <el-input v-model="form.picture" placeholder="请输入图片" readonly />
+        <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="层级" prop="level">
         <el-input type="number" v-model="form.level" placeholder="请输入层级" />
@@ -32,6 +33,7 @@
 import { addFloor } from "@/api/main/floor";
 import { listBuilding } from "@/api/main/building";
 import { Loading } from "element-ui";
+import MyImagePicker from "@/components/UploadImage";
 
 export default {
   data() {
@@ -85,10 +87,16 @@ export default {
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getImage(e) {
+      this.form.picture = e;
     }
   },
   mounted() {
     this.initForm();
+  },
+  components:{
+    MyImagePicker
   }
 };
 </script>

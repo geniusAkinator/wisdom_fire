@@ -28,9 +28,6 @@
       <el-form-item label="工厂地址" prop="address">
         <el-input v-model="form.address" placeholder="请输入工厂地址" />
       </el-form-item>
-      <el-form-item label="描述" prop="description">
-        <el-input v-model="form.description" placeholder="请输入描述" />
-      </el-form-item>
       <el-form-item label="工厂类型">
         <el-select v-model="form.factoryType" placeholder="请选择工厂类型">
           <el-option
@@ -41,26 +38,59 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="纬度" prop="latitude">
-        <el-input v-model="form.latitude" placeholder="请输入纬度" />
+      <el-form-item label="经纬度" prop="pos">
+        <el-row class="form-map-picker">
+          <el-col :span="6">
+            <el-input
+              placeholder
+              v-model="form.latitude"
+              type="number"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              :readonly="true"
+            >
+              <template slot="prepend">经度</template>
+            </el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-input
+              placeholder
+              v-model="form.longitude"
+              type="number"
+              oninput="value=value.replace(/[^\d.]/g,'')"
+              :readonly="true"
+            >
+              <template slot="prepend">纬度</template>
+            </el-input>
+          </el-col>
+          <el-col :span="6">
+            <i
+              :class="isShow ? 'el-icon-map-location toggleMap active' : 'el-icon-map-location toggleMap'"
+              @click="isShow=!isShow"
+            ></i>
+          </el-col>
+        </el-row>
+        <el-collapse-transition>
+          <my-map-picker :region="nowRegion" v-show="isShow" @sendPoint="getPoint"></my-map-picker>
+        </el-collapse-transition>
       </el-form-item>
       <el-form-item label="负责人" prop="leader">
         <el-input v-model="form.leader" placeholder="请输入负责人" />
       </el-form-item>
-      <el-form-item label="经度" prop="longitude">
-        <el-input v-model="form.longitude" placeholder="请输入经度" />
-      </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号" />
       </el-form-item>
-      <el-form-item label="图片" prop="picture">
-        <el-input v-model="form.picture" placeholder="请输入图片" />
+      <el-form-item label="图片" prop="picture" class="readonly">
+        <el-input v-model="form.picture" placeholder="请输入图片" readonly />
+        <my-image-picker :images="form.picture" @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="省市区" prop="province">
         <my-city-picker :pcd.sync="form.province" @sendPCD="getPCD"></my-city-picker>
       </el-form-item>
       <el-form-item label="座机号" prop="tel">
         <el-input v-model="form.tel" placeholder="请输入座机号" />
+      </el-form-item>
+      <el-form-item label="企业简介" prop="description">
+        <my-editor :value="form.description" @input="getEditor"></my-editor>
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -74,9 +104,11 @@
 import { updateFactory, getFactory } from "@/api/main/factory";
 import { listDept } from "@/api/system/dept";
 import { Loading } from "element-ui";
-import MyUploadImage from "@/components/UploadImage";
+import MyImagePicker from "@/components/UploadImage";
 import MyMapPicker from "@/components/MapPicker";
 import MyCityPicker from "@/components/CityPicker";
+import MyEditor from "@/components/Editor";
+
 export default {
   data() {
     return {
@@ -99,7 +131,9 @@ export default {
       dlist: [],
       flist: [],
       deptId: "",
-      typeOptions: []
+      typeOptions: [],
+      isShow: true,
+      nowRegion: "江苏"
     };
   },
   watch: {
@@ -134,7 +168,7 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
-      this.$parent.$layer.closeAll();
+      this.$parent.$layer.close(this.$parent.layerId);
     },
     handleSelect() {
       this.form.deptId = "";
@@ -171,17 +205,28 @@ export default {
         loadingInstance.close();
       }, 300);
     },
+    getImage(e) {
+      this.form.picture = e;
+    },
+    getPoint(e) {
+      this.form.latitude = e.lat;
+      this.form.longitude = e.lng;
+    },
     getPCD(e) {
       this.form.province = e;
+    },
+    getEditor(e) {
+      this.form.description = e;
     }
   },
   mounted() {
     this.initForm();
   },
   components: {
-    MyUploadImage,
+    MyImagePicker,
     MyMapPicker,
-    MyCityPicker
+    MyCityPicker,
+    MyEditor
   }
 };
 </script>

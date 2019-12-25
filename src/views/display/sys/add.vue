@@ -47,7 +47,9 @@ export default {
       this.$parent.$layer.closeAll();
     }
   },
-  mounted() {}
+  mounted() {
+    
+  }
 };
 </script>
 

@@ -60,10 +60,9 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="factoryId" />
+      <el-table-column label="ID" fixed align="center" prop="factoryId" width="80" />
       <el-table-column label="工厂名称" align="center" prop="factoryName" />
       <el-table-column label="工厂地址" align="center" prop="address" />
-      <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="工厂类型" align="center" prop="factoryType" />
       <el-table-column label="负责人" align="center" prop="leader" />
       <el-table-column label="手机号" align="center" prop="phone" />

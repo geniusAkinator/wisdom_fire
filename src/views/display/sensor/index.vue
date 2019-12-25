@@ -33,10 +33,10 @@
       :data="transducerList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" fixed width="55" align="center" />
       <el-table-column label="传感器id" align="center" prop="transducerId" />
       <el-table-column label="当前位置" align="center" prop="currlocation" />
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" fixed="right" align="center" width="190">
         <template slot-scope="scope">
           <el-button
             size="mini"

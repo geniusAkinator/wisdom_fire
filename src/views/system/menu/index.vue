@@ -96,21 +96,19 @@
 import {
   listMenu,
   getMenu,
-  treeselect,
   delMenu,
   addMenu,
   updateMenu
 } from "@/api/system/menu";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import MyMenuAdd from "@/views/system/menu/add";
 import MyMenuEdit from "@/views/system/menu/edit";
 import MySearchTool from "@/components/SearchTool/index";
 
 export default {
   name: "Menu",
-  components: { Treeselect, IconSelect, MySearchTool },
+  components: { IconSelect, MySearchTool },
   data() {
     return {
       // 遮罩层

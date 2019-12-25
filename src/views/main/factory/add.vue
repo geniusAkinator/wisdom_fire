@@ -28,9 +28,6 @@
       <el-form-item label="工厂地址" prop="address">
         <el-input v-model="form.address" placeholder="请输入工厂地址" />
       </el-form-item>
-      <el-form-item label="描述" prop="description">
-        <el-input v-model="form.description" placeholder="请输入描述" />
-      </el-form-item>
       <el-form-item label="工厂类型">
         <el-select v-model="form.factoryType" placeholder="请选择工厂类型">
           <el-option
@@ -84,13 +81,16 @@
       </el-form-item>
       <el-form-item label="图片" prop="picture" class="readonly">
         <el-input v-model="form.picture" placeholder="请输入图片" readonly />
-        <my-upload-image @sendImage="getImage"></my-upload-image>
+        <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="省市区" prop="province">
         <my-city-picker @sendPCD="getPCD"></my-city-picker>
       </el-form-item>
       <el-form-item label="座机号" prop="tel">
         <el-input v-model="form.tel" placeholder="请输入座机号" />
+      </el-form-item>
+      <el-form-item label="企业简介" prop="description">
+        <my-editor :value="form.description" @input="getEditor"></my-editor>
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -104,12 +104,12 @@
 import { addFactory } from "@/api/main/factory";
 import { listDept } from "@/api/system/dept";
 import { Loading } from "element-ui";
-import MyUploadImage from "@/components/UploadImage";
+import MyImagePicker from "@/components/UploadImage";
 import MyMapPicker from "@/components/MapPicker";
 import MyCityPicker from "@/components/CityPicker";
+import MyEditor from "@/components/Editor";
 
 export default {
-  
   data() {
     return {
       form: {
@@ -160,7 +160,7 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
-      this.$parent.$layer.closeAll();
+      this.$parent.$layer.close(this.$parent.layerId);
     },
     handleSelect() {
       this.form.deptId = "";
@@ -200,15 +200,19 @@ export default {
     },
     getPCD(e) {
       this.form.province = e;
+    },
+    getEditor(e){
+      this.form.description = e
     }
   },
   created() {
     this.initForm();
   },
   components: {
-    MyUploadImage,
+    MyImagePicker,
     MyMapPicker,
-    MyCityPicker
+    MyCityPicker,
+    MyEditor
   }
 };
 </script>

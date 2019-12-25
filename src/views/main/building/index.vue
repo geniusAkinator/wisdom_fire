@@ -59,13 +59,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" fixed align="center" />
-      <el-table-column label="楼宇id" align="center" prop="buildingId" />
+      <el-table-column label="ID" align="center" prop="buildingId" width="80" />
+      <el-table-column label="工厂id" align="center" prop="factoryId" />
       <el-table-column label="面积" align="center" prop="area" />
       <el-table-column label="楼宇名称" align="center" prop="name" />
-      <el-table-column label="照片" align="center" prop="picture" />
       <el-table-column label="楼下层数" align="center" prop="underLevel" />
       <el-table-column label="楼上层数" align="center" prop="upperLevel" />
-      <el-table-column label="工厂id" align="center" prop="factoryId" />
       <el-table-column label="操作" align="center" fixed="right" width="250">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼层</el-button>
