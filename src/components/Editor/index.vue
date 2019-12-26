@@ -147,7 +147,6 @@ export default {
 <style>
 .editor {
   line-height: normal !important;
-  height: 192px;
 }
 .el-upload {
   display: none;
@@ -222,5 +221,8 @@ export default {
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
   content: "等宽字体";
+}
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+    height: 200px;
 }
 </style>

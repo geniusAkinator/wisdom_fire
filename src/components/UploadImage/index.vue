@@ -1,3 +1,4 @@
+<!-- 图片选择器 -->
 <template>
   <div class="myUpload">
     <template v-if="list.length">

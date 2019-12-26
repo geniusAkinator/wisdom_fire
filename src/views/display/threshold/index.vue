@@ -1,141 +1,74 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最小值" prop="min">
-        <el-input
-          v-model="queryParams.min"
-          placeholder="请输入最小值"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最大值" prop="max">
-        <el-input
-          v-model="queryParams.max"
-          placeholder="请输入最大值"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="类型名称" prop="keyname">
-        <el-input
-          v-model="queryParams.keyname"
-          placeholder="请输入类型名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="单位" prop="unit">
-        <el-input
-          v-model="queryParams.unit"
-          placeholder="请输入单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="传感器类型id" prop="ttid">
-        <el-input
-          v-model="queryParams.ttid"
-          placeholder="请输入传感器类型id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input
-          v-model="queryParams.sort"
-          placeholder="请输入排序"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:type:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:type:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+    <div class="table-tool">
+      <el-button-group>
         <el-button
           type="danger"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:type:remove']"
+          v-hasPermi="['display:threshold:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['display:threshold:add']"
+        >新增</el-button>
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:type:export']"
+          v-hasPermi="['display:threshold:export']"
         >导出</el-button>
-      </el-col>
-    </el-row>
-
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
+      </el-button-group>
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="名称" prop="name">
+              <el-input
+                v-model="queryParams.name"
+                placeholder="请输入名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
+    <el-table v-loading="loading" border :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="逐渐" align="center" prop="id" />
+      <el-table-column label="ID" align="center" prop="id" width="80" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="最小值" align="center" prop="min" />
       <el-table-column label="最大值" align="center" prop="max" />
       <el-table-column label="类型名称" align="center" prop="keyname" />
       <el-table-column label="单位" align="center" prop="unit" />
-      <el-table-column label="传感器类型id" align="center" prop="ttid" />
-      <el-table-column label="排序" align="center" prop="sort" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="传感器类型id" align="center" prop="ttId" />
+      <el-table-column label="排序" align="center"  prop="sort" />
+      <el-table-column label="操作" align="center" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:type:edit']"
+            v-hasPermi="['display:threshold:edit']"
           >修改</el-button>
           <el-button
             size="mini"
-            type="text"
+            type="danger"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:type:remove']"
+            v-hasPermi="['display:threshold:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -148,37 +81,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改阈值对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
-        </el-form-item>
-        <el-form-item label="最小值" prop="min">
-          <el-input v-model="form.min" placeholder="请输入最小值" />
-        </el-form-item>
-        <el-form-item label="最大值" prop="max">
-          <el-input v-model="form.max" placeholder="请输入最大值" />
-        </el-form-item>
-        <el-form-item label="类型名称" prop="keyname">
-          <el-input v-model="form.keyname" placeholder="请输入类型名称" />
-        </el-form-item>
-        <el-form-item label="单位" prop="unit">
-          <el-input v-model="form.unit" placeholder="请输入单位" />
-        </el-form-item>
-        <el-form-item label="传感器类型id" prop="ttid">
-          <el-input v-model="form.ttid" placeholder="请输入传感器类型id" />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入排序" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -191,7 +93,9 @@ import {
   updateThreshold,
   exportThreshold
 } from "@/api/display/threshold";
-
+import MySearchTool from "@/components/SearchTool/index";
+import MyThresholdAdd from "@/views/display/threshold/add";
+import MyThresholdEdit from "@/views/display/threshold/edit";
 export default {
   data() {
     return {
@@ -227,7 +131,8 @@ export default {
       form: {},
       // 表单校验
       rules: {},
-      pid: this.$route.query.id
+      pid: this.$route.query.id,
+      eid: 0
     };
   },
   created() {
@@ -280,19 +185,36 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加阈值";
+      var index = this.$layer.iframe({
+        content: {
+          content: MyThresholdAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: false,
+        area: ["600px", "600px"],
+        title: "新增阈值信息",
+        target: ".app-main"
+      });
+      this.$layer.full(index);
+      this.layerId = index;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getThreshold(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改阈值";
+      this.eid = row.id;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyThresholdEdit, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: false,
+        area: ["600px", "600px"],
+        title: "编辑阈值信息",
+        target: ".app-main"
       });
+      this.$layer.full(index);
+      this.layerId = index;
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -355,6 +277,9 @@ export default {
         })
         .catch(function() {});
     }
+  },
+  components: {
+    MySearchTool
   }
 };
 </script>

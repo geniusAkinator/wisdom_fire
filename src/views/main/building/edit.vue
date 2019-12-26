@@ -88,7 +88,7 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-      listFactory(this.queryParams)
+      listFactory()
         .then(response => {
           if (response.code === 200) {
             this.factoryList = response.rows;

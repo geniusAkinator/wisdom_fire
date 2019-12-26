@@ -130,4 +130,7 @@ export default {
 .form-map-picker .el-col:nth-child(2) {
   margin-left: 20px;
 }
+.app-wrapper{
+  overflow: hidden;
+}
 </style>

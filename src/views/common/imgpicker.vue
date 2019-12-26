@@ -50,15 +50,16 @@ export default {
       multiple: true,
       isSelect: false,
       form: {
-        deptId: 0
+        deptId: this.$store.getters.dept.deptId
       },
       dform: {
-        deptId: 0,
+        deptId: this.$store.getters.dept.deptId,
         ids: ""
       },
       list: [],
       baseUrl: this.$parent.baseUrl,
-      imgs: ""
+      imgs: "",
+      deptId: this.$store.getters.dept.deptId
     };
   },
   watch: {
@@ -85,7 +86,6 @@ export default {
       });
     },
     handleChange() {
-      console.log("进来了");
       let _this = this;
       let imgFile = _this.$refs.imgFile.files;
       if (imgFile.length == 0) {
@@ -105,7 +105,7 @@ export default {
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        _this.msgError("图片小于等于2MB");
+        _this.msgError("上传图片不能大于2M");
         this.value = null;
         return;
       }
@@ -115,12 +115,12 @@ export default {
           var blob = utils.dataURItoBlob(reader.result);
           let fd = new FormData();
           fd.append("files", blob);
-          console.log(fd.get("files"));
+          fd.append("deptId", _this.deptId);
           return uploadImage(fd);
         })
         .then(response => {
-          console.log(response);
           if (response.code == 200) {
+            _this.msgSuccess("上传成功");
             _this.init();
           }
         });

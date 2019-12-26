@@ -49,7 +49,7 @@ export default {
     handleSubmit() {
       updateTransducertype(this.form).then(response => {
         if (response.code === 200) {
-          this.msgSuccess("新增成功");
+          this.msgSuccess("编辑成功");
           this.$parent.getList();
           this.closeDialog();
         } else {

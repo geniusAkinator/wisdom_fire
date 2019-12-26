@@ -183,7 +183,7 @@ export default {
       };
       let loadingInstance = Loading.service(options);
 
-      listTransducertype(this.queryParams)
+      listTransducertype()
         .then(response => {
           this.typeList = response.rows;
           console.log(this.typeList);

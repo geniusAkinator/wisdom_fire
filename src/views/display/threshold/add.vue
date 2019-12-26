@@ -1,14 +1,24 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="设备型号" prop="ttId">
+        <el-select v-model="form.ttId" placeholder="请选择所属楼层" disabled>
+          <el-option
+            v-for="(item,index) in typeList"
+            :key="index"
+            :label="item.name"
+            :value="item.ttId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="最小值" prop="min">
-        <el-input v-model="form.min" placeholder="请输入最小值" />
+        <el-input v-model="form.min" type="number" placeholder="请输入最小值" />
       </el-form-item>
       <el-form-item label="最大值" prop="max">
-        <el-input v-model="form.max" placeholder="请输入最大值" />
+        <el-input v-model="form.max" type="number" placeholder="请输入最大值" />
       </el-form-item>
       <el-form-item label="类型名称" prop="keyname">
         <el-input v-model="form.keyname" placeholder="请输入类型名称" />
@@ -17,7 +27,7 @@
         <el-input v-model="form.unit" placeholder="请输入单位" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model="form.sort" placeholder="请输入排序" />
+        <el-input v-model="form.sort" type="number" placeholder="请输入排序" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -30,7 +40,7 @@
 <script>
 import { addThreshold } from "@/api/display/threshold";
 import { Loading } from "element-ui";
-
+import { listTransducertype } from "@/api/display/type";
 export default {
   data() {
     return {
@@ -40,10 +50,17 @@ export default {
         max: "",
         keyname: "",
         unit: "",
-        ttid: this.$parent.eid,
+        ttId: 0,
         sort: 0
-      }
+      },
+      typeList: [],
+      rules: {}
     };
+  },
+  watch: {
+    typeList(nVal, oVal) {
+      this.form.ttId = this.$parent.pid * 1;
+    }
   },
   methods: {
     handleSubmit() {
@@ -63,7 +80,13 @@ export default {
     closeDialog() {
       this.$parent.$layer.closeAll();
     },
-    initForm() {}
+    initForm() {
+      listTransducertype().then(response => {
+        if (response.code == 200) {
+          this.typeList = response.rows;
+        }
+      });
+    }
   },
   mounted() {
     this.initForm();

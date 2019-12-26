@@ -7,7 +7,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    dept: {}
   },
 
   mutations: {
@@ -25,7 +26,10 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
-    }
+    },
+    SET_DEPT: (state, dept) => {
+      state.dept = dept
+    },
   },
 
   actions: {
@@ -53,12 +57,12 @@ const user = {
           const user = res.user
           const avatar = user.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            console.log("嘿嘿",res)
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
+          commit('SET_DEPT', user.dept)
           commit('SET_NAME', user.username)
           commit('SET_AVATAR', avatar)
           resolve(res)
@@ -67,14 +71,15 @@ const user = {
         })
       })
     },
-    
+
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
-          commit('SET_PERMISSIONS', [])
+          commit('SET_PERMISSIONS', []);
+          commit('SET_DEPT', {})
           removeToken()
           resolve()
         }).catch(error => {

@@ -26,3 +26,11 @@ export function delImage(params) {
         method: "delete"
     })
 }
+
+export function uploadFile(data) {
+    return request({
+        url: "/common/uploadFile",
+        method: "post",
+        data: data
+    });
+}
