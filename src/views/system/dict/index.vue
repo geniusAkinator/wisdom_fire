@@ -166,7 +166,9 @@ export default {
         status: ""
       },
       // 表单参数
-      form: {}
+      form: {},
+      eid:0,
+      layerId:""
     };
   },
   created() {

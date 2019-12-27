@@ -1,13 +1,16 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典名称" prop="dictName">
-        <el-input v-model="form.dictName" placeholder="请输入字典名称" />
+      <el-form-item label="岗位名称" prop="postName">
+        <el-input v-model="form.postName" placeholder="请输入岗位名称" />
       </el-form-item>
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input v-model="form.dictType" placeholder="请输入字典类型" />
+      <el-form-item label="岗位编码" prop="postCode">
+        <el-input v-model="form.postCode" placeholder="请输入编码名称" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="岗位顺序" prop="postSort">
+        <el-input-number v-model="form.postSort" type="number" controls-position="right" :min="0" />
+      </el-form-item>
+      <el-form-item label="岗位状态" prop="status">
         <el-radio-group v-model="form.status">
           <el-radio
             v-for="dict in statusOptions"
@@ -17,7 +20,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -28,32 +31,35 @@
 </template>
 
 <script>
-import { addType } from "@/api/system/dict/type";
+import { addPost } from "@/api/system/post";
 import { Loading } from "element-ui";
-
 export default {
   data() {
     return {
       form: {
-        dictName: "",
-        dictType: "",
-        status: "0"
+        postCode: "",
+        postName: "",
+        status: "",
+        postSort: 0,
+        remark: ""
       },
+      statusOptions: [],
       rules: {
-        dictName: [
-          { required: true, message: "字典名称不能为空", trigger: "blur" }
+        postName: [
+          { required: true, message: "岗位名称不能为空", trigger: "blur" }
         ],
-        dictType: [
-          { required: true, message: "字典类型不能为空", trigger: "blur" }
+        postCode: [
+          { required: true, message: "岗位编码不能为空", trigger: "blur" }
+        ],
+        postSort: [
+          { required: true, message: "岗位顺序不能为空", trigger: "blur" }
         ]
-      },
-      statusOptions: []
+      }
     };
   },
-
   methods: {
     handleSubmit() {
-      addType(this.form).then(response => {
+      addMenu(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();
@@ -82,7 +88,7 @@ export default {
       });
       setTimeout(() => {
         loadingInstance.close();
-      }, 300);
+      }, 600);
     }
   },
   mounted() {

@@ -1,34 +1,41 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item label="登录地址" prop="ipaddr">
-        <el-input
-          v-model="queryParams.ipaddr"
-          placeholder="请输入登录地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户名称" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="table-tool">
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="登录地址" prop="ipaddr">
+              <el-input
+                v-model="queryParams.ipaddr"
+                placeholder="请输入登录地址"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="用户名称" prop="userName">
+              <el-input
+                v-model="queryParams.userName"
+                placeholder="请输入用户名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
 
     <el-table
       v-loading="loading"
       :data="list.slice((pageNum-1)*pageSize,pageNum*pageSize)"
       style="width: 100%;"
+      border
     >
       <el-table-column label="序号" type="index" align="center">
         <template slot-scope="scope">
@@ -47,11 +54,11 @@
           <span>{{ parseTime(scope.row.loginTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="text"
+            type="danger"
             icon="el-icon-delete"
             @click="handleForceLogout(scope.row)"
             v-hasPermi="['monitor:online:forceLogout']"
@@ -66,6 +73,7 @@
 
 <script>
 import { list, forceLogout } from "@/api/monitor/online";
+import MySearchTool from "@/components/SearchTool/index";
 
 export default {
   name: "Online",
@@ -111,17 +119,27 @@ export default {
     },
     /** 强退按钮操作 */
     handleForceLogout(row) {
-      this.$confirm('是否确认强退名称为"' + row.userName + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认强退名称为"' + row.userName + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return forceLogout(row.tokenId);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("强退成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
+  },
+  components:{
+    MySearchTool
   }
 };
 </script>

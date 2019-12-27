@@ -99,7 +99,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        ttId: this.$route.query.id
+        ttId: this.$route.params.id
       },
       // 表单参数
       form: {},
@@ -111,7 +111,7 @@ export default {
       },
       eid: 0,
       layerId: "",
-      pid: this.$route.query.id
+      pid: this.$route.params.id
     };
   },
   created() {

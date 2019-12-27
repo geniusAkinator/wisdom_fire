@@ -1,61 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="岗位编码" prop="postCode">
-        <el-input
-          v-model="queryParams.postCode"
-          placeholder="请输入岗位编码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="岗位名称" prop="postName">
-        <el-input
-          v-model="queryParams.postName"
-          placeholder="请输入岗位名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:post:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:post:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+    <div class="table-tool">
+      <el-button-group>
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -64,8 +10,13 @@
           @click="handleDelete"
           v-hasPermi="['system:post:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['system:post:add']"
+        >新增</el-button>
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -73,8 +24,46 @@
           @click="handleExport"
           v-hasPermi="['system:post:export']"
         >导出</el-button>
-      </el-col>
-    </el-row>
+      </el-button-group>
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="岗位编码" prop="postCode">
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="请输入岗位编码"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="岗位名称" prop="postName">
+              <el-input
+                v-model="queryParams.postName"
+                placeholder="请输入岗位名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
+                <el-option
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
 
     <el-table v-loading="loading" border :data="postList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -114,37 +103,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改岗位对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="岗位名称" prop="postName">
-          <el-input v-model="form.postName" placeholder="请输入岗位名称" />
-        </el-form-item>
-        <el-form-item label="岗位编码" prop="postCode">
-          <el-input v-model="form.postCode" placeholder="请输入编码名称" />
-        </el-form-item>
-        <el-form-item label="岗位顺序" prop="postSort">
-          <el-input-number v-model="form.postSort" controls-position="right" :min="0" />
-        </el-form-item>
-        <el-form-item label="岗位状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -157,6 +115,9 @@ import {
   updatePost,
   exportPost
 } from "@/api/system/post";
+import MyPostAdd from "@/views/system/post/add";
+import MyPostEdit from "@/views/system/post/edit";
+import MySearchTool from "@/components/SearchTool/index";
 
 export default {
   name: "Post",
@@ -184,24 +145,14 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        postCode: undefined,
-        postName: undefined,
-        status: undefined
+        postCode: "",
+        postName: "",
+        status: ""
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        postName: [
-          { required: true, message: "岗位名称不能为空", trigger: "blur" }
-        ],
-        postCode: [
-          { required: true, message: "岗位编码不能为空", trigger: "blur" }
-        ],
-        postSort: [
-          { required: true, message: "岗位顺序不能为空", trigger: "blur" }
-        ]
-      }
+      eid: 0,
+      layerId: ""
     };
   },
   created() {
@@ -232,12 +183,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        postId: undefined,
-        postCode: undefined,
-        postName: undefined,
+        postId: "",
+        postCode: "",
+        postName: "",
         postSort: 0,
         status: "0",
-        remark: undefined
+        remark: ""
       };
       this.resetForm("form");
     },
@@ -259,25 +210,40 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加岗位";
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPostAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "新增岗位信息",
+        target: ".app-main"
+      });
+      this.layerId = index;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const postId = row.postId || this.ids;
-      getPost(postId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改岗位";
+      this.eid = row.postId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPostEdit, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "编辑岗位信息",
+        target: ".app-main"
       });
+      this.layerId = index;
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.postId != undefined) {
+          if (this.form.postId != "") {
             updatePost(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -338,6 +304,9 @@ export default {
         })
         .catch(function() {});
     }
+  },
+  components: {
+    MySearchTool
   }
 };
 </script>

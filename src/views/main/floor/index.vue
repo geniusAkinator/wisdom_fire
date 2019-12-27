@@ -129,7 +129,7 @@ export default {
         pageNum: 1,
         pageSize: 20,
         floorName: "",
-        buildingId: this.$route.query.id
+        buildingId: this.$route.params.id
       },
       // 表单参数
       form: {},
@@ -137,7 +137,7 @@ export default {
       rules: {},
       eid: 0,
       layerId: "",
-      pid: this.$route.query.id
+      pid: this.$route.params.id
     };
   },
   created() {
@@ -162,7 +162,7 @@ export default {
     reset() {
       this.form = {
         floorName: "",
-        buildingId: this.$route.query.id
+        buildingId: this.$route.params.id
       };
       this.resetForm("form");
     },

@@ -6,7 +6,13 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  watch:{
+     $route: function(newVal, oldVal) {
+       console.log("change");
+       this.$layer.closeAll()
+     }
+  }
 };
 </script>
 

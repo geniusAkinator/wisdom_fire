@@ -101,13 +101,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        systemId: this.$route.query.id
+        systemId: this.$route.params.id
       },
       // 表单参数
       form: {},
       eid: 0,
       layerId: "",
-      pid: this.$route.query.id
+      pid: this.$route.params.id
     };
   },
   created() {
@@ -224,14 +224,14 @@ export default {
     },
     handleJump(row) {
       this.$router.push({
-        path: "/display/sensor",
-        query: { id: row.ttId }
+        name: "Sensor",
+        params: { id: row.ttId }
       });
     },
     handleJumpThreshold(row) {
       this.$router.push({
-        path: "/display/threshold",
-        query: { id: row.ttId }
+        name: "Threshold",
+        params: { id: row.ttId }
       });
     }
   }

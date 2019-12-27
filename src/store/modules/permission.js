@@ -37,6 +37,9 @@ function filterAsyncRouter(asyncRouterMap) {
       if (route.component === 'Layout') {
         route.component = Layout
       } else {
+        if (route.parameter != "" && route.parameter != "/" && route.parameter != undefined) {
+          route.path = route.path + route.parameter
+        }
         route.component = loadView(route.component)
       }
     }

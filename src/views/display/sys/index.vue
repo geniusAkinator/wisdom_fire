@@ -237,9 +237,14 @@ export default {
     },
     handleJump(row) {
       console.log(row.systemId);
+      // this.$router.push({
+      //   path: "/display/type",
+      //   query: { id: row.systemId }
+      // });
+
       this.$router.push({
-        path: "/display/type",
-        query: { id: row.systemId }
+        name: "Type",
+        params: { id: row.systemId }
       });
     }
   },

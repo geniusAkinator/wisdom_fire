@@ -131,7 +131,7 @@ export default {
       form: {},
       // 表单校验
       rules: {},
-      pid: this.$route.query.id,
+      pid: this.$route.params.id,
       eid: 0
     };
   },

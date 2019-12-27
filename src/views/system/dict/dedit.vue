@@ -1,11 +1,17 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典名称" prop="dictName">
-        <el-input v-model="form.dictName" placeholder="请输入字典名称" />
+      <el-form-item label="字典类型">
+        <el-input v-model="form.dictType" :disabled="true" />
       </el-form-item>
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input v-model="form.dictType" placeholder="请输入字典类型" />
+      <el-form-item label="数据标签" prop="dictLabel">
+        <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+      </el-form-item>
+      <el-form-item label="数据键值" prop="dictValue">
+        <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
+      </el-form-item>
+      <el-form-item label="显示排序" prop="dictSort">
+        <el-input-number v-model="form.dictSort" type="number" controls-position="right" :min="0" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-radio-group v-model="form.status">
@@ -28,23 +34,31 @@
 </template>
 
 <script>
-import { addType } from "@/api/system/dict/type";
+import { getType } from "@/api/system/dict/type";
+import { updateData, getData } from "@/api/system/dict/data";
 import { Loading } from "element-ui";
 
 export default {
   data() {
     return {
       form: {
-        dictName: "",
-        dictType: "",
-        status: "0"
+        dictCode: this.$parent.eid,
+        dictLabel: "",
+        dictValue: "",
+        dictSort: 0,
+        status: "0",
+        remark: "",
+        dictType: ""
       },
       rules: {
-        dictName: [
-          { required: true, message: "字典名称不能为空", trigger: "blur" }
+        dictLabel: [
+          { required: true, message: "数据标签不能为空", trigger: "blur" }
         ],
-        dictType: [
-          { required: true, message: "字典类型不能为空", trigger: "blur" }
+        dictValue: [
+          { required: true, message: "数据键值不能为空", trigger: "blur" }
+        ],
+        dictSort: [
+          { required: true, message: "数据顺序不能为空", trigger: "blur" }
         ]
       },
       statusOptions: []
@@ -53,7 +67,7 @@ export default {
 
   methods: {
     handleSubmit() {
-      addType(this.form).then(response => {
+      updateData(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();
@@ -75,6 +89,17 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
+      const dictId = this.$parent.dictId;
+      getType(dictId).then(response => {
+        if (response.code == 200) {
+          this.form.dictType = response.data.dictType;
+        }
+      });
+      getData(this.form.dictCode).then(response => {
+        if (response.code == 200) {
+          this.form = response.data;
+        }
+      });
       this.getDicts("sys_normal_disable").then(response => {
         if (response.code == 200) {
           this.statusOptions = response.data;

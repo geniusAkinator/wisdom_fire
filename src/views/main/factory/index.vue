@@ -293,10 +293,7 @@ export default {
     },
     handleClick() {},
     handleJump(row) {
-      this.$router.push({
-        path: "/main/building",
-        query: { id: row.factoryId }
-      });
+      this.$router.push({ name: "Building", params: { id: row.factoryId } });
     }
   },
   components: {

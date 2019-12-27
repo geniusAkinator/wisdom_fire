@@ -129,7 +129,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 20,
-        factoryId: this.$route.query.id
+        factoryId: this.$route.params.id
       },
       // 表单参数
       form: {},
@@ -137,7 +137,7 @@ export default {
       rules: {},
       layerId: "",
       eid: 0,
-      pid: this.$route.query.id
+      pid: this.$route.params.id
     };
   },
   created() {
@@ -262,7 +262,7 @@ export default {
     },
     handleClick() {},
     handleJump(row) {
-      this.$router.push({ path: "/main/floor", query: { id: row.buildingId } });
+      this.$router.push({ name: "Floor", params: { id: row.buildingId } });
     }
   },
   components: {
