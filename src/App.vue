@@ -7,11 +7,11 @@
 <script>
 export default {
   name: "App",
-  watch:{
-     $route: function(newVal, oldVal) {
-       console.log("change");
-       this.$layer.closeAll()
-     }
+  watch: {
+    $route: function(newVal, oldVal) {
+      console.log("change");
+      this.$layer.closeAll();
+    }
   }
 };
 </script>
@@ -22,6 +22,9 @@ export default {
 }
 .container.form {
   width: 100%;
+  height: 100%;
+  overflow: scroll;
+  padding-bottom: 54px;
 }
 .container.form .el-form {
   padding-bottom: 70px;
@@ -136,7 +139,7 @@ export default {
 .form-map-picker .el-col:nth-child(2) {
   margin-left: 20px;
 }
-.app-wrapper{
+.app-wrapper {
   overflow: hidden;
 }
 </style>

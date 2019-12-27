@@ -1,44 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="表名称" prop="tableName">
-        <el-input
-          v-model="queryParams.tableName"
-          placeholder="请输入表名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="表描述" prop="tableComment">
-        <el-input
-          v-model="queryParams.tableComment"
-          placeholder="请输入表描述"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+    <div class="table-tool">
+      <el-button-group>
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['main:factory:remove']"
+        >删除</el-button>
         <el-button
           type="primary"
           icon="el-icon-download"
@@ -46,8 +17,6 @@
           @click="handleGenTable"
           v-hasPermi="['tool:gen:code']"
         >生成</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button
           type="info"
           icon="el-icon-upload"
@@ -55,30 +24,55 @@
           @click="openImportTable"
           v-hasPermi="['tool:gen:import']"
         >导入</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleEditTable"
-          v-hasPermi="['tool:gen:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tool:gen:remove']"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+      </el-button-group>
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="表名称" prop="tableName">
+              <el-input
+                v-model="queryParams.tableName"
+                placeholder="请输入表名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="表描述" prop="tableComment">
+              <el-input
+                v-model="queryParams.tableComment"
+                placeholder="请输入表描述"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <el-date-picker
+                v-model="dateRange"
+                size="small"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
 
-    <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      border
+      :data="tableList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="序号" align="center" prop="tableId" width="50px" />
       <el-table-column
@@ -102,33 +96,31 @@
         :show-overflow-tooltip="true"
         width="130"
       />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="创建时间" align="center" prop="createTime" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" />
+      <el-table-column label="操作" align="center" fixed="right" width="400">
         <template slot-scope="scope">
           <el-button
-            type="text"
             size="small"
             icon="el-icon-view"
             @click="handlePreview(scope.row)"
             v-hasPermi="['tool:gen:preview']"
           >预览</el-button>
           <el-button
-            type="text"
             size="small"
             icon="el-icon-edit"
             @click="handleEditTable(scope.row)"
             v-hasPermi="['tool:gen:edit']"
           >编辑</el-button>
           <el-button
-            type="text"
+            type="danger"
             size="small"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tool:gen:remove']"
           >删除</el-button>
           <el-button
-            type="text"
+            type="primary"
             size="small"
             icon="el-icon-download"
             @click="handleGenTable(scope.row)"
@@ -144,30 +136,20 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <!-- 预览界面 -->
-    <el-dialog :title="preview.title" :visible.sync="preview.open" width="80%" top="5vh">
-      <el-tabs v-model="preview.activeName">
-        <el-tab-pane
-          v-for="(value, key) in preview.data"
-          :label="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
-          :name="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
-          :key="key"
-        >
-          <pre>{{ value }}</pre>
-        </el-tab-pane>
-      </el-tabs>
-    </el-dialog>
-    <import-table ref="import" @ok="handleQuery" />
+    
   </div>
 </template>
 
 <script>
-import { listTable, previewTable, delTable } from "@/api/tool/gen";
-import importTable from "./importTable";
+import { listTable, delTable } from "@/api/tool/gen";
+import MyImportTable from "@/views/tool/gen/importTable";
+import MyPreview from "@/views/tool/gen/preview";
 import { downLoadZip } from "@/utils/zipdownload";
+import MySearchTool from "@/components/SearchTool/index";
+
 export default {
   name: "Gen",
-  components: { importTable },
+  components: { MySearchTool },
   data() {
     return {
       // 遮罩层
@@ -201,7 +183,9 @@ export default {
         title: "代码预览",
         data: {},
         activeName: "domain.java"
-      }
+      },
+      layerId: "",
+      pid: 0
     };
   },
   created() {
@@ -218,7 +202,8 @@ export default {
     /** 查询表集合 */
     getList() {
       this.loading = true;
-      listTable(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listTable(this.addDateRange(this.queryParams, this.dateRange)).then(
+        response => {
           this.tableList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -241,7 +226,18 @@ export default {
     },
     /** 打开导入表弹窗 */
     openImportTable() {
-      this.$refs.import.show();
+      var index = this.$layer.iframe({
+        content: {
+          content: MyImportTable, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["800px", "600px"],
+        title: "导入表格信息",
+        target: ".app-main"
+      });
+      this.layerId = index;
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -251,10 +247,20 @@ export default {
     },
     /** 预览按钮 */
     handlePreview(row) {
-      previewTable(row.tableId).then(response => {
-        this.preview.data = response.data;
-        this.preview.open = true;
+      this.pid = row.tableId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPreview, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["800px", "600px"],
+        title: "预览代码",
+        target: ".app-main"
       });
+      this.$layer.full(index);
+      this.layerId = index;
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -275,12 +281,15 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      }).then(function() {
+      })
+        .then(function() {
           return delTable(tableIds);
-      }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-      }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };

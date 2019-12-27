@@ -5,7 +5,7 @@
         <basic-info-form ref="basicInfo" :info="info" />
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="cloum">
-        <el-table :data="cloumns" :max-height="tableHeight">
+        <el-table :data="cloumns" border :max-height="tableHeight">
           <el-table-column label="序号" type="index" min-width="5%" />
           <el-table-column
             label="字段列名"
@@ -101,10 +101,11 @@
                   v-for="dict in dictOptions"
                   :key="dict.dictType"
                   :label="dict.dictName"
-                  :value="dict.dictType">
+                  :value="dict.dictType"
+                >
                   <span style="float: left">{{ dict.dictName }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ dict.dictType }}</span>
-              </el-option>
+                </el-option>
               </el-select>
             </template>
           </el-table-column>
@@ -114,12 +115,10 @@
         <gen-info-form ref="genInfo" :info="info" />
       </el-tab-pane>
     </el-tabs>
-    <el-form label-width="100px">
-      <el-form-item style="text-align: center;margin-left:-100px;margin-top:10px;">
-        <el-button type="primary" @click="submitForm()">提交</el-button>
-        <el-button @click="close()">返回</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="add-footer">
+      <el-button type="primary" @click="submitForm()">提交</el-button>
+      <el-button @click="close()">返回</el-button>
+    </div>
   </el-card>
 </template>
 <script>
@@ -197,8 +196,13 @@ export default {
     /** 关闭按钮 */
     close() {
       this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/tool/gen", query: { t: Date.now()}})
+      this.$router.push({ path: "/tool/gen", query: { t: Date.now() } });
     }
   }
 };
 </script>
+<style scoped>
+.el-card {
+  height: 100%;
+}
+</style>

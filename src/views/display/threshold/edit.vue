@@ -55,7 +55,8 @@ export default {
         sort: 0,
         id: this.$parent.eid
       },
-      rules: {}
+      rules: {},
+      typeList:[]
     };
   },
   watch: {

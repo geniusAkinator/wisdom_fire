@@ -58,3 +58,11 @@ export function delDept(deptId) {
     method: 'delete'
   })
 }
+
+//获取项目deptId
+export function getDeptId() {
+  return request({
+    url: '/system/dept/deptId',
+    method: 'get'
+  })
+}

@@ -1,32 +1,38 @@
 <template>
-  <!-- 导入表 -->
-  <el-dialog title="导入表" :visible.sync="visible" width="800px" top="5vh">
-    <el-form :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item label="表名称" prop="tableName">
-        <el-input
-          v-model="queryParams.tableName"
-          placeholder="请输入表名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="表描述" prop="tableComment">
-        <el-input
-          v-model="queryParams.tableComment"
-          placeholder="请输入表描述"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="container form">
+    <div class="table-tool">
+      <my-search-tool>
+        <template slot="content">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="表名称" prop="tableName">
+              <el-input
+                v-model="queryParams.tableName"
+                placeholder="请输入表名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="表描述" prop="tableComment">
+              <el-input
+                v-model="queryParams.tableComment"
+                placeholder="请输入表描述"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+          </el-form>
+        </template>
+        <template slot="end">
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        </template>
+      </my-search-tool>
+    </div>
+
     <el-row>
-      <el-table :data="dbTableList" @selection-change="handleSelectionChange" height="260px">
+      <el-table :data="dbTableList" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="tableName" label="表名称"></el-table-column>
         <el-table-column prop="tableComment" label="表描述"></el-table-column>
@@ -41,15 +47,17 @@
         @pagination="getList"
       />
     </el-row>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleImportTable">确 定</el-button>
-      <el-button @click="visible = false">取 消</el-button>
+    <div class="add-footer">
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleImportTable">提交</el-button>
+      <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script>
 import { listDbTable, importTable } from "@/api/tool/gen";
+import MySearchTool from "@/components/SearchTool/index";
+
 export default {
   data() {
     return {
@@ -71,11 +79,6 @@ export default {
     };
   },
   methods: {
-    // 显示弹框
-    show() {
-      this.getList();
-      this.visible = true;
-    },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.tables = selection.map(item => item.tableName);
@@ -104,11 +107,23 @@ export default {
       importTable({ tables: this.tables.join(",") }).then(res => {
         this.msgSuccess(res.msg);
         if (res.code === 200) {
-          this.visible = false;
-          this.$emit("ok");
+          this.closeDialog();
+          this.$parent.getList();
         }
       });
+    },
+    handleBack() {
+      this.closeDialog();
+    },
+    closeDialog() {
+      this.$parent.$layer.close(this.$parent.layerId);
     }
+  },
+  mounted() {
+    this.getList();
+  },
+  components: {
+    MySearchTool
   }
 };
 </script>
