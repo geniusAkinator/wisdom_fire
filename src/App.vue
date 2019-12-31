@@ -9,7 +9,6 @@ export default {
   name: "App",
   watch: {
     $route: function(newVal, oldVal) {
-      console.log("change");
       this.$layer.closeAll();
     }
   }
@@ -141,5 +140,11 @@ export default {
 }
 .app-wrapper {
   overflow: hidden;
+}
+.help-block {
+  color: #999;
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
 }
 </style>

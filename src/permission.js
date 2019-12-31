@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('GetInfo').then(res => {
           // 拉取user_info
           const roles = res.roles
-          store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {
+          store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {       //GenerateRoutes
           // 测试 默认静态页面
           // store.dispatch('permission/generateRoutes', { roles }).then(accessRoutes => {
             // 根据roles权限生成可访问的路由表
@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
         })
           .catch(err => {
             store.dispatch('FedLogOut').then(() => {
-              Message.error(err)
+              Message.error('网络错误')
               next({ path: '/' })
             })
           })

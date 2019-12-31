@@ -59,7 +59,8 @@ export default {
       list: [],
       baseUrl: this.$parent.baseUrl,
       imgs: "",
-      deptId: this.$store.getters.dept.deptId
+      deptId: this.$store.getters.dept.deptId,
+      isMulti: this.$parent.multiple
     };
   },
   watch: {
@@ -126,19 +127,29 @@ export default {
         });
     },
     handleSelect(index, row) {
-      this.list[index].checked = !this.list[index].checked;
-      this.dform.ids = "";
-      this.imgs = "";
-      let _ids = "";
-      let _imgs = "";
-      this.list.map((item, i) => {
-        if (item.checked) {
-          _ids = _ids + "," + item.id;
-          _imgs = _imgs + "|" + item.pictureurl;
-        }
-      });
-      this.dform.ids = _ids.substr(1);
-      this.imgs = _imgs.substr(1);
+      let isMulti = this.isMulti;
+      if (isMulti) {
+        this.list[index].checked = !this.list[index].checked;
+        this.dform.ids = "";
+        this.imgs = "";
+        let _ids = "";
+        let _imgs = "";
+        this.list.map((item, i) => {
+          if (item.checked) {
+            _ids = _ids + "," + item.id;
+            _imgs = _imgs + "|" + item.pictureurl;
+          }
+        });
+        this.dform.ids = _ids.substr(1);
+        this.imgs = _imgs.substr(1);
+      } else {
+        this.list.map((item, i) => {
+          item.checked = false;
+        });
+        this.list[index].checked = !this.list[index].checked;
+        this.dform.ids = row.id;
+        this.imgs = row.pictureurl;
+      }
     },
     handleSubmit() {
       this.$parent.imgs = this.imgs;

@@ -39,7 +39,7 @@ export default {
       form: {
         postCode: "",
         postName: "",
-        status: "",
+        status: "0",
         postSort: 0,
         remark: ""
       },

@@ -26,6 +26,7 @@ import layer from 'vue-layer'
 import 'vue-layer/lib/vue-layer.css'
 import global from '@/utils/global'
 // import vueJsonp from 'vue-jsonp'
+import VueClipboard from 'vue-clipboard2'
 
 // 全局方法挂载
 Vue.prototype.$layer = layer(Vue)
@@ -55,6 +56,8 @@ Vue.component('Pagination', Pagination)
 
 Vue.use(permission)
 Vue.use(common)
+Vue.use(VueClipboard)
+
 // Vue.use(vueJsonp)
 /**
  * If you don't want to use mock-server

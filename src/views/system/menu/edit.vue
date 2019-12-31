@@ -93,7 +93,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item v-if="form.menuType == 'C'" label="显示状态">
+          <el-form-item v-if="form.menuType != 'F'" label="显示状态">
             <el-radio-group v-model="form.status">
               <el-radio
                 v-for="dict in statusOptions"

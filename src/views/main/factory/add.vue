@@ -79,9 +79,9 @@
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号" />
       </el-form-item>
-      <el-form-item label="图片" prop="picture" class="readonly">
-        <el-input v-model="form.picture" placeholder="请输入图片" readonly />
-        <my-image-picker @sendImage="getImage"></my-image-picker>
+      <el-form-item label="LOGO" prop="picture" class="readonly">
+        <el-input v-model="form.picture" placeholder="请输入LOGO" readonly />
+        <my-image-picker :multiple="false" @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="省市区" prop="province">
         <my-city-picker @sendPCD="getPCD"></my-city-picker>
@@ -201,8 +201,8 @@ export default {
     getPCD(e) {
       this.form.province = e;
     },
-    getEditor(e){
-      this.form.description = e
+    getEditor(e) {
+      this.form.description = e;
     }
   },
   created() {

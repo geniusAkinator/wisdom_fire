@@ -14,9 +14,16 @@
         </div>
       </div>
     </template>
-    <div class="upload-btn" @click="handleClick">
-      <i class="el-icon-plus"></i>
-    </div>
+    <template v-if="multiple">
+      <div class="upload-btn" @click="handleClick">
+        <i class="el-icon-plus"></i>
+      </div>
+    </template>
+    <template v-if="!multiple">
+      <div class="upload-btn" @click="handleClick" v-if="list.length<1">
+        <i class="el-icon-plus"></i>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -45,7 +52,8 @@ export default {
     }
   },
   props: {
-    images: ""
+    images: "",
+    multiple: true
   },
   methods: {
     handleClick() {

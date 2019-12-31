@@ -40,7 +40,7 @@ export default {
         postId: this.$parent.eid,
         postCode: "",
         postName: "",
-        status: "",
+        status: "0",
         postSort: 0,
         remark: ""
       },
