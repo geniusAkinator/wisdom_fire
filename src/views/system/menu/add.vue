@@ -9,14 +9,15 @@
               :options="menuOptions"
               :show-count="true"
               placeholder="选择上级菜单"
+              :disabled="!isVisible"
             />
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="菜单类型" prop="menuType">
             <el-radio-group v-model="form.menuType">
-              <el-radio label="M">目录</el-radio>
-              <el-radio label="C">菜单</el-radio>
+              <el-radio label="M" :disabled="isDirDisabled">目录</el-radio>
+              <el-radio label="C" :disabled="isMenuDisabled">菜单</el-radio>
               <el-radio label="F">按钮</el-radio>
             </el-radio-group>
           </el-form-item>
@@ -124,19 +125,30 @@ export default {
   data() {
     return {
       form: {
-        parentId: 0,
+        parentId: this.$parent.rowId,
+        menuType: this.$parent.rowMenuType,
         menuName: "",
         icon: "",
-        menuType: "M",
         orderNum: "",
         isFrame: "1",
         visible: "0",
         status: "0",
         parameter: ""
       },
-      rules: {},
+      rules: {
+        menuName: [
+          { required: true, message: "菜单名称不能为空", trigger: "blur" }
+        ],
+        orderNum: [
+          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
+        ]
+      },
       menuOptions: [],
-      visibleOptions: []
+      visibleOptions: [],
+      statusOptions: [],
+      isVisible: this.$parent.isVisible,
+      isDirDisabled: this.$parent.isDirDisabled,
+      isMenuDisabled: this.$parent.isMenuDisabled
     };
   },
   methods: {
@@ -163,6 +175,11 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
+      this.$parent.rowMenuType = "M";
+      this.$parent.rowId = 0;
+      this.$parent.isVisible = true;
+      this.$parent.isMenuDisabled = false;
+      this.$parent.isDirDisabled = false;
       this.$parent.$layer.closeAll();
     },
     selected(name) {
@@ -170,6 +187,11 @@ export default {
     }
   },
   mounted() {
+    let options = {
+      target: document.querySelector(`#${this.$parent.layerId}`),
+      text: "加载中"
+    };
+    let loadingInstance = Loading.service(options);
     this.getTreeselect();
     this.getDicts("sys_show_hide").then(response => {
       this.statusOptions = response.data;
@@ -177,6 +199,9 @@ export default {
     this.getDicts("sys_enable_disable").then(response => {
       this.visibleOptions = response.data;
     });
+    setTimeout(() => {
+      loadingInstance.close();
+    }, 600);
   },
   components: {
     Treeselect,

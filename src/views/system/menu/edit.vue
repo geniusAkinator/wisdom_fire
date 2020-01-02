@@ -120,6 +120,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
 import { treeselect } from "@/api/system/menu";
+
 export default {
   data() {
     return {
@@ -135,9 +136,17 @@ export default {
         status: "0",
         parameter: ""
       },
-      rules: {},
+      rules: {
+        menuName: [
+          { required: true, message: "菜单名称不能为空", trigger: "blur" }
+        ],
+        orderNum: [
+          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
+        ]
+      },
       menuOptions: [],
-      visibleOptions: []
+      visibleOptions: [],
+      statusOptions: []
     };
   },
   methods: {
@@ -170,19 +179,27 @@ export default {
       this.form.icon = name;
     },
     initForm() {
+      let options = {
+        target: document.querySelector(`#${this.$parent.layerId}`),
+        text: "加载中"
+      };
+      let loadingInstance = Loading.service(options);
+      this.getTreeselect();
+      this.getDicts("sys_show_hide").then(response => {
+        this.statusOptions = response.data;
+      });
+      this.getDicts("sys_enable_disable").then(response => {
+        this.visibleOptions = response.data;
+      });
       getMenu(this.form.menuId).then(response => {
         this.form = response.data;
       });
+      setTimeout(() => {
+        loadingInstance.close();
+      }, 600);
     }
   },
   mounted() {
-    this.getTreeselect();
-    this.getDicts("sys_show_hide").then(response => {
-      this.statusOptions = response.data;
-    });
-    this.getDicts("sys_enable_disable").then(response => {
-      this.visibleOptions = response.data;
-    });
     this.initForm();
   },
   components: {

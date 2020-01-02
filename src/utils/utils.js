@@ -145,7 +145,7 @@ const Utils = {
         let nowLayerTitle = nowLayer.querySelector(".vl-notice-title");
         if (layerInitHeight > docHeight) {  //遮挡归位
             nowLayer.style.top = "50%";
-            nowLayerContent.style.height = docHeight - nowLayerTitle.offsetHeight + 'px'; //更新高度，让scroll正常
+            // nowLayerContent.style.height = docHeight - nowLayerTitle.offsetHeight + 'px'; //更新高度，让scroll正常
         }
         if (layerInitWidth > docWidth) {  //遮挡归位
             nowLayer.style.left = "50%";

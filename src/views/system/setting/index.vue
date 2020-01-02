@@ -175,7 +175,7 @@
       <el-tab-pane label="微信小程序" name="sixth">
         <el-form ref="form" :model="wxForm" :label-width="labelWidth">
           <el-form-item label="APPID">
-            <el-input v-model="wxForm.appId" placeholder="请输入APPID"></el-input>
+            <el-input v-model="wxForm.appKey" placeholder="请输入APPID"></el-input>
             <span class="help-block">微信小程序APPID</span>
           </el-form-item>
           <el-form-item label="访问密钥">
@@ -199,7 +199,12 @@
             <span class="help-block">用于打包小程序进入页面的标题</span>
           </el-form-item>
           <el-form-item label="小程序跳转背景">
-            <el-input v-model="wxForm.splashScreen"></el-input>
+            <el-input v-model="wxForm.splashScreen" disabled></el-input>
+            <my-image-picker
+              :images="wxForm.splashScreen"
+              :multiple="false"
+              @sendImage="getSpaImage"
+            ></my-image-picker>
             <span class="help-block">小程序跳转背景图片，可以为空</span>
           </el-form-item>
         </el-form>
@@ -310,7 +315,9 @@ import {
   getTemplate,
   addTemplate,
   getSms,
-  addSms
+  addSms,
+  getWx,
+  addWx
 } from "@/api/system/setting";
 import MyImagePicker from "@/components/UploadImage";
 import { Loading } from "element-ui";
@@ -343,7 +350,8 @@ export default {
       },
       themeOptions: [],
       wxForm: {
-        appId: "",
+        uniacId: "",
+        appKey: "",
         appSecret: "",
         mchId: "",
         mchSecret: "",
@@ -430,9 +438,13 @@ export default {
             this.msgSuccess("更新成功");
           }
         });
-      } else if (_activeName == "sixth"){
+      } else if (_activeName == "sixth") {
         // 微信小程序
-        
+        addWx(this.wxForm).then(response => {
+          if (response.code == 200) {
+            this.msgSuccess("更新成功");
+          }
+        });
       }
       console.log(_activeName);
     },
@@ -490,6 +502,14 @@ export default {
         });
       } else if (_activeName == "sixth") {
         //小程序设置
+        getWx().then(response => {
+          if (response.code == 200) {
+            let _data = response.data;
+            for (let key in _data) {
+              this.wxForm[key] = _data[key];
+            }
+          }
+        });
       }
       setTimeout(() => {
         loadingInstance.close();
@@ -497,6 +517,9 @@ export default {
     },
     getImage(e) {
       this.themeForm.splashScreen = e;
+    },
+    getSpaImage(e) {
+      this.wxForm.splashScreen = e;
     }
   },
   mounted() {

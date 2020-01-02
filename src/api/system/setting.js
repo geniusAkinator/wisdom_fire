@@ -68,3 +68,20 @@ export function addSms(data) {
         data: data
     })
 }
+
+//微信配置详细
+export function getWx() {
+    return request({
+        url: '/system/wxapp/list',
+        method: 'get',
+    })
+}
+
+//微信配置添加
+export function addWx(data) {
+    return request({
+        url: '/system/wxapp',
+        method: 'post',
+        data: data
+    })
+}

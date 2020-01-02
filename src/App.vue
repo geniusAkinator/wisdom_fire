@@ -73,7 +73,8 @@ export default {
   height: auto;
   width: auto;
   left: 0;
-  bottom: -9999px;
+  height: initial !important;
+  bottom: -9999px !important;
 }
 // .vl-notify-content {
 //   z-index: 2002 !important;

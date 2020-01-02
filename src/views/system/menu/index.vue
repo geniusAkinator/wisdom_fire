@@ -76,8 +76,9 @@
             size="mini"
             type="primary"
             icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
+            @click="handleRowAdd(scope.row)"
             v-hasPermi="['system:menu:add']"
+            v-if="scope.row.menuType!='F'"
           >新增</el-button>
           <el-button
             size="mini"
@@ -117,7 +118,6 @@ export default {
       menuList: [],
       // 菜单树选项
       menuOptions: [],
-
       // 菜单状态数据字典
       visibleOptions: [],
       statusOptions: [],
@@ -128,15 +128,13 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        menuName: [
-          { required: true, message: "菜单名称不能为空", trigger: "blur" }
-        ],
-        orderNum: [
-          { required: true, message: "菜单顺序不能为空", trigger: "blur" }
-        ]
-      }
+      rowMenuType: "M",
+      rowId: 0,
+      isVisible: true,
+      isDirDisabled: false,
+      isMenuDisabled: false,
+      layerId: "",
+      eid: 0
     };
   },
   created() {
@@ -158,6 +156,7 @@ export default {
       this.loading = true;
       listMenu(this.queryParams).then(response => {
         this.menuList = response.data;
+        console.log(this.menuList);
         this.loading = false;
       });
     },
@@ -198,7 +197,7 @@ export default {
       this.getList();
     },
     /** 新增按钮操作 */
-    handleAdd(row) {
+    handleAdd() {
       var index = this.$layer.iframe({
         content: {
           content: MyMenuAdd, //传递的组件对象
@@ -208,6 +207,34 @@ export default {
         shade: false,
         area: ["600px", "600px"],
         title: "新增菜单信息",
+        target: ".app-main"
+      });
+      this.$layer.full(index);
+      this.layerId = index;
+    },
+    handleRowAdd(row) {
+      this.rowId = row.menuId;
+      let _title = "";
+      if (row.menuType == "M") {
+        this.rowMenuType = "C";
+        this.isDirDisabled = true;
+        _title = "新增菜单信息";
+      } else if (row.menuType == "C") {
+        this.rowMenuType = "F";
+        this.isDirDisabled = true;
+        this.isMenuDisabled = true;
+        _title = "新增权限信息";
+      }
+      this.isVisible = false;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyMenuAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: false,
+        area: ["600px", "600px"],
+        title: _title,
         target: ".app-main"
       });
       this.$layer.full(index);
@@ -228,6 +255,7 @@ export default {
         target: ".app-main"
       });
       this.$layer.full(index);
+      this.layerId = index;
     },
     /** 删除按钮操作 */
     handleDelete(row) {
