@@ -148,4 +148,71 @@ export default {
   margin-bottom: 0;
   display: block;
 }
+.tips {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+.el-card__header .tips {
+  padding: 18px 0;
+}
+.tips-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  line-height: 19px;
+}
+.tips-item:last-child {
+  margin-right: 0;
+}
+.circle {
+  width: 14px;
+  height: 14px;
+  display: block;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.circle.success {
+  background: #67c23a;
+}
+.circle.warning {
+  background: #e6a23c;
+}
+.circle.danger {
+  background: #f56c6c;
+}
+.circle.info {
+  background: #909399;
+}
+.el-card {
+  position: relative;
+}
+.box-card .el-carousel .el-carousel__indicators {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  bottom: auto;
+  padding: 2px 20px;
+  border-bottom: 0;
+}
+.box-card .el-carousel {
+  position: initial;
+}
+.box-card .el-carousel .el-carousel__button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+.box-card .el-carousel .el-carousel__button.is-active {
+  background: #999;
+}
+.box-card.no-padding .el-card__body {
+  padding: 0;
+}
+.block-content .el-carousel__container {
+  height: 200px;
+}
 </style>
