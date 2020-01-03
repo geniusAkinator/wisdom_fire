@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '智慧消防管理系统',
+      title: '安中云后台管理系统',
       logo: logoImg
     }
   }

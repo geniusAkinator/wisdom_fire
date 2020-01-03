@@ -215,4 +215,10 @@ export default {
 .block-content .el-carousel__container {
   height: 200px;
 }
+.header_right {
+  position: absolute;
+  right: 20px;
+  top: 0;
+}
+
 </style>

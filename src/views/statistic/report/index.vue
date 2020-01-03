@@ -144,7 +144,7 @@
       <div class="text item">
         <p
           class="statistics"
-        >您管理的智慧消防{{nowYear}}年{{nowMonth?nowMonth:12}}月平均消防安全评分40分，请继续加强消防加强消防安全管理。</p>
+        >您管理的安中云{{nowYear}}年{{nowMonth?nowMonth:12}}月平均消防安全评分40分，请继续加强消防加强消防安全管理。</p>
         <div id="rate_chart"></div>
       </div>
     </el-card>
@@ -153,7 +153,7 @@
         <span>2.故障</span>
       </div>
       <div class="text item">
-        <p class="statistics">{{nowYear}}年{{nowMonth?nowMonth:12}}月智慧消防共发现故障38起，完成故障维修1起，平均维修时间7小时。</p>
+        <p class="statistics">{{nowYear}}年{{nowMonth?nowMonth:12}}月安中云共发现故障38起，完成故障维修1起，平均维修时间7小时。</p>
         <div id="breakdown_chart"></div>
         <span class="title">故障频发点位</span>
         <el-table stripe border :data="tableData" align="center" style="width: 100%">
@@ -182,7 +182,7 @@
         <span>3.隐患</span>
       </div>
       <div class="text item">
-        <p class="statistics">{{nowYear}}年{{nowMonth?nowMonth:12}}月智慧消防共发现隐患38起，完成隐患维修1起，平均维修时间7小时。</p>
+        <p class="statistics">{{nowYear}}年{{nowMonth?nowMonth:12}}月安中云共发现隐患38起，完成隐患维修1起，平均维修时间7小时。</p>
         <div id="hazard_chart"></div>
       </div>
     </el-card>
@@ -193,7 +193,7 @@
       <div class="text item">
         <p
           class="statistics"
-        >{{nowYear}}年{{nowMonth?nowMonth:12}}月共有8人参与到智慧消防日常管理中，所有工作人员共在云平台中处理故障5次，处理隐患2次。</p>
+        >{{nowYear}}年{{nowMonth?nowMonth:12}}月共有8人参与到安中云日常管理中，所有工作人员共在云平台中处理故障5次，处理隐患2次。</p>
         <el-table stripe border :data="tableData" align="center" style="width: 100%">
           <el-table-column prop="name" label="人员姓名"></el-table-column>
           <el-table-column prop="name" label="处理故障"></el-table-column>
