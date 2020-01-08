@@ -189,7 +189,7 @@
           <el-form-item label="商户支付密钥">
             <el-input v-model="wxForm.mchSecret">
               <template slot="append">
-                <span class="pointer" @click="handleGenerate">生成秘钥</span>
+                <span class="pointer">生成秘钥</span>
               </template>
             </el-input>
             <span class="help-block">对应商户支付密钥</span>
@@ -211,23 +211,17 @@
       </el-tab-pane>
       <el-tab-pane label="平台设置" name="seventh">
         <el-form ref="form" :model="platformForm" :label-width="labelWidth">
-          <el-form-item label="平台状态">
-            <el-radio-group v-model="platformForm.status">
-              <el-radio label="0">开启</el-radio>
-              <el-radio label="1">关闭</el-radio>
-            </el-radio-group>
-            <span class="help-block">平台状态</span>
-          </el-form-item>
           <el-form-item label="平台服务电话">
             <el-input v-model="platformForm.tel"></el-input>
             <span class="help-block">平台服务电话</span>
           </el-form-item>
           <el-form-item label="平台看板密码">
-            <el-input v-model="platformForm.pwd"></el-input>
+            <el-input v-model="platformForm.pwd" type="password"></el-input>
             <span class="help-block"></span>
           </el-form-item>
           <el-form-item label="平台LOGO">
             <el-input class="readonly" v-model="platformForm.logo" :readonly="true"></el-input>
+            <my-image-picker :images="platformForm.logo" :multiple="false" @sendImage="getLogo"></my-image-picker>
             <span class="help-block"></span>
           </el-form-item>
           <el-form-item label="版权信息">
@@ -239,14 +233,14 @@
       <el-tab-pane label="API接口" name="eighth">
         <el-form ref="form" :model="apiForm" :label-width="labelWidth">
           <el-form-item label="API访问">
-            <el-radio-group v-model="apiForm.status">
+            <el-radio-group v-model="apiForm.apiStatus">
               <el-radio label="0">开启</el-radio>
               <el-radio label="1">关闭</el-radio>
             </el-radio-group>
             <span class="help-block">关闭后app和小程序都不可访问</span>
           </el-form-item>
-          <el-form-item label="访问密钥">
-            <el-input v-model="apiForm.appkey">
+          <el-form-item label="访问密钥" class="readonly">
+            <el-input v-model="apiForm.apiSecret" readonly>
               <template slot="append">
                 <span class="pointer" @click="handleGenerate">生成秘钥</span>
               </template>
@@ -317,7 +311,12 @@ import {
   getSms,
   addSms,
   getWx,
-  addWx
+  addWx,
+  getApi,
+  addApi,
+  getSetup,
+  addSetup,
+  generateApiToken
 } from "@/api/system/setting";
 import MyImagePicker from "@/components/UploadImage";
 import { Loading } from "element-ui";
@@ -377,11 +376,10 @@ export default {
         smsType: 0
       },
       apiForm: {
-        status: "1",
-        appkey: ""
+        apiStatus: "1",
+        apiSecret: ""
       },
       platformForm: {
-        status: "0",
         tel: "",
         pwd: "",
         logo: "",
@@ -403,7 +401,14 @@ export default {
   },
   methods: {
     handleClick(e) {},
-    handleGenerate() {},
+    handleGenerate() {
+      generateApiToken().then(response => {
+        if (response.code == 200) {
+          console.log(response.data);
+          this.apiForm.apiSecret = response.data.token;
+        }
+      });
+    },
     handleCopySuc() {
       this.$message({ type: "success", message: "拷贝成功" });
     },
@@ -441,6 +446,18 @@ export default {
       } else if (_activeName == "sixth") {
         // 微信小程序
         addWx(this.wxForm).then(response => {
+          if (response.code == 200) {
+            this.msgSuccess("更新成功");
+          }
+        });
+      } else if (_activeName == "seventh") {
+        addSetup(this.platformForm).then(response => {
+          if (response.code == 200) {
+            this.msgSuccess("更新成功");
+          }
+        });
+      } else if (_activeName == "eighth") {
+        addApi(this.apiForm).then(response => {
           if (response.code == 200) {
             this.msgSuccess("更新成功");
           }
@@ -510,6 +527,28 @@ export default {
             }
           }
         });
+      } else if (_activeName == "seventh") {
+        //小程序设置
+        getSetup().then(response => {
+          if (response.code == 200) {
+            let _data = response.data;
+            for (let key in _data) {
+              this.platformForm[key] = _data[key];
+            }
+            this.platformForm.pwd = ""
+          }
+        });
+      } else if (_activeName == "eighth") {
+        //api设置
+        getApi().then(response => {
+          if (response.code == 200) {
+            let _data = response.data;
+            console.log(response.data);
+            for (let key in _data) {
+              this.apiForm[key] = _data[key];
+            }
+          }
+        });
       }
       setTimeout(() => {
         loadingInstance.close();
@@ -520,7 +559,10 @@ export default {
     },
     getSpaImage(e) {
       this.wxForm.splashScreen = e;
-    }
+    },
+    getLogo(e) {
+      this.platformForm.logo = e;
+    },
   },
   mounted() {
     this.initForm();

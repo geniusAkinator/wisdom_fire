@@ -132,7 +132,8 @@ export default {
       deptId: "",
       typeOptions: [],
       isShow: true,
-      nowRegion: "江苏"
+      nowRegion: "江苏",
+      roles: this.$store.getters.roles
     };
   },
   watch: {
@@ -179,8 +180,14 @@ export default {
       };
       let loadingInstance = Loading.service(options);
       listDept().then(response => {
+        console.log(response.data);
+        console.log(this.roles[0]);
         if (response.code === 200) {
-          this.dlist = response.data[0].children;
+          if (this.roles[0] == "dls") {
+            this.dlist = response.data;
+          } else {
+            this.dlist = response.data[0].children;
+          }
         }
       });
       this.getDicts("main_factory_type").then(response => {

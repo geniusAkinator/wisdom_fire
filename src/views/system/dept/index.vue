@@ -26,7 +26,7 @@
               <el-select v-model="queryParams.status" placeholder="代理状态" clearable size="small">
                 <el-option
                   v-for="dict in statusOptions"
-                  :key="dict.dictValue"
+                  :key="dict.dictValue+''"
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
                 />

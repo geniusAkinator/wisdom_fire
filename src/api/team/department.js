@@ -51,3 +51,11 @@ export function exportDepartment(query) {
     params: query
   })
 }
+
+export function listDepartmentList(query) {
+  return request({
+    url: '/system/department/departmentList',
+    method: 'get',
+    params: query
+  })
+}

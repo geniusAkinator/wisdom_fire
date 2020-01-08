@@ -65,6 +65,7 @@ const user = {
           commit('SET_DEPT', user.dept)
           commit('SET_NAME', user.username)
           commit('SET_AVATAR', avatar)
+          console.log(user)
           resolve(res)
         }).catch(error => {
           reject(error)

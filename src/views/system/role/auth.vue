@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { addRole, getRole } from "@/api/system/role";
+import { addRole, getRole, dataScope } from "@/api/system/role";
 import {
   treeselect as deptTreeselect,
   roleDeptTreeselect
@@ -54,7 +54,8 @@ export default {
         status: "0",
         menuIds: [],
         deptIds: [],
-        remark: ""
+        remark: "",
+        dataScope: []
       },
       defaultProps: {
         children: "children",

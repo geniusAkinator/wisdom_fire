@@ -85,3 +85,45 @@ export function addWx(data) {
         data: data
     })
 }
+
+//API详情
+export function getApi() {
+    return request({
+        url: 'system/api/list',
+        method: 'get',
+    })
+}
+
+//API添加
+export function addApi(data) {
+    return request({
+        url: '/system/api',
+        method: 'post',
+        data: data
+    })
+}
+
+//token
+export function generateApiToken() {
+    return request({
+        url: '/system/api/generateToken',
+        method: 'post',
+    })
+}
+
+//平台设置详情
+export function getSetup(){
+    return request({
+        url: 'system/setup/list',
+        method: 'get',
+    })
+}
+
+//平台设置添加
+export function addSetup(data) {
+    return request({
+        url: '/system/setup',
+        method: 'post',
+        data: data
+    })
+}
