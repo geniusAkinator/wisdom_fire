@@ -31,6 +31,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="点位置">
+        <my-pos-picker :img="floorImg" @sendPos="getPos"></my-pos-picker>
+      </el-form-item>
+      <el-form-item label="点位描述" prop="currlocation">
+        <el-input v-model="form.currlocation" type="textarea" placeholder="请输入点位描述" />
+      </el-form-item>
       <el-form-item label="设备型号" prop="ttId">
         <el-select v-model="form.ttId" placeholder="请选择所属楼层" disabled>
           <el-option
@@ -90,9 +96,6 @@
           <my-map-picker :region="nowRegion" v-show="isShow" @sendPoint="getPoint"></my-map-picker>
         </el-collapse-transition>
       </el-form-item>
-      <el-form-item label="点位描述" prop="currlocation">
-        <el-input v-model="form.currlocation" placeholder="请输入点位描述" />
-      </el-form-item>
     </el-form>
     <div class="add-footer">
       <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
@@ -109,6 +112,7 @@ import { listFloor } from "@/api/main/floor";
 import { addTransducer } from "@/api/display/sensor";
 import { Loading } from "element-ui";
 import MyMapPicker from "@/components/MapPicker";
+import MyPosPicker from "@/components/PosPicker";
 
 export default {
   data() {
@@ -124,8 +128,11 @@ export default {
         currlocation: "",
         longitude: 0,
         latitude: 0,
-        ttId: this.$parent.pid
+        ttId: this.$parent.pid,
+        xaxis: 0,
+        yaxis: 0
       },
+      floorImg: "",
       factoryList: [],
       buildingList: [],
       floorList: [],
@@ -140,8 +147,8 @@ export default {
       tform: {
         systemId: this.$route.query.id
       },
-      isShow:true,
-      nowRegion:"江苏"
+      isShow: true,
+      nowRegion: "江苏"
     };
   },
   watch: {
@@ -156,6 +163,17 @@ export default {
       this.form.floorId = "";
       this.floorList = [];
       this.getFloorList();
+    },
+    "form.floorId": function(nVal, oVal) {
+      let list = this.floorList;
+      console.log(this.floorList);
+      let floorImg = "";
+      list.map((item, i) => {
+        if (item.floorId == nVal) {
+          floorImg = item.picture;
+        }
+      });
+      this.floorImg = floorImg;
     }
   },
   methods: {
@@ -182,11 +200,11 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-
       listTransducertype()
         .then(response => {
-          this.typeList = response.rows;
-          console.log(this.typeList);
+          if (response.code === 200) {
+            this.typeList = response.rows;
+          }
           return listFactory();
         })
         .then(response => {
@@ -215,13 +233,18 @@ export default {
     getPoint(e) {
       this.form.latitude = e.lat;
       this.form.longitude = e.lng;
+    },
+    getPos(e) {
+      this.form.xaxis = e.xAxis;
+      this.form.yaxis = e.yAxis;
     }
   },
   mounted() {
     this.initForm();
   },
   components: {
-    MyMapPicker
+    MyMapPicker,
+    MyPosPicker
   }
 };
 </script>

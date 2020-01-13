@@ -37,7 +37,7 @@
       style="width: 100%;"
       border
     >
-      <el-table-column label="序号" type="index" align="center">
+      <el-table-column label="ID" type="index" align="center">
         <template slot-scope="scope">
           <span>{{(pageNum - 1) * pageSize + scope.$index + 1}}</span>
         </template>

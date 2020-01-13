@@ -91,22 +91,14 @@
             <div class="text item" style="min-height:300px;height:auto">
               <div class="block">
                 <el-timeline>
-                  <el-timeline-item timestamp="2019/10/10" placement="top">
+                  <el-timeline-item
+                    v-for="(item,index) in logList"
+                    :timestamp="parseTime(item.operTime)"
+                    placement="top"
+                  >
                     <el-card shadow="hover">
-                      <h4>修改了什么什么页面</h4>
-                      <p>admin 提交于 2019/10/10 20:46</p>
-                    </el-card>
-                  </el-timeline-item>
-                  <el-timeline-item timestamp="2019/10/10" placement="top">
-                    <el-card shadow="hover">
-                      <h4>修改了什么什么页面</h4>
-                      <p>admin 提交于 2019/10/10 20:46</p>
-                    </el-card>
-                  </el-timeline-item>
-                  <el-timeline-item timestamp="2019/10/10" placement="top">
-                    <el-card shadow="hover">
-                      <h4>修改了什么什么页面</h4>
-                      <p>admin 提交于 2019/10/10 20:46</p>
+                      <h4>{{item.title}}</h4>
+                      <p>{{item.operName}}</p>
                     </el-card>
                   </el-timeline-item>
                 </el-timeline>
@@ -129,8 +121,8 @@ import MyCalendar from "@/components/Calendar/index";
 import { format } from "path";
 import { parseTimeStr, parseTime } from "@/utils/common";
 import MyEchartRange from "@/components/Echart/erange";
-import MyEchartLine from "@/components/Echart/eLine";
-
+import MyEchartLine from "@/components/Echart/eline";
+import { list } from "@/api/monitor/operlog";
 export default {
   name: "Index",
   components: {
@@ -146,6 +138,7 @@ export default {
       calList: [],
       monthList: {},
       weekList: [],
+      logList: [],
       labelPos: "monthly",
       mcharts: {},
       pattern: "{y}-{m}-{d}",
@@ -210,28 +203,25 @@ export default {
       let base = new Date(nYear, nMonth, nDay - nDayOfWeek); //获得本周的开始日期
       let date = []; //时间轴
       let data = []; //纵坐标（值）
-      console.log(base.getDate());
+      let _map = this.weekList;
       for (let i = 1, days = 7; i <= days; i++) {
         base.setDate(base.getDate() + 1);
-        console.log(base);
-        let _date = parseTimeStr(now, this.pattern);
+        let _date = parseTimeStr(base, this.pattern);
         if (_map.has(_date)) {
           data.push(_map.get(_date));
         } else {
           data.push(0);
         }
         date.push([
-          now.getDate() < 10 ? "0" + now.getDate() : "" + now.getDate()
+          base.getDate() < 10 ? "0" + base.getDate() : "" + base.getDate()
         ]);
       }
-      this.weekData.xdata = date;
+      this.weekData.xdata = ['星期天','星期一','星期二','星期三','星期四','星期五','星期六'];
       this.weekData.ydata.push(data);
-      console.log(date, data);
     }
   },
   mounted() {
     listFactory().then(response => {
-      console.log(response);
       if (response.code == 200) {
         let _data = response.rows;
         _data.map((item, i) => {
@@ -243,7 +233,6 @@ export default {
     //获取本月隐患
     getCalendar({ type: "0" }).then(response => {
       if (response.code == 200) {
-        console.log(response);
         let _data = response.data.monthList;
         let _map = new Map();
         _data.map((item, i) => {
@@ -273,6 +262,15 @@ export default {
           temp.createDate = parseTimeStr(item.currdate, this.pattern);
           this.calList.push(temp);
         });
+      }
+    });
+    list({
+      pageNum: 1,
+      pageSize: 3
+    }).then(response => {
+      if (response.code == 200) {
+        this.logList = response.rows;
+        console.log(this.logList);
       }
     });
   }

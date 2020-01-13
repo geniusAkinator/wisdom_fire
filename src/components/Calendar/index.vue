@@ -30,7 +30,6 @@ export default {
   },
   watch: {
     list: function(newVal, oldVal) {
-      console.log(newVal);
       this.clist = newVal;
     }
   },

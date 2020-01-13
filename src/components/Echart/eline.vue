@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" style="width:100%;height:100%"></div>
+  <div :id="id" class="echart"></div>
 </template>
 <script>
 export default {
@@ -29,49 +29,41 @@ export default {
       let _series = [];
       for (let i = 0, size = _this.chartData.ydata.length; i < size; i++) {
         _series.push({
+          name: _this.chartData.legend[i],
           data: _this.chartData.ydata[i],
           type: "line",
           smooth: false
         });
       }
+      console.log(_series);
       let option = {
-        title: {
-          text: "",
-          show: true,
-          x: "10px",
-          y: "10px",
-          textStyle: {
-            fontFamily: "Arial, Verdana, sans...",
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: "normal",
-            color: "#8b969c"
-          }
-        },
-        grid: {
-          x: 0,
-          y: 60,
-          x2: 0,
-          y2: 2
+        legend: {
+          data: _this.chartData.legend
         },
         xAxis: {
           type: "category",
-          show: false
+          data: _this.chartData.xdata
         },
         yAxis: {
-          show: false
+          type: "value"
         },
         series: _series
       };
-      _this.myCharts.setOption(_this.option);
+      _this.myCharts.setOption(option);
       window.addEventListener("resize", _this.resizeLineChart);
     }
   },
-  mounted() {},
+  mounted() {
+    this.initLineChart();
+  },
   beforeDestroy() {
     this.myCharts.clear();
   }
 };
 </script>
 <style>
+.echart {
+  width: 100%;
+  height: 400px;
+}
 </style>

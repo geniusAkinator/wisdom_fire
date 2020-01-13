@@ -6,7 +6,7 @@
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="cloum">
         <el-table :data="cloumns" border :max-height="tableHeight">
-          <el-table-column label="序号" type="index" min-width="5%" />
+          <el-table-column label="ID" type="index" min-width="5%" />
           <el-table-column
             label="字段列名"
             prop="columnName"

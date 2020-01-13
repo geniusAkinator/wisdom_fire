@@ -31,6 +31,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="点位置">
+        <my-pos-picker :img="floorImg" :pos="pos" @sendPos="getPos"></my-pos-picker>
+      </el-form-item>
+      <el-form-item label="点位描述" prop="currlocation">
+        <el-input v-model="form.currlocation" type="textarea" placeholder="请输入点位描述" />
+      </el-form-item>
       <el-form-item label="设备型号" prop="ttId">
         <el-select v-model="form.ttId" placeholder="请选择所属楼层" disabled>
           <el-option
@@ -109,6 +115,7 @@ import { listFloor } from "@/api/main/floor";
 import { updateTransducer, getTransducer } from "@/api/display/sensor";
 import { Loading } from "element-ui";
 import MyMapPicker from "@/components/MapPicker";
+import MyPosPicker from "@/components/PosPicker";
 
 export default {
   data() {
@@ -132,11 +139,16 @@ export default {
       floorList: [],
       typeList: [],
       rules: {},
+      floorImg: "",
       bform: {
         factoryId: 0
       },
       fform: {
         buildingId: 0
+      },
+      pos: {
+        xAxis: "",
+        yAxis: ""
       },
       tform: {
         systemId: this.$route.query.id
@@ -148,13 +160,21 @@ export default {
   watch: {
     "form.factoryId": function(nVal, oVal) {
       this.bform.factoryId = nVal;
-
       this.getBuildingList();
     },
     "form.buildingId": function(nVal, oVal) {
       this.fform.buildingId = nVal;
-
       this.getFloorList();
+    },
+    "form.floorId": function(nVal, oVal) {
+      let list = this.floorList;
+      let floorImg = "";
+      list.map((item, i) => {
+        if (item.floorId == nVal) {
+          floorImg = item.picture;
+        }
+      });
+      this.floorImg = floorImg;
     }
   },
   methods: {
@@ -181,22 +201,26 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-
       getTransducer(this.form.transducerId).then(response => {
         if (response.code == 200) {
           console.log(response.data);
           let _data = response.data;
-          this.form.latitude = _data.sysTransducer.latitude; //latitude
-          this.form.longitude = _data.sysTransducer.longitude; //longitude
-          this.form.expirationDate = _data.sysTransducer.expirationDate; //expirationDate
-          this.form.currlocation = _data.sysTransducer.currlocation; //currlocation
-          this.form.deviceNumber = _data.sysTransducer.deviceNumber; //deviceNumber
-          this.form.factoryId = _data.sysTransducer.factoryId;
+          let _sensor = _data.sysTransducer;
+          this.form.latitude = _sensor.latitude; //latitude
+          this.form.longitude = _sensor.longitude; //longitude
+          this.form.expirationDate = _sensor.expirationDate; //expirationDate
+          this.form.currlocation = _sensor.currlocation; //currlocation
+          this.form.deviceNumber = _sensor.deviceNumber; //deviceNumber
+          this.form.factoryId = _sensor.factoryId;
           this.form.buildingId = _data.sysFloor.buildingId;
-          this.form.floorId = _data.sysTransducer.floorId;
+          this.form.floorId = _sensor.floorId;
+          this.form.xaxis = _sensor.xaxis;
+          this.form.yaxis = _sensor.yaxis;
+          console.log(_sensor.xaxis, _sensor.yaxis);
+          this.$set(this.pos, "xAxis", _sensor.xaxis + "%");
+          this.$set(this.pos, "yAxis", _sensor.yaxis + "%");
         }
       });
-
       listTransducertype(this.queryParams)
         .then(response => {
           this.typeList = response.rows;
@@ -208,6 +232,11 @@ export default {
             this.factoryList = response.rows;
           }
         });
+      listFloor().then(response => {
+        if (response.code === 200) {
+          this.floorList = response.rows;
+        }
+      });
       setTimeout(() => {
         loadingInstance.close();
       }, 600);
@@ -239,13 +268,18 @@ export default {
     getPoint(e) {
       this.form.latitude = e.lat;
       this.form.longitude = e.lng;
+    },
+    getPos(e) {
+      this.form.xaxis = e.xAxis;
+      this.form.yaxis = e.yAxis;
     }
   },
   mounted() {
     this.initForm();
   },
   components: {
-    MyMapPicker
+    MyMapPicker,
+    MyPosPicker
   }
 };
 </script>
