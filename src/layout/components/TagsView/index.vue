@@ -1,6 +1,6 @@
 <template>
   <div id="tags-view-container" class="tags-view-container" ref="myTab">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+    <!-- <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -19,7 +19,18 @@
           @click.prevent.stop="closeSelectedTag(tag)"
         />
       </router-link>
-    </scroll-pane>
+    </scroll-pane>-->
+    <el-tabs v-model="nowTabIndex" type="card" @tab-remove="removeTab" @tab-click="clickTab">
+      <el-tab-pane
+        v-for="(tag,index) in visitedViews"
+        :key="tag.path"
+        :label="tag.title"
+        :closable="!tag.meta.affix"
+        :name="tag.index"
+        class="tab-item"
+        ref="tag"
+      ></el-tab-pane>
+    </el-tabs>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">刷新页面</li>
       <li
@@ -44,7 +55,8 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: []
+      affixTags: [],
+      nowTabIndex: 0
     };
   },
   computed: {
@@ -59,6 +71,7 @@ export default {
     $route() {
       this.addTags();
       this.moveToCurrentTag();
+      this.updateTabIndex();
     },
     visible(value) {
       if (value) {
@@ -69,15 +82,53 @@ export default {
     }
   },
   mounted() {
+    let _this = this;
     this.initTags();
     this.addTags();
     let tab = this.$refs.myTab;
+    let tabList = document.querySelector(".el-tabs__nav.is-top");
     tab.addEventListener("contextmenu", e => {
       e.preventDefault();
+      if (tabList.contains(e.target)) {
+        let nNode = e.target.closest(".el-tabs__item.is-top");
+        let aNode = document.querySelectorAll(".el-tabs__item");
+        aNode.forEach((currentValue, index, arr) => {
+          if (currentValue == nNode) {
+            this.selectedTag = this.visitedViews[index];
+            _this.openMenu(e);
+          }
+        });
+      }
     });
   },
   methods: {
+    clickTab(tab, event) {
+      let index = this.nowTabIndex;
+      let nowViews = this.visitedViews[this.nowTabIndex];
+      console.log(nowViews);
+      this.$router.push({ path: nowViews.path });
+    },
+    removeTab() {
+      let index = this.nowTabIndex;
+      let nowViews = this.visitedViews[this.nowTabIndex];
+      this.$store
+        .dispatch("tagsView/delView", nowViews)
+        .then(({ visitedViews }) => {
+          if (this.isActive(nowViews)) {
+            this.toLastView(visitedViews, nowViews);
+          }
+        });
+    },
     do() {},
+    updateTabIndex() {
+      let _this = this;
+      this.visitedViews.map((item, i) => {
+        if (item.path == _this.$route.path) {
+          _this.nowTabIndex = i + "";
+        }
+      });
+      console.log(this.$route.path);
+    },
     isActive(route) {
       return route.path === this.$route.path;
     },
@@ -119,19 +170,21 @@ export default {
       return false;
     },
     moveToCurrentTag() {
-      const tags = this.$refs.tag;
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag);
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch("tagsView/updateVisitedView", this.$route);
-            }
-            break;
-          }
-        }
-      });
+      // const tags = this.$refs.tag;
+      // console.log(tags)
+      // this.$nextTick(() => {
+      //   for (const tag of tags) {
+      //     if (tag.to.path === this.$route.path) {
+      //       this.$refs.scrollPane.moveToTarget(tag);
+      //       // when query is different then update
+      //       if (tag.to.fullPath !== this.$route.fullPath) {
+      //         this.$store.dispatch("tagsView/updateVisitedView", this.$route);
+      //       }
+      //       break;
+      //     }
+      //   }
+      // });
+      this.$store.dispatch("tagsView/updateVisitedView", this.$route);
     },
     refreshSelectedTag(view) {
       this.$store.dispatch("tagsView/delCachedView", view).then(() => {
@@ -183,12 +236,13 @@ export default {
         }
       }
     },
-    openMenu(tag, e) {
+    openMenu(e) {
+      console.log("ddd");
       const menuMinWidth = 105;
       const offsetLeft = this.$el.getBoundingClientRect().left; // container margin left
       const offsetWidth = this.$el.offsetWidth; // container width
       const maxLeft = offsetWidth - menuMinWidth; // left boundary
-      const left = e.clientX - offsetLeft + 15; // 15: margin right
+      const left = e.clientX - offsetLeft; // 15: margin right
 
       if (left > maxLeft) {
         this.left = maxLeft;
@@ -198,7 +252,7 @@ export default {
 
       this.top = e.clientY;
       this.visible = true;
-      this.selectedTag = tag;
+      // this.selectedTag = tag;
     },
     closeMenu() {
       this.visible = false;
@@ -212,8 +266,8 @@ export default {
   height: 40px;
   width: 100%;
   background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  // border-bottom: 1px solid #d8dce5;
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -288,5 +342,23 @@ export default {
       }
     }
   }
+}
+.tags-view-container .el-tabs--card > .el-tabs__header .el-tabs__nav {
+  border-radius: 0 !important;
+  border-top: 0 !important;
+}
+.el-tabs .el-tabs__nav-prev {
+  border-right: 1px solid #e6e6e6;
+  background: #fff;
+  z-index: 10;
+}
+.el-tabs .el-tabs__nav-next {
+  border-left: 1px solid #e6e6e6;
+  background: #fff;
+  z-index: 10;
+}
+.el-tabs .el-tabs__nav-wrap.is-scrollable.is-top .el-tabs__nav-scroll {
+  margin-left: 20px !important;
+  margin-right: 20px !important;
 }
 </style>

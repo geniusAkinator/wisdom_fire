@@ -45,7 +45,6 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
-import RuoYi from "@/components/RuoYi";
 
 export default {
   components: {
@@ -53,8 +52,7 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    Search,
-    RuoYi
+    Search
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),
@@ -95,8 +93,8 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-
+  // box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  border-bottom: 1px solid #dfe4ed;
   .hamburger-container {
     line-height: 46px;
     height: 100%;

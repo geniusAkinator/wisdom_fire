@@ -44,7 +44,7 @@
         @open="infoWindowOpen"
       >
         <p>
-          <img class="factory_img" :src="imgUrl+item.picture" alt />
+          <el-image style="width: 100%; height: 100px" :src="imgUrl+item.picture" fit="contain"></el-image>
         </p>
         <p>
           <span class="left">项目ID：</span>
@@ -79,7 +79,7 @@
         placeholder="请输入内容"
         @select="handleSelect"
       >
-        <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick"></i>
+        <i class="el-icon-edit el-input__icon" slot="suffix"></i>
         <template slot-scope="props">
           <div class="result" :key="index" v-for="(item,index) in props">
             <i>{{item.factoryId}}</i>
@@ -125,12 +125,11 @@ export default {
     };
   },
   props: {
-    list: {}
+    list: {
+      type: Array
+    }
   },
   watch: {
-    list(val, oldVal) {
-      // console.log(val);
-    },
     clickIndex(val, oldVal) {
       setTimeout(() => {
         this.openInfoWindow(val);
@@ -153,6 +152,7 @@ export default {
     },
     openInfoWindow(index) {
       let arr = this.list;
+      console.log(arr);
       for (let i = 0; i < arr.lenth; i++) {
         arr[i].show = false;
       }
@@ -182,10 +182,12 @@ export default {
       };
     },
     handleSelect(item) {
-      let index = item.factoryId - 1;
-      this.openInfoWindow(index);
+      this.list.map((citem, i) => {
+        if (citem.factoryId == item.factoryId) {
+          this.openInfoWindow(i);
+        }
+      });
     },
-    handleIconClick(ev) {},
     jump(index, item) {
       this.$router.push({
         name: "工厂管理"
@@ -199,7 +201,9 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    console.log(this.list);
+  },
   components: {
     BaiduMap,
     BmScale,
@@ -207,8 +211,7 @@ export default {
     BmMarkerClusterer,
     BmMarker,
     BmInfoWindow,
-    BmLabel,
-    
+    BmLabel
   }
 };
 </script>

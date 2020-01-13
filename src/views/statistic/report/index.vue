@@ -148,7 +148,7 @@
         <div id="rate_chart"></div>
       </div>
     </el-card>
-    <el-card class="box-card" shadow="hover">
+    <!-- <el-card class="box-card" shadow="hover">
       <div slot="header" class="clearfix">
         <span>2.故障</span>
       </div>
@@ -176,7 +176,7 @@
           ></el-pagination>
         </div>
       </div>
-    </el-card>
+    </el-card> -->
     <el-card class="box-card" shadow="hover">
       <div slot="header" class="clearfix">
         <span>3.隐患</span>

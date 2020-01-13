@@ -220,5 +220,37 @@ export default {
   right: 20px;
   top: 0;
 }
+.el-input__prefix .svg-icon {
+  margin-top: 2px;
+  margin-left: 5px;
+}
+.el-tabs .el-tabs__nav-next,
+.el-tabs .el-tabs__nav-prev {
+  width: 40px;
+  display: block;
+  font-size: 18px;
+  text-align: center;
+  border-bottom: 1px solid #dfe4ed;
+  line-height: 39px;
+}
+.el-card+.el-table{
+  margin-top: 20px;
+}
 
+.calendar .el-calendar__header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 13px 20px;
+  border-bottom: 0;
+}
+.el-calendar__title {
+  display: none;
+}
+.el-calendar__body {
+  padding: 0;
+}
+.el-calendar-table .el-calendar-day {
+  height: auto;
+}
 </style>

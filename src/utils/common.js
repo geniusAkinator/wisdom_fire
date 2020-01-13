@@ -1,6 +1,5 @@
 /**
  * 通用js方法封装处理
- * Copyright (c) 2019 ruoyi
  */
 
 const baseURL = process.env.VUE_APP_BASE_API
@@ -96,9 +95,20 @@ export function sprintf(str) {
 }
 
 // 转换字符串，undefined,null等转化为""
-export function praseStrEmpty(str) {
+export function parseStrEmpty(str) {
 	if (!str || str == "undefined" || str == "null") {
 		return "";
 	}
 	return str;
+}
+
+//将"1970-01-01T00:00:00.000+0000"这种格式的时间转化为1970-01-01 00:00:00
+export function parseTimeStr(str, pattern) {
+	const format = pattern || '{y}-{m}-{d} {h}:{i}:{s}'
+	let strTime = new Date(+new Date(str) + 8 * 3600 * 1000)
+		.toISOString()
+		.replace(/T/g, " ")
+		.replace(/\.[\d]{3}Z/, "");
+	let date = new Date(Date.parse(strTime.replace(/-/g, "/")));
+	return parseTime(date, pattern)
 }

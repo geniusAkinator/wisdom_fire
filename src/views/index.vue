@@ -44,18 +44,18 @@
               <div class="tips">
                 <div class="tips-item">
                   <i class="circle warning"></i>
-                  报警
+                  隐患
                 </div>
-                <div class="tips-item">
+                <!-- <div class="tips-item">
                   <i class="circle danger"></i>
                   故障
-                </div>
-                <div class="tips-item">
+                </div>-->
+                <!-- <div class="tips-item">
                   <i class="circle info"></i>
                   离线
-                </div>
+                </div>-->
               </div>
-              <!-- <my-calendar class="calendar" :list="calList"></my-calendar> -->
+              <my-calendar class="calendar" :list="calList"></my-calendar>
             </div>
           </el-card>
         </el-col>
@@ -71,7 +71,15 @@
                 </el-radio-group>
               </el-button>
             </div>
-            <div class="text item"></div>
+            <div class="text item">
+              <!-- <div id="month_chart"></div> -->
+              <template v-if="labelPos == 'monthly'">
+                <my-echart-range :chartData="monthData" v-if="monthData.ydata.length > 0"></my-echart-range>
+              </template>
+              <template v-if="labelPos == 'weekly'">
+                <my-echart-line :chartData="weekData" v-if="weekData.ydata.length > 0"></my-echart-line>
+              </template>
+            </div>
           </el-card>
         </el-col>
         <el-col :md="24" style="margin-top:10px">
@@ -113,29 +121,169 @@
 </template>
 
 <script>
+import { listFactory } from "@/api/main/factory";
+import { getCalendar } from "@/api/hazard/overview";
 import PanelGroup from "./dashboard/PanelGroup";
 import MyMap from "@/components/Map/index";
+import MyCalendar from "@/components/Calendar/index";
+import { format } from "path";
+import { parseTimeStr, parseTime } from "@/utils/common";
+import MyEchartRange from "@/components/Echart/erange";
+import MyEchartLine from "@/components/Echart/eLine";
 
 export default {
   name: "Index",
   components: {
     PanelGroup,
-    MyMap
+    MyMap,
+    MyCalendar,
+    MyEchartRange,
+    MyEchartLine
   },
   data() {
     return {
       geoList: [],
       calList: [],
-      labelPos: "weekly"
+      monthList: {},
+      weekList: [],
+      labelPos: "monthly",
+      mcharts: {},
+      pattern: "{y}-{m}-{d}",
+      monthData: {
+        legend: ["本月隐患"],
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
+      },
+      weekData: {
+        legend: ["本周隐患"],
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
+      }
     };
   },
+  watch: {
+    monthList(nVal, oVal) {
+      this.filterMonthList();
+    },
+    weekList(nVal, oVal) {
+      this.filterWeekList();
+    }
+  },
   methods: {
-    handleSetLineChartData(type) {}
+    handleSetLineChartData(type) {},
+    filterMonthList() {
+      let d = new Date();
+      let nYear = d.getFullYear(); //当前年
+      let nMonth = d.getMonth() + 1; //当前月
+      let base = new Date(nYear, nMonth, 0);
+      let now = {};
+      if (nMonth) {
+        now = new Date(nYear, nMonth - 1, 0);
+      } else {
+        now = new Date(nYear - 1, 11, 0);
+      }
+      let date = []; //时间轴
+      let data = []; //纵坐标（值）
+      let days = base.getDate(); //获取天数
+      let _map = this.monthList;
+      for (let i = 1; i <= days; i++) {
+        now.setDate(now.getDate() + 1);
+        let _date = parseTimeStr(now, this.pattern);
+        if (_map.has(_date)) {
+          data.push(_map.get(_date));
+        } else {
+          data.push(0);
+        }
+        date.push([
+          now.getDate() < 10 ? "0" + now.getDate() : "" + now.getDate()
+        ]);
+      }
+      this.monthData.xdata = date;
+      this.monthData.ydata.push(data);
+    },
+    filterWeekList() {
+      let d = new Date();
+      let nYear = d.getFullYear(); //当前年
+      let nMonth = d.getMonth() + 1; //当前月
+      let nDayOfWeek = d.getDay(); //今天本周的第几天
+      let nDay = d.getDate(); //当前日
+      let base = new Date(nYear, nMonth, nDay - nDayOfWeek); //获得本周的开始日期
+      let date = []; //时间轴
+      let data = []; //纵坐标（值）
+      console.log(base.getDate());
+      for (let i = 1, days = 7; i <= days; i++) {
+        base.setDate(base.getDate() + 1);
+        console.log(base);
+        let _date = parseTimeStr(now, this.pattern);
+        if (_map.has(_date)) {
+          data.push(_map.get(_date));
+        } else {
+          data.push(0);
+        }
+        date.push([
+          now.getDate() < 10 ? "0" + now.getDate() : "" + now.getDate()
+        ]);
+      }
+      this.weekData.xdata = date;
+      this.weekData.ydata.push(data);
+      console.log(date, data);
+    }
+  },
+  mounted() {
+    listFactory().then(response => {
+      console.log(response);
+      if (response.code == 200) {
+        let _data = response.rows;
+        _data.map((item, i) => {
+          item.show = false;
+          this.geoList.push(item);
+        });
+      }
+    });
+    //获取本月隐患
+    getCalendar({ type: "0" }).then(response => {
+      if (response.code == 200) {
+        console.log(response);
+        let _data = response.data.monthList;
+        let _map = new Map();
+        _data.map((item, i) => {
+          _map.set(parseTimeStr(item.currdate, this.pattern), item.count);
+        });
+        this.monthList = _map;
+      }
+    });
+    //获取本周隐患
+    getCalendar({ type: "1" }).then(response => {
+      if (response.code == 200) {
+        let _data = response.data.weekList;
+        let _map = new Map();
+        _data.map((item, i) => {
+          _map.set(parseTimeStr(item.currdate, this.pattern), item.count);
+        });
+        this.weekList = _map;
+      }
+    });
+    //获取全部隐患
+    getCalendar({ type: "2" }).then(response => {
+      if (response.code == 200) {
+        let _data = response.data.allList;
+        _data.map((item, i) => {
+          let temp = {};
+          temp.isHazard = true;
+          temp.createDate = parseTimeStr(item.currdate, this.pattern);
+          this.calList.push(temp);
+        });
+      }
+    });
   }
 };
 </script>
 
 <style lang="scss">
+// #month_chart {
+//   width: 100%;
+//   height: 400px;
+// }
 .echarts {
   width: 100%;
   height: 100%;
@@ -218,5 +366,10 @@ export default {
 .sta_item:hover {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+@media screen and (max-width: 991px) {
+  .el-col.el-col-24.el-col-md-16 + .el-col.el-col-24.el-col-md-8 {
+    margin-top: 10px;
+  }
 }
 </style>

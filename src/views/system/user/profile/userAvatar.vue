@@ -24,7 +24,7 @@
       <br />
       <el-row>
         <el-col :lg="2" :md="2">
-          <el-upload :show-file-list="false" :before-upload="beforeUpload">
+          <el-upload action :show-file-list="false" :before-upload="beforeUpload">
             <el-button size="small">
               上传
               <i class="el-icon-upload el-icon--right"></i>
@@ -113,9 +113,9 @@ export default {
     uploadImg() {
       this.$refs.cropper.getCropBlob(data => {
         let formData = new FormData();
-        console.log(data)
+        console.log(data);
         formData.append("avatarfile", data);
-        console.log(formData.get("avatarfile"))
+        console.log(formData.get("avatarfile"));
         uploadAvatar(formData).then(response => {
           if (response.code === 200) {
             this.open = false;

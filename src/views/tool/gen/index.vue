@@ -222,7 +222,7 @@ export default {
         this.msgError("请选择要生成的数据");
         return;
       }
-      downLoadZip("/tool/gen/batchGenCode?tables=" + tableNames, "ruoyi");
+      downLoadZip("/tool/gen/batchGenCode?tables=" + tableNames, "anzhongyun");
     },
     /** 打开导入表弹窗 */
     openImportTable() {
