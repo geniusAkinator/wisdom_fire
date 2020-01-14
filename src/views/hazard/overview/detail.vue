@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-card class="state-card">
+    <el-card class="state-card" shadow="hover">
       <el-row :gutter="20">
         <el-col :span="8">
           <ul class="state_block">
@@ -88,8 +88,7 @@ export default {
     return {
       tableData: [],
       imgUrl: "",
-      //   icon: require("@/assets/map-marker.png")
-      icon: ""
+      icon: require("@/assets/image/map-marker.png"),
     };
   },
   watch: {},

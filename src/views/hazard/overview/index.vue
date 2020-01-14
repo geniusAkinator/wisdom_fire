@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="state-card">
+    <el-card class="state-card" shadow="hover">
       <el-row :gutter="20">
         <el-col :span="12">
           <ul class="state_block">
@@ -143,15 +143,17 @@ export default {
   border: 2px solid #e6a23c;
   background: #fff;
 }
-.state_block{
+.state_block {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   justify-content: space-around;
-  align-items: center
+  align-items: center;
 }
-.state_item>span{
-  display: block;font-weight: bold;margin-bottom: 10px;
+.state_item > span {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 </style>

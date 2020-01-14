@@ -216,7 +216,6 @@ export default {
           this.form.floorId = _sensor.floorId;
           this.form.xaxis = _sensor.xaxis;
           this.form.yaxis = _sensor.yaxis;
-          console.log(_sensor.xaxis, _sensor.yaxis);
           this.$set(this.pos, "xAxis", _sensor.xaxis + "%");
           this.$set(this.pos, "yAxis", _sensor.yaxis + "%");
         }
@@ -224,7 +223,6 @@ export default {
       listTransducertype(this.queryParams)
         .then(response => {
           this.typeList = response.rows;
-          console.log(this.typeList);
           return listFactory();
         })
         .then(response => {

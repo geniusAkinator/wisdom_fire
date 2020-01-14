@@ -100,6 +100,12 @@ export default {
         });
       }
     });
+    this.visitedViews.map((item, i) => {
+      if (item.fullPath == _this.$route.path) {
+        _this.nowTabIndex = i + "";
+      }
+    });
+    console.log("=======", this.nowTabIndex, this.$route.path);
   },
   methods: {
     clickTab(tab, event) {
