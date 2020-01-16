@@ -105,7 +105,6 @@ export default {
         _this.nowTabIndex = i + "";
       }
     });
-    console.log("=======", this.nowTabIndex, this.$route.path);
   },
   methods: {
     clickTab(tab, event) {

@@ -233,7 +233,7 @@ export default {
   border-bottom: 1px solid #dfe4ed;
   line-height: 39px;
 }
-.el-card+.el-table{
+.el-card + .el-table {
   margin-top: 20px;
 }
 
@@ -253,4 +253,6 @@ export default {
 .el-calendar-table .el-calendar-day {
   height: auto;
 }
+
+
 </style>

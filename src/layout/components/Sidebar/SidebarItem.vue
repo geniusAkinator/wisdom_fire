@@ -7,6 +7,7 @@
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
           :class="{'submenu-title-noDropdown':!isNest}"
+           v-if="onlyOneChild.status!='1'"
         >
           <item
             :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"

@@ -11,6 +11,9 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <div class="right-menu-item hover-effect">
+          <svg-icon class-name="international-icon" icon-class="international" @click="jump" />
+        </div>
         <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -82,6 +85,11 @@ export default {
           location.reload();
         });
       });
+    },
+    jump() {
+      this.$router.push({
+        name: "Platform"
+      });
     }
   }
 };
@@ -133,7 +141,6 @@ export default {
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
-
       &.hover-effect {
         cursor: pointer;
         transition: background 0.3s;

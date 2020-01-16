@@ -44,7 +44,7 @@
         @open="infoWindowOpen"
       >
         <p>
-          <el-image style="width: 100%; height: 100px" :src="imgUrl+item.picture" fit="contain"></el-image>
+          <el-image style="width: 100%; height: 100px" :src="baseUrl+item.picture" fit="contain"></el-image>
         </p>
         <p>
           <span class="left">项目ID：</span>
@@ -121,7 +121,7 @@ export default {
       map: {},
       clickIndex: 0,
       state3: "",
-      imgUrl: process.env.VUE_APP_BASE_API
+      baseUrl: process.env.VUE_APP_BASE_API
     };
   },
   props: {
