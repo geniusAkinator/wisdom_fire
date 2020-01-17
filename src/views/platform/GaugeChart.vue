@@ -43,6 +43,12 @@ export default {
         color: scolor // 0% 处的颜色
       }
     ]);
+    //     var value = dataArr[0].value;
+    // var min = value.split('.');
+    // // var degrees = 180 - (180 * value / 15); //蓝色刻度尺计算
+    // var degrees = (15 - value) / 2.5 * 30; //蓝色刻度尺计算
+    // // 蓝色背景
+    // var num = value / 15;
     var colorSet = [[0.91, color], [1, bcolor]];
     var rich = {
       white: {

@@ -169,7 +169,7 @@ export default {
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 5011
+        value: 30
       },
       errData: [
         { value: 10, name: "二氧化碳" },
