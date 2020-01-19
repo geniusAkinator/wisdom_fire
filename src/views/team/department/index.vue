@@ -132,7 +132,6 @@ export default {
   watch: {
     layerId: function(newVal, oldVal) {
       let layer = document.querySelector("#" + newVal);
-      console.log(layer);
       if (layer != null) {
         this.layerInitWidth = layer.offsetWidth;
         this.layerInitHeight = layer.offsetHeight;

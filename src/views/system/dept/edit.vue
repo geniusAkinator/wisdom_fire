@@ -54,7 +54,7 @@
 
 <script>
 import Treeselect from "@riophae/vue-treeselect";
-import { treeselect, addDept, getDept } from "@/api/system/dept";
+import { treeselect, updateDept, getDept } from "@/api/system/dept";
 export default {
   data() {
     return {
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      addDept(this.form).then(response => {
+      updateDept(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();

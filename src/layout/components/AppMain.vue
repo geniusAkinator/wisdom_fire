@@ -1,8 +1,8 @@
 <template>
-  <section class="app-main">
+  <section class="app-main" :style="{top:isFirst?'90px':'140px'}">
     <transition name="fade-transform" mode="out-in">
       <!-- <keep-alive :include="cachedViews"> -->
-        <router-view :key="key" />
+      <router-view :key="key" />
       <!-- </keep-alive> -->
     </transition>
   </section>
@@ -11,6 +11,11 @@
 <script>
 export default {
   name: "AppMain",
+  data() {
+    return {
+      isFirst: true
+    };
+  },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews;
@@ -18,11 +23,28 @@ export default {
     key() {
       return this.$route.path;
     }
+  },
+  watch: {
+    $route: function(newVal, oldVal) {
+      this.isFirst = this.isDashboard(newVal);
+    }
+  },
+  methods: {
+    isDashboard(route) {
+      const name = route && route.name;
+      if (!name) {
+        return false;
+      }
+      return name.trim() === "首页";
+    }
+  },
+  mounted() {
+    this.isFirst = this.isDashboard(this.$route);
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .app-main {
   /* 50= navbar  50  */
   width: 100%;
@@ -31,7 +53,7 @@ export default {
   position: absolute;
   overflow-y: scroll;
   bottom: 0;
-  top: 90px;
+  top: 140px;
 }
 
 .fixed-header + .app-main {
@@ -41,7 +63,7 @@ export default {
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 40 */
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 140px);
   }
 
   .fixed-header + .app-main {

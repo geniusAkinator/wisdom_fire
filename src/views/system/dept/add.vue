@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      updateDept(this.form).then(response => {
+      addDept(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
           this.$parent.getList();

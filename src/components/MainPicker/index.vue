@@ -48,55 +48,58 @@
 </template>
 
 <script>
+import { listDept } from "@/api/system/dept";
+import { listFactory } from "@/api/main/factory";
+
 export default {
   data() {
     return {
       keyword: "",
       mainList: [
-        {
-          id: "1",
-          label: "阿米华晟代理商",
-          isCollapsed: true,
-          children: [
-            {
-              id: "2",
-              label: "AAA工厂",
-              checked: false
-            },
-            {
-              id: "3",
-              label: "BBB工厂",
-              checked: false
-            },
-            {
-              id: "4",
-              label: "CCC工厂",
-              checked: false
-            }
-          ]
-        },
-        {
-          id: "1",
-          label: "阿米华晟代理商",
-          isCollapsed: true,
-          children: [
-            {
-              id: "2",
-              label: "AAA工厂",
-              checked: false
-            },
-            {
-              id: "3",
-              label: "BBB工厂",
-              checked: false
-            },
-            {
-              id: "4",
-              label: "CCC工厂",
-              checked: false
-            }
-          ]
-        }
+        // {
+        //   id: "1",
+        //   label: "阿米华晟代理商",
+        //   isCollapsed: true,
+        //   children: [
+        //     {
+        //       id: "2",
+        //       label: "AAA工厂",
+        //       checked: false
+        //     },
+        //     {
+        //       id: "3",
+        //       label: "BBB工厂",
+        //       checked: false
+        //     },
+        //     {
+        //       id: "4",
+        //       label: "CCC工厂",
+        //       checked: false
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "1",
+        //   label: "阿米华晟代理商",
+        //   isCollapsed: true,
+        //   children: [
+        //     {
+        //       id: "2",
+        //       label: "AAA工厂",
+        //       checked: false
+        //     },
+        //     {
+        //       id: "3",
+        //       label: "BBB工厂",
+        //       checked: false
+        //     },
+        //     {
+        //       id: "4",
+        //       label: "CCC工厂",
+        //       checked: false
+        //     }
+        //   ]
+        // }
       ]
     };
   },
@@ -133,9 +136,55 @@ export default {
     },
     jump() {
       this.$router.push({
-        name: "平台主体"
+        name: "Factory"
       });
     }
+  },
+  mounted() {
+    let flist = [];
+    listFactory()
+      .then(response => {
+        if (response.code === 200) {
+          flist = response.rows;
+          console.log(flist);
+          return listDept();
+        }
+      })
+      .then(response => {
+        if (response.code === 200) {
+          let dlist = response.data[0].children;
+          dlist.map((item, i) => {
+            console.log(item);
+            let temp = {};
+            temp.id = item.deptId;
+            temp.label = item.deptName;
+            temp.isCollapsed = true;
+            temp.children = [];
+            console.log();
+            item.children.map((citem, k) => {
+              flist.map((fitem, j) => {
+                if (fitem.deptId == citem.deptId) {
+                  let temp2 = {};
+                  temp2.id = fitem.factoryId;
+                  temp2.label = fitem.factoryName;
+                  temp2.checked = false;
+                  temp.children.push(temp2);
+                }
+              });
+            });
+            flist.map((fitem, j) => {
+              if (fitem.deptId == item.deptId) {
+                let temp2 = {};
+                temp2.id = fitem.factoryId;
+                temp2.label = fitem.factoryName;
+                temp2.checked = false;
+                temp.children.push(temp2);
+              }
+            });
+            this.mainList.push(temp);
+          });
+        }
+      });
   }
 };
 </script>

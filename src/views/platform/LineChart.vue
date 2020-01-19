@@ -19,22 +19,64 @@ export default {
       this.myCharts.resize();
     }
   },
+  props: {
+    chartData: {
+      type: Object,
+      deep: true
+    }
+  },
   mounted() {
-    this.myCharts = echarts.init(document.getElementById(`${this.id}`));
-
+    let _this = this;
+    _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
+    let colorList = ["rgba(3, 187, 180", "rgba(4,126,216"];
+    let _series = [];
+    console.log(_this.chartData.ydata[0]);
+    for (let i = 0; i < _this.chartData.ydata.length; i++) {
+      _series.push({
+        name: _this.chartData.legend[i],
+        data: _this.chartData.ydata[i],
+        type: "line",
+        smooth: true,
+        color: colorList[i] + ")",
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: colorList[i] + ", 0.3)"
+                },
+                {
+                  offset: 0.8,
+                  color: colorList[i] + ", 0)"
+                }
+              ],
+              false
+            ),
+            shadowColor: "rgba(0, 0, 0, 0.1)",
+            shadowBlur: 10
+          }
+        }
+      });
+    }
     let option = {
       legend: {
-        data: ["隐患总数", "已解决数"],
+        data: _this.chartData.legend,
         textStyle: {
           color: "#ccc"
         },
-        left: "right"
+        x: "right",
+        y: "15%"
       },
       color: ["#fff"],
       xAxis: {
         type: "category",
         boundaryGap: false,
-        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        data: _this.chartData.xdata,
         axisLabel: {
           textStyle: {
             color: "#fff"
@@ -57,71 +99,14 @@ export default {
         },
         splitLine: { show: false } //隐藏网格
       },
-      series: [
-        {
-          name: "隐患总数",
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          type: "line",
-          smooth: true,
-          color: "rgba(3, 187, 180" + ")",
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: "rgba(3, 187, 180" + ", 0.8)"
-                  },
-                  {
-                    offset: 0.8,
-                    color: "rgba(3, 187, 180" + ", 0)"
-                  }
-                ],
-                false
-              ),
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 10
-            }
-          }
-        },
-        {
-          name: "已解决数",
-          data: [100, 100, 100, 100, 100, 100, 100],
-          type: "line",
-          smooth: true,
-          color: "rgba(4,126,216" + ")",
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: "rgba(4,126,216" + ", 0.3)"
-                  },
-                  {
-                    offset: 0.8,
-                    color: "rgba(4,126,216" + ", 0)"
-                  }
-                ],
-                false
-              ),
-              shadowColor: "rgba(0, 0, 0, 0.1)",
-              shadowBlur: 10
-            }
-          }
-        }
-      ]
+      series: _series
     };
-    this.myCharts.setOption(option);
-    window.addEventListener("resize", this.resizeChart);
+    _this.myCharts.setOption(option);
+    window.addEventListener("resize", _this.resizeChart);
+  },
+
+  beforeDestroy() {
+    this.myCharts.clear();
   }
 };
 </script>

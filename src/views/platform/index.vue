@@ -69,7 +69,26 @@
         <div class="item-title">隐患处理情况</div>
         <el-row>
           <el-col :span="24" style="height:100%">
-            <my-echart-line></my-echart-line>
+            <el-radio-group v-model="labelHazard" class="hazard_btn_group" size="small">
+              <el-radio-button label="weekly">近7天</el-radio-button>
+              <el-radio-button label="monthly">近30天</el-radio-button>
+              <el-radio-button label="yearly">近1年</el-radio-button>
+            </el-radio-group>
+            <my-echart-line
+              :chartData="weekData"
+              key="weekData-chart"
+              v-if="labelHazard == 'weekly'&&weekData.ydata.length > 0"
+            ></my-echart-line>
+            <my-echart-range
+              :chartData="monthData"
+              key="monthData-chart"
+              v-if="labelHazard == 'monthly'&&monthData.ydata.length > 0"
+            ></my-echart-range>
+            <my-echart-line
+              :chartData="yearData"
+              key="yearData-chart"
+              v-if="labelHazard == 'yearly'&&yearData.ydata.length > 0"
+            ></my-echart-line>
           </el-col>
         </el-row>
       </div>
@@ -83,11 +102,14 @@ import MyEchartGauge from "@/views/platform/GaugeChart";
 import MyEchartRose from "@/views/platform/RoseChart";
 import MyEchartLine from "@/views/platform/LineChart";
 import MyEchartMap from "@/views/platform/MapChart";
+import MyEchartRange from "@/views/platform/RangeChart";
+
 import CountTo from "vue-count-to";
 
 export default {
   data() {
     return {
+      labelHazard: "weekly",
       hazardData: [
         {
           id: 1,
@@ -177,7 +199,44 @@ export default {
         { value: 15, name: "电气" },
         { value: 25, name: "水深" }
       ],
-      resData: [{ value: 10, name: "水位不够" }, { value: 5, name: "水压低" }]
+      resData: [
+        { value: 10, name: "水位不够" },
+        { value: 5, name: "水压低" }
+      ],
+      weekData: {
+        legend: ["隐患总数", "已解决数"],
+        xdata: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], //横坐标的值
+        ydata: [
+          [820, 932, 901, 934, 1290, 1330, 1320],
+          [100, 100, 100, 100, 100, 100, 100]
+        ] //纵坐标的值
+      },
+      monthData: {
+        legend: ["隐患总数", "已解决数"],
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
+      },
+      yearData: {
+        legend: ["隐患总数", "已解决数"],
+        xdata: [
+          "一月",
+          "二月",
+          "三月",
+          "四月",
+          "五月",
+          "六月",
+          "七月",
+          "八月",
+          "九月",
+          "十月",
+          "十一月",
+          "十二月"
+        ], //横坐标的值
+        ydata: [
+          [820, 932, 901, 934, 1290, 1330, 1320, 901, 934, 1290, 1330, 1320],
+          [901, 934, 1290, 1330, 1320, 100, 100, 100, 290, 1330, 1320, 100]
+        ] //纵坐标的值
+      }
     };
   },
   components: {
@@ -185,16 +244,17 @@ export default {
     MyEchartRose,
     MyEchartLine,
     MyEchartMap,
+    MyEchartRange,
     CountTo
   }
 };
 </script>
 
 <style lang="scss">
-$bgColor: #07133d;
+$bgColor: #041a49;
 $font-color: #888;
 $item-bgColor: rgba(
-  $color: lighten($bgColor, 5%),
+  $color: lighten($bgColor, 20%),
   $alpha: 0.5
 );
 $item-alpha: 0.5;
@@ -205,7 +265,7 @@ $left-item-bottom: 30px;
 $top-item-width: 500px;
 $top-item-height: 100px;
 $top-item-top: 30px;
-$border-radius: 0;
+$border-radius: 4px;
 @mixin border-radius($radius) {
   border-radius: $radius;
   -ms-border-radius: $radius;
@@ -254,18 +314,22 @@ $border-radius: 0;
       .echart-top-item {
         height: 50%;
         font-size: 30px;
+        line-height: 50px;
         color: #fff;
         overflow: hidden;
         .top-item-title {
           float: left;
+          color: #addbf3;
         }
         .card-panel-num {
           float: left;
+          color: #1ea3b6;
         }
       }
       .top-item-title {
         display: block;
-        line-height: 100%;
+        margin-left: 100px;
+        margin-right: 20px;
       }
     }
     .platform-right {
@@ -277,6 +341,19 @@ $border-radius: 0;
       height: 33.3%;
       position: relative;
       overflow: hidden;
+      .hazard_btn_group {
+        position: absolute;
+        z-index: 99;
+        top: 5px;
+        right: 10px;
+        height: 28px;
+        .el-radio-button--small .el-radio-button__inner {
+          padding: 7px 15px;
+        }
+        .el-radio-button__inner {
+          height: 28px;
+        }
+      }
       .item-title {
         position: absolute;
         padding: 0 20px;

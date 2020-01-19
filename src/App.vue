@@ -254,5 +254,49 @@ export default {
   height: auto;
 }
 
+#tags-view-container
+  .el-tabs--card
+  > .el-tabs__header
+  .el-tabs__item.is-active {
+  border-bottom-color: #dfe4ed;
+}
 
+#tags-view-container .el-tabs__header {
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 5px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
+}
+
+.app-main ::-webkit-scrollbar-track {
+  box-shadow: 1px 1px 5px rgba(255, 255, 255, 0.2) inset;
+}
+
+.app-main ::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2) inset;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 </style>

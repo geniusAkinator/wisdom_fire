@@ -7,12 +7,15 @@
       @toggleClick="toggleSideBar"
     />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
+    <ul class="left-menu">
+      <li @click="toggleMain">切换主体</li>
+    </ul>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <div class="right-menu-item hover-effect">
-          <svg-icon class-name="international-icon" icon-class="international" @click="jump" />
+          <svg-icon class-name="board-icon" icon-class="board" @click="jump" />
         </div>
         <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -43,7 +46,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
@@ -51,7 +53,6 @@ import Search from "@/components/HeaderSearch";
 
 export default {
   components: {
-    Breadcrumb,
     Hamburger,
     Screenfull,
     SizeSelect,
@@ -72,6 +73,9 @@ export default {
     }
   },
   methods: {
+    toggleMain() {
+      this.$emit("parentDrawerChange","");
+    },
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },
@@ -124,7 +128,20 @@ export default {
     display: inline-block;
     vertical-align: top;
   }
-
+  .left-menu {
+    float: left;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 18px;
+    height: 100%;
+    line-height: 50px;
+    color: #5a5e66;
+    font-size: 14px;
+    li {
+      cursor: pointer;
+    }
+  }
   .right-menu {
     float: right;
     height: 100%;
