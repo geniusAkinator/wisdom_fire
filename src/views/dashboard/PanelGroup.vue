@@ -3,13 +3,13 @@
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
         <i class="el-icon-user"></i>
-        <router-link class="item" :to="'factory'">
+        <router-link class="item" :to="'/main/factory'">
           <div>
             工厂总数:
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
-        <router-link class="item" :to="'member'">
+        <router-link class="item" :to="'/team/department'">
           <div>
             人员总数:
             <span>55</span>
@@ -37,9 +37,9 @@
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
         <i class="el-icon-circle-close"></i>
-        <router-link class="item" :to="''">
+        <router-link class="item" :to="'/hazard/overview'">
           <div>
-            故障总数:
+            隐患总数:
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>

@@ -190,14 +190,18 @@ export default {
     },
     jump(index, item) {
       this.$router.push({
-        name: "工厂管理"
+        name: "FactoryDetail",
+        params: { id: item.id }
       });
-      setTimeout(() => {
-        this.$router.push({
-          name: "工厂详情",
-          params: { fId: item.factoryId }
-        });
-      }, 600);
+      // this.$router.push({
+      //   name: "工厂管理"
+      // });
+      // setTimeout(() => {
+      //   this.$router.push({
+      //     name: "工厂详情",
+      //     params: { fId: item.factoryId }
+      //   });
+      // }, 600);
     }
   },
   created() {},

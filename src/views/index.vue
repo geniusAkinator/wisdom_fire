@@ -95,6 +95,7 @@
                     v-for="(item,index) in logList"
                     :timestamp="parseTime(item.operTime)"
                     placement="top"
+                    :key="index"
                   >
                     <el-card shadow="hover">
                       <h4>{{item.title}}</h4>

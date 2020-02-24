@@ -11,10 +11,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所属工厂">
+      <el-form-item label="工厂名称">
         <el-select
           v-model="form.deptId"
-          placeholder="请选择所属工厂"
+          placeholder="请选择工厂名称"
           @change="handleSelectFactory($event)"
         >
           <el-option
@@ -25,9 +25,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="工厂地址" prop="address">
-        <el-input v-model="form.address" placeholder="请输入工厂地址" />
-      </el-form-item>
+
       <el-form-item label="工厂类型">
         <el-select v-model="form.factoryType" placeholder="请选择工厂类型">
           <el-option
@@ -37,6 +35,17 @@
             :value="dict.dictValue"
           />
         </el-select>
+      </el-form-item>
+
+      <el-form-item label="LOGO" prop="picture" class="readonly">
+        <el-input v-model="form.picture" placeholder="请输入LOGO" readonly />
+        <my-image-picker :multiple="false" @sendImage="getImage"></my-image-picker>
+      </el-form-item>
+      <el-form-item label="省市区" prop="province">
+        <my-city-picker @sendPCD="getPCD"></my-city-picker>
+      </el-form-item>
+      <el-form-item label="工厂地址" prop="address">
+        <el-input v-model="form.address" placeholder="请输入工厂地址" />
       </el-form-item>
       <el-form-item label="经纬度" prop="pos">
         <el-row class="form-map-picker">
@@ -78,13 +87,6 @@
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号" />
-      </el-form-item>
-      <el-form-item label="LOGO" prop="picture" class="readonly">
-        <el-input v-model="form.picture" placeholder="请输入LOGO" readonly />
-        <my-image-picker :multiple="false" @sendImage="getImage"></my-image-picker>
-      </el-form-item>
-      <el-form-item label="省市区" prop="province">
-        <my-city-picker @sendPCD="getPCD"></my-city-picker>
       </el-form-item>
       <el-form-item label="座机号" prop="tel">
         <el-input v-model="form.tel" placeholder="请输入座机号" />

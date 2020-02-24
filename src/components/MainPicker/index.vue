@@ -50,57 +50,11 @@
 <script>
 import { listDept } from "@/api/system/dept";
 import { listFactory } from "@/api/main/factory";
-
 export default {
   data() {
     return {
       keyword: "",
-      mainList: [
-        // {
-        //   id: "1",
-        //   label: "阿米华晟代理商",
-        //   isCollapsed: true,
-        //   children: [
-        //     {
-        //       id: "2",
-        //       label: "AAA工厂",
-        //       checked: false
-        //     },
-        //     {
-        //       id: "3",
-        //       label: "BBB工厂",
-        //       checked: false
-        //     },
-        //     {
-        //       id: "4",
-        //       label: "CCC工厂",
-        //       checked: false
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "1",
-        //   label: "阿米华晟代理商",
-        //   isCollapsed: true,
-        //   children: [
-        //     {
-        //       id: "2",
-        //       label: "AAA工厂",
-        //       checked: false
-        //     },
-        //     {
-        //       id: "3",
-        //       label: "BBB工厂",
-        //       checked: false
-        //     },
-        //     {
-        //       id: "4",
-        //       label: "CCC工厂",
-        //       checked: false
-        //     }
-        //   ]
-        // }
-      ]
+      mainList: []
     };
   },
   methods: {
@@ -124,15 +78,11 @@ export default {
       );
     },
     handleSelectFactory(idx1, idx2, item) {
-      this.$emit("send", "");
       this.$router.push({
-        name: "工厂管理"
+        name: "FactoryDetail",
+        params: { id: item.id }
       });
-      setTimeout(() => {
-        this.$router.push({
-          name: "工厂详情"
-        });
-      }, 600);
+      this.$emit("send", "");
     },
     jump() {
       this.$router.push({
@@ -154,13 +104,11 @@ export default {
         if (response.code === 200) {
           let dlist = response.data[0].children;
           dlist.map((item, i) => {
-            console.log(item);
             let temp = {};
             temp.id = item.deptId;
             temp.label = item.deptName;
             temp.isCollapsed = true;
             temp.children = [];
-            console.log();
             item.children.map((citem, k) => {
               flist.map((fitem, j) => {
                 if (fitem.deptId == citem.deptId) {

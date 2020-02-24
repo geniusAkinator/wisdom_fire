@@ -77,7 +77,9 @@ export default {
     handleShowDrawer() {
       this.drawer = true;
     },
-    handleCloseDrawer() {},
+    handleCloseDrawer() {
+      this.drawer = false;
+    },
     handleBeforeClose(done) {
       done();
     }

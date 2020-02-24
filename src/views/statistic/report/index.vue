@@ -51,19 +51,19 @@
           ></el-pagination>
         </div>
       </div>
-    </el-card> -->
+    </el-card>-->
     <el-card class="box-card" shadow="hover">
       <div slot="header" class="clearfix">
-        <span>3.隐患</span>
+        <span>2.隐患</span>
       </div>
       <div class="text item">
         <p class="statistics">{{nowYear}}年{{nowMonth?nowMonth:12}}月安中云共发现隐患38起，完成隐患维修1起，平均维修时间7小时。</p>
-        <div id="hazard_chart"></div>
+        <my-echart-bar style="height:400px;"></my-echart-bar>
       </div>
     </el-card>
     <el-card class="box-card" shadow="hover">
       <div slot="header" class="clearfix">
-        <span>4.人员统计</span>
+        <span>3.人员统计</span>
       </div>
       <div class="text item">
         <p
@@ -71,10 +71,10 @@
         >{{nowYear}}年{{nowMonth?nowMonth:12}}月共有8人参与到安中云日常管理中，所有工作人员共在云平台中处理故障5次，处理隐患2次。</p>
         <el-table stripe border :data="tableData" align="center" style="width: 100%">
           <el-table-column prop="name" label="人员姓名"></el-table-column>
-          <el-table-column prop="name" label="处理故障"></el-table-column>
-          <el-table-column prop="name" label="处理隐患"></el-table-column>
+          <el-table-column prop="errCount" label="处理故障"></el-table-column>
+          <el-table-column prop="hazardCount" label="处理隐患"></el-table-column>
         </el-table>
-        <div class="pagination">
+        <!-- <div class="pagination">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -85,36 +85,43 @@
             layout="prev,pager,next,jumper,total,sizes"
             :total="400"
           ></el-pagination>
-        </div>
+        </div> -->
       </div>
     </el-card>
     <el-card class="box-card" shadow="hover">
       <div slot="header" class="clearfix">
-        <span>5.服务统计</span>
+        <span>4.服务统计</span>
       </div>
       <div class="text item">
         <p
           class="statistics"
-        >{{nowYear}}年{{nowMonth?nowMonth:12}}月共使用应用内推送234次，使用短信23条，我们将继续结成为您提供优质的服务。</p>
+        >{{nowYear}}年{{nowMonth?nowMonth:12}}月共使用应用内推送{{this.appCount}}次，使用短信{{this.msgCount}}条，我们将继续结成为您提供优质的服务。</p>
       </div>
     </el-card>
   </div>
 </template>
 <script>
 import MySearchTool from "@/components/SearchTool/index";
+import MyEchartBar from "@/views/statistic/report/BarChart";
+import {
+  getCount,
+  getHazardCount,
+  getServiceCount
+} from "@/api/statistic/report";
 export default {
   data() {
     return {
       rcharts: {},
       bcharts: {},
       hcharts: {},
-      nowMonth: 0,
       isPaging: true,
       currentPage: 0,
       tableData: [],
       datetime: "",
       nowYear: 2019,
       nowMonth: 1,
+      appCount: 0,
+      msgCount: 0,
       pickerOptions: {
         disabledDate: time => {
           return time.getTime() > new Date();
@@ -132,206 +139,91 @@ export default {
       let m = dtime.split("-")[1];
       this.nowYear = y;
       this.nowMonth = m;
-      this.initRateChart();
     }
   },
   methods: {
     handleSelect() {},
     handleSizeChange() {},
     handleCurrentChange() {},
-    resizeRateChart() {
-      this.rcharts.resize();
-    },
-    resizeBreakdownChart() {
-      this.bcharts.resize();
-    },
-    resizeHazardChart() {
-      this.hcharts.resize();
-    },
-    initRateChart() {
-      this.rcharts = echarts.init(document.getElementById(`rate_chart`));
-      let nYear = this.nowYear;
-      let nMonth = this.nowMonth;
-      let base = new Date(nYear, nMonth, 0);
-      let now = {};
-      if (nMonth) {
-        now = new Date(nYear, nMonth - 1, 0);
-      } else {
-        now = new Date(nYear - 1, 11, 0);
-      }
-      let date = []; //时间轴
-      let data = [Math.random() * 300]; //纵坐标（值）
-      let days = base.getDate(); //获取天数
-      for (var i = 1; i <= days; i++) {
-        now.setDate(now.getDate() + 1);
-        date.push([now.getDate() < 10 ? "0" + now.getDate() : now.getDate()]);
-        data.push(Math.round(Math.random() * 20 + 10));
-      }
-      let option = {
-        tooltip: {
-          trigger: "axis",
-          position: function(pt) {
-            return [pt[0], "10%"];
-          }
-        },
-        legend: {
-          data: ["安全评分"]
-        },
-        title: {
-          left: "left",
-          text: "消防安全评分"
-        },
-        toolbox: {
-          feature: {
-            dataZoom: {
-              yAxisIndex: "none"
-            },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: date
-        },
-        yAxis: {
-          type: "value",
-          boundaryGap: [0, "100%"]
-        },
-        dataZoom: [
-          {
-            type: "inside",
-            start: 0,
-            end: 100
-          },
-          {
-            start: 0,
-            end: 10,
-            handleIcon:
-              "M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z",
-            handleSize: "80%",
-            handleStyle: {
-              color: "#fff",
-              shadowBlur: 3,
-              shadowColor: "rgba(0, 0, 0, 0.6)",
-              shadowOffsetX: 2,
-              shadowOffsetY: 2
-            }
-          }
-        ],
-        series: [
-          {
-            name: "安全评分",
-            type: "line",
-            smooth: false,
-            symbol: "none",
-            sampling: "average",
-            itemStyle: {
-              color: "rgb(255, 70, 131)"
-            },
-            data: data
-          }
-        ]
-      };
-      this.rcharts.setOption(option);
-      window.addEventListener("resize", this.resizeRateChart);
-    },
-    initBreakdownChart() {
-      this.bcharts = echarts.init(document.getElementById(`breakdown_chart`));
-      let option = {
-        legend: {},
-        tooltip: {},
-        title: {
-          left: "left",
-          text: "故障统计"
-        },
-        dataset: {
-          dimensions: ["name", "上月", "本月"],
-          source: [
-            {
-              name: "故障",
-              上月: 43.3,
-              本月: 85.8
-            },
-            { name: "忽略故障", 上月: 83.1, 本月: 73.4 },
-            {
-              name: "复位故障",
-              上月: 86.4,
-              本月: 65.2
-            },
-            {
-              name: "维修故障",
-              上月: 72.4,
-              本月: 53.9
-            }
-          ]
-        },
-        xAxis: { type: "category" },
-        yAxis: {},
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
-        series: [{ type: "bar" }, { type: "bar" }, { type: "bar" }]
-      };
-
-      this.bcharts.setOption(option);
-      // window.addEventListener("resize", this.resizeBreakdownChart);
-    },
-    initHazardChart() {
-      this.hcharts = echarts.init(document.getElementById(`hazard_chart`));
-      let option = {
-        legend: {},
-        tooltip: {},
-        title: {
-          left: "left",
-          text: "隐患统计"
-        },
-        dataset: {
-          dimensions: ["name", "上月", "本月"],
-          source: [
-            {
-              name: "隐患",
-              上月: 43.3,
-              本月: 85.8
-            },
-            { name: "忽略隐患", 上月: 83.1, 本月: 73.4 },
-            {
-              name: "复位隐患",
-              上月: 86.4,
-              本月: 65.2
-            },
-            {
-              name: "解决隐患",
-              上月: 72.4,
-              本月: 53.9
-            }
-          ]
-        },
-        xAxis: { type: "category" },
-        yAxis: {},
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
-        series: [{ type: "bar" }, { type: "bar" }, { type: "bar" }]
-      };
-      this.hcharts.setOption(option);
-      window.addEventListener("resize", this.resizeHazardChart);
-    },
     initPreMonth() {
       let nowDate = new Date();
       let nYear = nowDate.getFullYear();
-      let nMonth = nowDate.getMonth();
+      let nMonth = nowDate.getMonth() + 1;
       this.nowYear = nYear;
       this.nowMonth = nMonth;
     }
   },
   mounted() {
     this.initPreMonth();
-    this.initRateChart();
-    // this.initBreakdownChart();
-    this.initHazardChart();
+    if (this.datetime == "") {
+      this.datetime = this.nowYear + "-" + this.nowMonth;
+    }
+
+    getCount({ datetime: this.datetime + "-1" }).then(response => {
+      if (response.code == 200) {
+        console.log(response);
+        let _data = response.rows;
+        let _tableData = [];
+        _data.map((item, i) => {
+          let temp = {};
+
+          if (i == 0) {
+            temp.name = item.name;
+            if (item.type == "G") {
+              temp.errCount = item.count;
+              temp.hazardCount = 0;
+            } else {
+              temp.hazardCount = item.count;
+              temp.errCount = 0;
+            }
+          } else {
+            _tableData.map((citem, j) => {
+              if (citem.name == item.name) {
+                if (item.type == "G") {
+                  _tableData[j].errCount = item.count;
+                } else {
+                  _tableData[j].hazardCount = item.count;
+                }
+              } else {
+                temp.name = item.name;
+                if (item.type == "G") {
+                  temp.errCount = item.count;
+                  temp.hazardCount = 0;
+                } else {
+                  temp.hazardCount = item.count;
+                  temp.errCount = 0;
+                }
+              }
+            });
+          }
+          if (JSON.stringify(temp) == "{}") {
+            return;
+          }
+          _tableData.push(temp);
+          this.tableData = _tableData;
+        });
+         // this.total = response.total;
+        // this.tableData = response.rows;
+       
+      }
+    });
+
+    getServiceCount({
+      datetime: this.datetime + "-1"
+    }).then(response => {
+      let _data = response.data;
+      _data.map((item, i) => {
+        if (item.type == "app") {
+          this.appCount = item.count;
+        } else if (item.type == "message") {
+          this.msgCount = item.count;
+        }
+      });
+    });
   },
   components: {
-    MySearchTool
+    MySearchTool,
+    MyEchartBar
   }
 };
 </script>

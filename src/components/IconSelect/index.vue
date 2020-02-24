@@ -7,7 +7,7 @@
       clearable
       placeholder="请输入图标名称"
       @clear="filterIcons"
-      @input.native="filterIcons"
+      @input="filterIcons"
       size="small"
     >
       <i slot="suffix" class="el-icon-search el-input__icon" />
@@ -15,7 +15,7 @@
     <div class="icon-list">
       <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
         <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
-        <span>{{ item }}</span>
+        <span :title="item">{{ item }}</span>
       </div>
     </div>
   </div>
@@ -72,11 +72,11 @@ export default {
       margin: 0 0 10px;
       padding: 5px;
       margin-left: 10px;
-      &:nth-child(3n+1){
+      &:nth-child(3n + 1) {
         margin-left: 0;
       }
-      &:hover{
-        background: #F8F9FA
+      &:hover {
+        background: #f8f9fa;
       }
     }
     span {
@@ -85,6 +85,9 @@ export default {
       fill: currentColor;
       overflow: hidden;
       margin-left: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

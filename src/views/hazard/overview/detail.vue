@@ -18,11 +18,11 @@
         <el-col :span="8">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_name">首次上报时间</span>
+              <span class="info_name">上报时间</span>
               <span class="info_value">2019-11-16 13:59:24</span>
             </li>
             <li class="info_item">
-              <span class="info_name">最后上报时间</span>
+              <span class="info_name">更新时间</span>
               <span class="info_value">2019-11-16 13:59:24</span>
             </li>
           </ul>
