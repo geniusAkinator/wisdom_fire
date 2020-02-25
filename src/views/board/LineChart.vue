@@ -36,7 +36,7 @@ export default {
         name: _this.chartData.legend[i],
         data: _this.chartData.ydata[i],
         type: "line",
-        smooth: true,
+        smooth: false,
         color: colorList[i] + ")",
         areaStyle: {
           normal: {
@@ -70,7 +70,8 @@ export default {
           color: "#ccc"
         },
         x: "right",
-        y: "15%"
+        y: "5%",
+        orient:'vertical',
       },
       color: ["#fff"],
       xAxis: {

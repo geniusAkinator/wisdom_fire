@@ -15,7 +15,10 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <div class="right-menu-item hover-effect">
-          <svg-icon class-name="board-icon" icon-class="board" @click="jump" />
+          <svg-icon class-name="board-icon" icon-class="international" @click="doJump" />
+        </div>
+        <div class="right-menu-item hover-effect">
+          <svg-icon class-name="board-icon" icon-class="board" @click="doJumpBoard" />
         </div>
         <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -90,9 +93,14 @@ export default {
         });
       });
     },
-    jump() {
+    doJump() {
       this.$router.push({
         name: "Platform"
+      });
+    },
+    doJumpBoard(){
+      this.$router.push({
+        name: "Board"
       });
     }
   }

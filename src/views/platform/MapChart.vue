@@ -30,7 +30,7 @@ export default {
       axios.get(`static/js/province/${mtype}.json`).then(response => {
         this.myCharts = echarts.init(document.getElementById(`${this.id}`));
         let geoData = response.data;
-        console.log(geoData);
+        // console.log(geoData);
         echarts.registerMap(mtype, geoData);
         var geoCoordMap = {
           台湾: [121.5135, 25.0308],
@@ -108,11 +108,11 @@ export default {
             colorStops: [
               {
                 offset: 0,
-                color: "#0f378f" // 0% 处的颜色
+                color: "#08174b" // 0% 处的颜色 0f378f
               },
               {
                 offset: 1,
-                color: "#00091a" // 100% 处的颜色
+                color: "#08174b" // 100% 处的颜色 00091a
               }
             ],
             globalCoord: false // 缺省为 false
@@ -255,7 +255,6 @@ export default {
         };
         _this.myCharts.setOption(option);
         window.addEventListener("resize", _this.resizeChart);
-
         _this.myCharts.on("click", function(ev) {
           let key = ev.name;
           if (_this.provinceData.has(key)) {
@@ -302,7 +301,7 @@ export default {
     myMap.set("云南", "yunnan");
     myMap.set("浙江", "zhejiang");
     this.provinceData = myMap;
-    console.log(this.provinceData);
+    // console.log(this.provinceData);
     this.initChart();
   }
 };

@@ -194,7 +194,7 @@ export default {
   right: 0;
   left: auto;
   bottom: auto;
-  padding: 2px 20px;
+  padding: 8px 20px;
   border-bottom: 0;
 }
 .box-card .el-carousel {

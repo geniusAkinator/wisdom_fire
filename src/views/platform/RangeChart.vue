@@ -28,14 +28,39 @@ export default {
       let _this = this;
       this.myCharts = echarts.init(document.getElementById(_this.id));
       let _series = [];
+      let colorList = ["rgba(3, 187, 180", "rgba(4,126,216"];
       for (let i = 0, size = _this.chartData.ydata.length; i < size; i++) {
         _series.push({
           name: _this.chartData.legend[i],
           type: "line",
-          smooth: false,
           symbol: "none",
           sampling: "average",
-          data: _this.chartData.ydata[i]
+          data: _this.chartData.ydata[i],
+          smooth: true,
+          color: colorList[i] + ")",
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(
+                0,
+                0,
+                0,
+                1,
+                [
+                  {
+                    offset: 0,
+                    color: colorList[i] + ", 0.3)"
+                  },
+                  {
+                    offset: 0.8,
+                    color: colorList[i] + ", 0)"
+                  }
+                ],
+                false
+              ),
+              shadowColor: "rgba(0, 0, 0, 0.1)",
+              shadowBlur: 10
+            }
+          }
         });
       }
       let option = {
@@ -45,8 +70,20 @@ export default {
             return [pt[0], "10%"];
           }
         },
+        grid: {
+          top: "20%",
+          left: "3%",
+          right: "3%",
+          bottom: "15%",
+          containLabel: true
+        },
         legend: {
-          data: _this.chartData.legend
+          data: _this.chartData.legend,
+          x: "right",
+          y: "12%",
+          textStyle: {
+            color: "#ccc"
+          }
         },
         toolbox: {
           feature: {
@@ -60,10 +97,30 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
+          axisLabel: {
+            textStyle: {
+              color: "#fff"
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#fff" //轴颜色
+            }
+          },
           data: _this.chartData.xdata
         },
         yAxis: {
           type: "value",
+          axisLabel: {
+            textStyle: {
+              color: "#fff"
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#fff" //轴颜色
+            }
+          },
           boundaryGap: [0, "100%"]
         },
         dataZoom: [
@@ -84,6 +141,12 @@ export default {
               shadowColor: "rgba(0, 0, 0, 0.6)",
               shadowOffsetX: 2,
               shadowOffsetY: 2
+            },
+            dataBackground:{
+              
+            },
+            textStyle: {
+              color: "#fff"
             }
           }
         ],
@@ -106,6 +169,6 @@ export default {
 <style>
 .echart {
   width: 100%;
-  height: 400px;
+  height: 100%;
 }
 </style>

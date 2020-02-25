@@ -1,0 +1,64 @@
+<template>
+  <div :id="id" class="echart"></div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      id:
+        "piechart" +
+        Math.random()
+          .toString(36)
+          .substr(-8),
+      myCharts: {}
+    };
+  },
+  props: {
+    data: {}
+  },
+  methods: {
+    resizeChart() {
+      this.myCharts.resize();
+    }
+  },
+  mounted() {
+    this.myCharts = echarts.init(document.getElementById(`${this.id}`));
+    let option = {
+      tooltip: {
+        trigger: "item",
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      color:["#3573fc","#234bf2"],
+      series: [
+        {
+          name: "访问来源",
+          type: "pie",
+          radius: "55%",
+          center: ["50%", "60%"],
+          data: [
+            { value: 335, name: "在线" },
+            { value: 310, name: "离线" }
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)"
+            }
+          }
+        }
+      ]
+    };
+
+    this.myCharts.setOption(option);
+    window.addEventListener("resize", this.resizeChart);
+  }
+};
+</script>
+
+<style>
+.echart {
+  width: 100%;
+  height: 100%;
+}
+</style>

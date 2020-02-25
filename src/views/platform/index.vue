@@ -103,13 +103,12 @@ import MyEchartRose from "@/views/platform/RoseChart";
 import MyEchartLine from "@/views/platform/LineChart";
 import MyEchartMap from "@/views/platform/MapChart";
 import MyEchartRange from "@/views/platform/RangeChart";
-
+import { parseTimeStr, parseTime } from "@/utils/common";
 import CountTo from "vue-count-to";
-
 export default {
   data() {
     return {
-      labelHazard: "weekly",
+      labelHazard: "monthly",
       hazardData: [
         {
           id: 1,
@@ -236,8 +235,47 @@ export default {
           [820, 932, 901, 934, 1290, 1330, 1320, 901, 934, 1290, 1330, 1320],
           [901, 934, 1290, 1330, 1320, 100, 100, 100, 290, 1330, 1320, 100]
         ] //纵坐标的值
-      }
+      },
+      monthList: {}
     };
+  },
+  methods: {
+    filterMonthList() {
+      let d = new Date();
+      let nYear = d.getFullYear(); //当前年
+      let nMonth = d.getMonth() + 1; //当前月
+      let base = new Date(nYear, nMonth, 0);
+      let now = {};
+      if (nMonth) {
+        now = new Date(nYear, nMonth - 1, 0);
+      } else {
+        now = new Date(nYear - 1, 11, 0);
+      }
+      let date = []; //时间轴
+      let data = []; //纵坐标（值）
+      let days = base.getDate(); //获取天数
+      let _map = this.monthList;
+      console.log(_map);
+      for (let i = 1; i <= days; i++) {
+        now.setDate(now.getDate() + 1);
+        // let _date = parseTimeStr(now, this.pattern);
+        // if (_map.has(_date)) {
+        //   data.push(_map.get(_date));
+        // } else {
+        //   data.push(0);
+        // }
+        data.push(Math.floor(Math.random()*10))
+        date.push([
+          now.getDate() < 10 ? "0" + now.getDate() : "" + now.getDate()
+        ]);
+      }
+      console.log(date, data);
+      this.monthData.xdata = date;
+      this.monthData.ydata.push(data);
+    }
+  },
+  mounted() {
+    this.filterMonthList();
   },
   components: {
     MyEchartGauge,
@@ -295,7 +333,6 @@ $border-radius: 4px;
       bottom: $left-item-bottom;
       width: $left-item-width;
       @include border-radius($border-radius);
-      background: $item-bgColor;
       z-index: 11;
       .el-row {
         height: 100%;
@@ -309,7 +346,6 @@ $border-radius: 4px;
       height: $top-item-height;
       margin-left: -$top-item-width / 2;
       @include border-radius($border-radius);
-      background: $item-bgColor;
       z-index: 11;
       .echart-top-item {
         height: 50%;
@@ -319,11 +355,12 @@ $border-radius: 4px;
         overflow: hidden;
         .top-item-title {
           float: left;
-          color: #addbf3;
+          color: #fff;
         }
         .card-panel-num {
           float: left;
-          color: #1ea3b6;
+          color: #fff;
+          font-weight: bold;
         }
       }
       .top-item-title {
