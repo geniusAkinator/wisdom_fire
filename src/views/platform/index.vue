@@ -34,7 +34,7 @@
         </el-row>
       </div>
     </div>
-    <div class="platform-top">
+    <div class="pla-top">
       <div class="echart-top-item">
         <div class="top-item-title">注册单位总数</div>
         <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
@@ -49,7 +49,7 @@
         <div class="item-title">高频隐患类型排名</div>
         <el-row>
           <el-col :span="24" style="height:100%">
-            <my-echart-rose :data="resData"></my-echart-rose>
+            <my-echart-rose :data="typeRankData" :key="rankKey"></my-echart-rose>
           </el-col>
         </el-row>
       </div>
@@ -74,21 +74,13 @@
               <el-radio-button label="monthly">近30天</el-radio-button>
               <el-radio-button label="yearly">近1年</el-radio-button>
             </el-radio-group>
-            <my-echart-line
-              :chartData="weekData"
-              key="weekData-chart"
-              v-if="labelHazard == 'weekly'&&weekData.ydata.length > 0"
-            ></my-echart-line>
+            <my-echart-line :chartData="weekData" :key="weekDataKey" v-if="labelHazard == 'weekly'"></my-echart-line>
             <my-echart-range
               :chartData="monthData"
-              key="monthData-chart"
-              v-if="labelHazard == 'monthly'&&monthData.ydata.length > 0"
+              :key="monthDataKey"
+              v-if="labelHazard == 'monthly'"
             ></my-echart-range>
-            <my-echart-line
-              :chartData="yearData"
-              key="yearData-chart"
-              v-if="labelHazard == 'yearly'&&yearData.ydata.length > 0"
-            ></my-echart-line>
+            <my-echart-line :chartData="yearData" :key="yearDataKey" v-if="labelHazard == 'yearly'"></my-echart-line>
           </el-col>
         </el-row>
       </div>
@@ -104,11 +96,18 @@ import MyEchartLine from "@/views/platform/LineChart";
 import MyEchartMap from "@/views/platform/MapChart";
 import MyEchartRange from "@/views/platform/RangeChart";
 import { parseTimeStr, parseTime } from "@/utils/common";
+import {
+  getWeekly,
+  getMonthly,
+  getYearly,
+  getHazardUnitsRank,
+  getHazardTypesRank
+} from "@/api/platform/platform";
 import CountTo from "vue-count-to";
 export default {
   data() {
     return {
-      labelHazard: "monthly",
+      labelHazard: "weekly",
       hazardData: [
         {
           id: 1,
@@ -147,33 +146,7 @@ export default {
           state: "异常"
         }
       ],
-      rankData: [
-        {
-          id: 1,
-          factoryName: "阿米华晟集团",
-          count: 1
-        },
-        {
-          id: 1,
-          factoryName: "阿米华晟集团",
-          count: 1
-        },
-        {
-          id: 1,
-          factoryName: "阿米华晟集团",
-          count: 1
-        },
-        {
-          id: 1,
-          factoryName: "阿米华晟集团",
-          count: 1
-        },
-        {
-          id: 1,
-          factoryName: "阿米华晟集团",
-          count: 1
-        }
-      ],
+      rankData: [],
       color1: {
         scolor: "#e5790d",
         bcolor: "#fbc795",
@@ -198,17 +171,11 @@ export default {
         { value: 15, name: "电气" },
         { value: 25, name: "水深" }
       ],
-      resData: [
-        { value: 10, name: "水位不够" },
-        { value: 5, name: "水压低" }
-      ],
+      typeRankData: [],
       weekData: {
         legend: ["隐患总数", "已解决数"],
-        xdata: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], //横坐标的值
-        ydata: [
-          [820, 932, 901, 934, 1290, 1330, 1320],
-          [100, 100, 100, 100, 100, 100, 100]
-        ] //纵坐标的值
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
       },
       monthData: {
         legend: ["隐患总数", "已解决数"],
@@ -217,65 +184,156 @@ export default {
       },
       yearData: {
         legend: ["隐患总数", "已解决数"],
-        xdata: [
-          "一月",
-          "二月",
-          "三月",
-          "四月",
-          "五月",
-          "六月",
-          "七月",
-          "八月",
-          "九月",
-          "十月",
-          "十一月",
-          "十二月"
-        ], //横坐标的值
-        ydata: [
-          [820, 932, 901, 934, 1290, 1330, 1320, 901, 934, 1290, 1330, 1320],
-          [901, 934, 1290, 1330, 1320, 100, 100, 100, 290, 1330, 1320, 100]
-        ] //纵坐标的值
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
       },
+      weekDataKey: 1,
+      monthDataKey: 10,
+      yearDataKey: 20,
+      rankKey: 30,
       monthList: {}
     };
   },
   methods: {
-    filterMonthList() {
-      let d = new Date();
-      let nYear = d.getFullYear(); //当前年
-      let nMonth = d.getMonth() + 1; //当前月
-      let base = new Date(nYear, nMonth, 0);
-      let now = {};
-      if (nMonth) {
-        now = new Date(nYear, nMonth - 1, 0);
-      } else {
-        now = new Date(nYear - 1, 11, 0);
-      }
-      let date = []; //时间轴
-      let data = []; //纵坐标（值）
-      let days = base.getDate(); //获取天数
-      let _map = this.monthList;
-      console.log(_map);
-      for (let i = 1; i <= days; i++) {
-        now.setDate(now.getDate() + 1);
-        // let _date = parseTimeStr(now, this.pattern);
-        // if (_map.has(_date)) {
-        //   data.push(_map.get(_date));
-        // } else {
-        //   data.push(0);
-        // }
-        data.push(Math.floor(Math.random()*10))
-        date.push([
-          now.getDate() < 10 ? "0" + now.getDate() : "" + now.getDate()
-        ]);
-      }
-      console.log(date, data);
-      this.monthData.xdata = date;
-      this.monthData.ydata.push(data);
+    getWeeklyList() {
+      getWeekly().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _xdata = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+          let _allList = [...Array(_xdata.length)].map(_ => 0);
+          let _doneList = [...Array(_xdata.length)].map(_ => 0);
+          _xdata.map((xitem, i) => {
+            _data.map((item, j) => {
+              if (xitem == item.weekly && item.state == "2") {
+                _doneList[i] = item.count;
+              }
+              if (xitem == item.weekly) {
+                _allList[i] = _allList[i] + item.count;
+              }
+            });
+          });
+          this.weekData.xdata = _xdata;
+          this.weekData.ydata.push(_allList);
+          this.weekData.ydata.push(_doneList);
+          ++this.weekDataKey;
+        }
+      });
+    },
+    getMonthlyList() {
+      getMonthly().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let d = new Date();
+          let nYear = d.getFullYear(); //当前年
+          let nMonth = d.getMonth() + 1; //当前月
+          let base = new Date(nYear, nMonth, 0);
+          let days = base.getDate(); //获取天数
+          let _xdata = [];
+          let _allList = [];
+          let _doneList = [];
+          for (let i = 1; i <= days; i++) {
+            _xdata.push(i);
+            _allList.push(0);
+            _doneList.push(0);
+          }
+          _xdata.map((xitem, i) => {
+            _data.map((item, j) => {
+              let _day = item.monthly.split("-")[2] * 1;
+              let index = i + 1;
+              if (index == _day && item.state == "2") {
+                _doneList[i] = item.count;
+              }
+              if (index == _day) {
+                _allList[i] = _allList[i] + item.count;
+              }
+            });
+          });
+          this.monthData.xdata = _xdata;
+          this.monthData.ydata.push(_allList);
+          this.monthData.ydata.push(_doneList);
+          ++this.monthDataKey;
+        }
+      });
+    },
+    getYearlyList() {
+      getYearly().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _xdata = [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+          ];
+          let _allList = [...Array(_xdata.length)].map(_ => 0);
+          let _doneList = [...Array(_xdata.length)].map(_ => 0);
+          _xdata.map((xitem, i) => {
+            _data.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month && item.state == "2") {
+                _doneList[i] = item.count;
+              }
+              if (i == _month) {
+                _allList[i] = _allList[i] + item.count;
+              }
+            });
+          });
+          this.yearData.xdata = _xdata;
+          this.yearData.ydata.push(_allList);
+          this.yearData.ydata.push(_doneList);
+          ++this.yearDataKey;
+        }
+      });
+    },
+    getUnitsRankList() {
+      //重大隐患单位排名
+      getHazardUnitsRank().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _list = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.id = i + 1;
+            temp.factoryName = item.factoryName;
+            temp.count = item.count;
+            _list.push(temp);
+          });
+          this.rankData = _list;
+        }
+      });
+    },
+    getTypesRankList() {
+      getHazardTypesRank().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _list = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.name = item.type;
+            temp.value = item.count;
+            _list.push(temp);
+          });
+          console.log(_list);
+          this.typeRankData = _list;
+          ++this.rankKey;
+        }
+      });
     }
   },
   mounted() {
-    this.filterMonthList();
+    this.getWeeklyList();
+    this.getMonthlyList();
+    this.getYearlyList();
+    this.getUnitsRankList();
+    this.getTypesRankList();
   },
   components: {
     MyEchartGauge,
@@ -338,7 +396,7 @@ $border-radius: 4px;
         height: 100%;
       }
     }
-    .platform-top {
+    .pla-top {
       position: absolute;
       left: 50%;
       top: $top-item-top;
@@ -410,7 +468,7 @@ $border-radius: 4px;
           color: #fff !important;
         }
         tr {
-          background: initial;
+          background: initial !important;
           color: #fff;
         }
         .el-table__row:hover td {

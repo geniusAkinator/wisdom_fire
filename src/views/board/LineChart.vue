@@ -71,7 +71,7 @@ export default {
         },
         x: "right",
         y: "5%",
-        orient:'vertical',
+        orient: "vertical"
       },
       color: ["#fff"],
       xAxis: {
@@ -80,12 +80,12 @@ export default {
         data: _this.chartData.xdata,
         axisLabel: {
           textStyle: {
-            color: "#fff"
+            color: "#4c81a9"
           }
         },
         axisLine: {
           lineStyle: {
-            color: "#fff" //轴颜色
+            color: "#4c81a9" //轴颜色
           }
         }
       },
@@ -99,11 +99,24 @@ export default {
       yAxis: {
         type: "value",
         axisLine: {
+          show: false,
           lineStyle: {
-            color: "#fff" //轴颜色
+            color: "#4c81a9" //轴颜色
           }
         },
-        splitLine: { show: false } //隐藏网格
+        axisTick: {
+          lineStyle: {
+            color: ["#143151"]
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ["#143151"],
+            width: 1,
+            type: "solid"
+          }
+        }
       },
       series: _series
     };

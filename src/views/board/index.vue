@@ -1,9 +1,52 @@
 <template>
   <div class="container dark">
     <div class="platform-top">
-        <div class="el-col el-col-9"></div>
-        <div class="el-col el-col-6"></div>
-        <div class="el-col el-col-9"></div>
+      <div class="el-col el-col-7">
+        <div class="platform-top-left"></div>
+      </div>
+      <div class="el-col el-col-10" style="position:relative">
+        <div class="top-title">
+          <span class="main_title">安中云数据平台</span>
+          <span class="date_time">{{nowDate}}</span>
+        </div>
+        <div class="rectangle_left"></div>
+        <div class="rectangle_right"></div>
+        <div class="square left">
+          <div v-for="i in 15"></div>
+        </div>
+        <div class="square right">
+          <div v-for="i in 15"></div>
+        </div>
+        <div class="gradient_line"></div>
+      </div>
+      <div class="el-col el-col-7">
+        <div class="platform-top-right">
+          <div class="platform-dropdown">
+            <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                负责建筑
+                <i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item>狮子头</el-dropdown-item>
+                <el-dropdown-item>螺蛳粉</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>/
+            <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                管理员
+                <i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>AAA</el-dropdown-item>
+                <el-dropdown-item>BBB</el-dropdown-item>
+                <el-dropdown-item>CCC</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </div>
+      </div>
     </div>
     <el-row :gutter="10" class="platform-box">
       <el-col :span="6" id="platform-left">
@@ -16,87 +59,111 @@
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">健康指数</div>
-          <div id="dashboard"></div>
+          <div class="box-item-title">
+            <span class="title">健康指数</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
+          <el-row style="width:100%">
+            <el-col :span="12" style="height:100%">
+              <my-echart-meter></my-echart-meter>
+            </el-col>
+            <el-col :span="12" style="height:100%">
+              <div class="count">
+                <div class="count_item danger">
+                  <svg-icon class-name="count-icon" icon-class="info" />
+                  <span>隐患</span>
+                  <span class="num">(02)</span>
+                </div>
+                <div class="count_item error">
+                  <svg-icon class-name="count-icon" icon-class="error" />
+                  <span>故障</span>
+                  <span class="num">(02)</span>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
         </el-col>
         <el-col :span="24" class="box-item">
           <div class="hightlight_line top_left"></div>
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">处理详情</div>
-          <el-col :span="12">
-            <ul class="platform-list">
-              <li class="platform-item title">今日火警</li>
-              <li class="platform-item">
+          <div class="box-item-title">
+            <span class="title">处理详情</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
+          <div class="detail-box">
+            <ul class="detail-list">
+              <li class="detail-item title">今日火警</li>
+              <li class="detail-item">
                 <i class="el-icon-time"></i>
                 <p>
                   等待处理
                   <span>0</span>个
                 </p>
               </li>
-              <li class="platform-item">
-                <i class="el-icon-time"></i>
-                <p>
-                  等待处理
-                  <span>0</span>个
-                </p>
-              </li>
-              <li class="platform-item">
+              <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
-                  等待处理
+                  处理中
+                  <span>0</span>个
+                </p>
+              </li>
+              <li class="detail-item">
+                <i class="el-icon-stopwatch"></i>
+                <p>
+                  已完成
                   <span>0</span>个
                 </p>
               </li>
             </ul>
-          </el-col>
-          <el-col :span="12">
-            <ul class="platform-list">
-              <li class="platform-item title">今日火警</li>
-              <li class="platform-item">
+            <ul class="detail-list">
+              <li class="detail-item title">今日火警</li>
+              <li class="detail-item">
                 <i class="el-icon-time"></i>
                 <p>
                   等待处理
                   <span>0</span>个
                 </p>
               </li>
-              <li class="platform-item">
+              <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
-                  等待处理
+                  处理中
                   <span>0</span>个
                 </p>
               </li>
-              <li class="platform-item">
+              <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
-                  等待处理
-                  <span>0</span>个
-                </p>
-              </li>
-              <li class="platform-item">
-                <i class="el-icon-stopwatch"></i>
-                <p>
-                  等待处理
+                  已完成
                   <span>0</span>个
                 </p>
               </li>
             </ul>
-          </el-col>
+          </div>
         </el-col>
         <el-col :span="24" class="box-item">
           <div class="hightlight_line top_left"></div>
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">本日设备正常运行统计</div>
-          <div id="today_chart"></div>
+          <div class="box-item-title">
+            <span class="title">本日设备正常运行统计</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
+          <my-echart-radar></my-echart-radar>
         </el-col>
       </el-col>
       <el-col :span="12">
         <el-col :span="24" class="box-item middle" id="floorBox">
-          <!-- <my-floor :height="floorHeight"></my-floor> -->
+          <my-floor></my-floor>
         </el-col>
         <el-col :span="24" class="box-item" id="tableBox">
           <div class="hightlight_line top_left"></div>
@@ -123,7 +190,12 @@
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">事件处理率</div>
+          <div class="box-item-title">
+            <span class="title">事件处理率</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
           <el-row>
             <el-col :span="12" style="height:100%">
               <my-echart-gauge :color="color1" :data="gauge1"></my-echart-gauge>
@@ -138,7 +210,12 @@
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">监控在线统计</div>
+          <div class="box-item-title">
+            <span class="title">监控在线统计</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
           <my-echart-pie></my-echart-pie>
         </el-col>
         <el-col :span="24" class="box-item">
@@ -146,7 +223,12 @@
           <div class="hightlight_line top_right"></div>
           <div class="hightlight_line bottom_left"></div>
           <div class="hightlight_line bottom_right"></div>
-          <div class="box-item-title">隐患处理情况</div>
+          <div class="box-item-title">
+            <span class="title">隐患处理情况</span>
+            <div class="square_list">
+              <div v-for="i in 5"></div>
+            </div>
+          </div>
           <my-echart-line :chartData="yearData"></my-echart-line>
         </el-col>
       </el-col>
@@ -158,6 +240,9 @@
 import MyEchartGauge from "@/views/board/GaugeChart";
 import MyEchartLine from "@/views/board/LineChart";
 import MyEchartPie from "@/views/board/PieChart";
+import MyEchartMeter from "@/views/board/MeterChart";
+import MyEchartRadar from "@/views/board/RadarChart";
+import MyFloor from "@/views/board/floor";
 export default {
   data() {
     return {
@@ -223,7 +308,6 @@ export default {
       nowDate: "",
       nowTime: "",
       tableHeight: "250",
-      floorHeight: "200",
       color1: {
         scolor: "#e5790d",
         bcolor: "#fbc795",
@@ -272,153 +356,14 @@ export default {
     };
   },
   methods: {
-    resizeChart() {
-      this.resizeFloor();
-    },
-    resizeFloor() {
-      let floor = document.querySelector("#floorBox");
-      let _height = floor.offsetHeight - 95;
-      this.floorHeight = _height;
-      console.log(this.floorHeight);
-    },
-    initTodayChart() {
-      //今日传感器
-      this.tchart = echarts.init(document.getElementById("today_chart"));
-      let option = {
-        radar: {
-          center: ["50%", "70%"],
-          radius: "80%",
-          splitNumber: 8,
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              opacity: 0.2
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              color: "#fff",
-              opacity: 0.2
-            }
-          },
-          splitArea: {
-            areaStyle: {
-              color: "rgba(127,95,132,.3)",
-              opacity: 1,
-              shadowBlur: 45,
-              shadowColor: "rgba(0,0,0,.5)",
-              shadowOffsetX: 0,
-              shadowOffsetY: 15
-            }
-          },
-          indicator: [
-            {
-              name: "气体传感器",
-              max: 6000
-            },
-            {
-              name: "温湿度",
-              max: 16000
-            },
-            {
-              name: "烟感传感器",
-              max: 30000
-            }
-          ]
-        },
-        series: [
-          {
-            type: "radar",
-            symbolSize: 0,
-            areaStyle: {
-              normal: {
-                shadowBlur: 13,
-                shadowColor: "rgba(0,0,0,.2)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 10,
-                opacity: 1
-              }
-            },
-            data: [
-              {
-                value: [2500, 12000, 8000]
-              }
-            ]
-          }
-        ],
-        color: ["#ef4b4c", "#b1eadb"]
-      };
-      this.tchart.setOption(option);
-    },
-    initDashboard() {
-      //仪表盘
-      //   this.bchart = echarts.init(document.getElementById("dashboard"));
-      //   let option = {
-      //     series: [
-      //       {
-      //         name: "高程",
-      //         type: "gauge",
-      //         center: ["50%", "75%"], // 默认全局居中
-      //         radius: "140%", //仪表大小
-      //         startAngle: 180, //开始角度
-      //         endAngle: 0, //结束角度
-      //         min: 0, //最小角度
-      //         max: 100, //最小角度
-      //         axisLine: {
-      //           show: true,
-      //           lineStyle: {
-      //             width: 20, //颜色宽度
-      //             shadowBlur: 0,
-      //             color: [
-      //               [0.2, "#ce244a"],
-      //               [0.6, "#E6A23C"],
-      //               [1, "#2deb69"]
-      //             ]
-      //           }
-      //         },
-      //         axisTick: {
-      //           show: true,
-      //           splitNumber: 2 //刻度
-      //         },
-      //         splitLine: {
-      //           show: true,
-      //           length: 25, //最大刻度长度
-      //           lineStyle: {
-      //             //color:'black'
-      //           }
-      //         },
-      //         axisLabel: {
-      //           textStyle: {
-      //             fontSize: 12,
-      //             fontWeight: ""
-      //           }
-      //         },
-      //         pointer: {
-      //           show: true
-      //         },
-      //         detail: {
-      //           //show:false,
-      //           offsetCenter: [0, 30],
-      //           textStyle: {
-      //             fontSize: 16
-      //           }
-      //         },
-      //         data: [
-      //           {
-      //             name: "",
-      //             value: 50
-      //           }
-      //         ]
-      //       }
-      //     ]
-      //   };
-      //   this.bchart.setOption(option);
-    },
     initDateTime() {
       let date = new Date();
       let _day = date.getDate();
       let year = date.getFullYear();
       let _month = date.getMonth() + 1;
+      let _hour = date.getHours();
+      let _min = date.getMinutes();
+      let _sec = date.getSeconds();
       let week = date.getDay();
       let w = "";
       switch (week) {
@@ -444,34 +389,31 @@ export default {
           w = "星期六";
           break;
       }
-      _day > 10 ? (_day = _day) : (_day = "0" + _day);
-      _month > 10 ? (_month = _month) : (_month = "0" + _month);
-      this.nowDate = `${year}/${_month}/${_day}  ${w}`;
-      setInterval(() => {
-        this.updateTime();
-      }, 1000);
+      _day = this.getNumFormat(_day);
+      _month = this.getNumFormat(_month);
+      _hour = this.getNumFormat(_hour);
+      _min = this.getNumFormat(_min);
+      _sec = this.getNumFormat(_sec);
+      this.nowDate = `${year}-${_month}-${_day} ${_hour}:${_min}:${_sec}  ${w}`;
+      // setInterval(() => {
+      //   this.initDateTime();
+      // }, 1000);
     },
-    updateTime() {
-      let date = new Date();
-      let _hour = date.getHours();
-      let _min = date.getMinutes();
-      // _hour > 10 ? (_hour = _hour) : (_hour = "0" + _hour);
-      _min > 10 ? {} : (_min = "0" + _min);
-      this.nowTime = `${_hour}:${_min}`;
+    getNumFormat(num) {
+      return num > 10 ? num : "0" + num;
     }
   },
   mounted() {
-    this.initTodayChart();
-    this.initDashboard();
     this.initDateTime();
-    this.resizeFloor();
-
     window.addEventListener("resize", this.resizeChart);
   },
   components: {
     MyEchartGauge,
     MyEchartLine,
-    MyEchartPie
+    MyEchartPie,
+    MyEchartMeter,
+    MyEchartRadar,
+    MyFloor
   }
 };
 </script>
@@ -489,69 +431,64 @@ export default {
 }
 .platform-box {
   height: 100%;
+  padding: 0 20px;
 }
 .platform-box > div {
-  height: 100%;
+  height: calc(100% - 60px);
 }
 .box-item {
   height: calc((100% - 100px) / 3);
   margin-top: 10px;
-  box-shadow: inset 0px 0px 10px 2px #0942a1;
+  overflow: hidden;
 }
 .middle {
-  height: calc((200% - 180px) / 3);
+  height: calc((200% - 170px) / 3);
 }
-.platform-list {
+.detail-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.platform-item {
+.detail-item {
   display: flex;
 }
-.platform-item.title {
+.detail-item.title {
   font-weight: bold;
 }
-.platform-item p {
+.detail-item p {
   margin: 0;
   padding: 0;
 }
-#today_chart {
-  width: 100%;
-  height: 100%;
-}
-/* .box-item {
-  border: 1px solid #fff;
-} */
 .box-item {
   padding-left: 0 !important;
   padding-right: 0 !important;
-  background: rgba(8, 27, 83, 0.2);
   position: relative;
   border: 1px solid #1087b1;
+  background-image: radial-gradient(#07133b, #071844, rgba(7, 38, 84, 0.8));
 }
-.platform-list {
-  padding: 10px;
+.detail-list {
+  width: 45%;
+  padding: 10px 20px;
   margin-top: 40px;
   color: #fff;
-  box-shadow: inset 0px 0px 10px 2px #4e3d4f;
+  box-shadow: inset 0px 0px 16px 6px #513c4b;
 }
-.platform-item {
+.detail-item {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
   color: #fff;
   line-height: 25px;
 }
-.platform-item i {
+.detail-item i {
   margin-right: 10px;
   color: #fff;
 }
-.platform-item p {
+.detail-item p {
   color: #fff;
   font-size: 12px;
 }
-.platform-item span {
+.detail-item span {
   font-size: 18px;
   margin-right: 5px;
 }
@@ -564,18 +501,20 @@ export default {
 .platform-table .el-table th {
   padding: 0;
 }
-#dashboard {
-  width: 100%;
-  height: 150px;
-}
 div[id^="rchart"] {
   height: 100%;
   width: 100%;
 }
 .platform-top {
   width: 100%;
-  height: 40px;
   display: flex;
+  margin-bottom: 20px;
+}
+/* .platform-top > div {
+  background: #132962;
+} */
+.top-title {
+  background: #132962;
 }
 .flex-box {
   display: flex;
@@ -607,6 +546,11 @@ div[id^="rchart"] {
   padding: 10px;
   padding-left: 20px;
   font-weight: bold;
+  color: #fff;
+  overflow: hidden;
+}
+.box-item-title span {
+  float: left;
   color: #fff;
 }
 .hightlight_line.top_left {
@@ -641,6 +585,7 @@ div[id^="rchart"] {
   left: 0;
   top: 0;
   opacity: 1;
+  z-index: 10;
 }
 .hightlight_line::after {
   content: "";
@@ -651,6 +596,7 @@ div[id^="rchart"] {
   left: 0;
   top: 0;
   opacity: 1;
+  z-index: 10;
 }
 
 .platform-table.el-table tr {
@@ -667,26 +613,309 @@ div[id^="rchart"] {
 .el-row {
   height: 100%;
 }
+.platform-table.el-table .el-table__row:hover td {
+  background-color: rgba(9, 66, 161, 0.8) !important;
+}
 #floorBox {
   border: 0;
   box-shadow: initial;
+  background: initial;
 }
-.el-table--border {
+.platform-table.el-table--border {
   border: 1px solid #096c7f;
 }
 .platform-table.el-table th.is-leaf,
 .platform-table.el-table td {
   border-bottom: 1px solid #096c7f;
 }
-.el-table--border th,
-.el-table--border td {
+.platform-table.el-table--border th,
+.platform-table.el-table--border td {
   border-right: 1px solid #096c7f;
 }
-.el-table__row:hover {
+.platform-table .el-table__row:hover {
   background: initial;
 }
-.platform-top>div{
-    background: rgba(255, 255, 255, 0.2)
+.count {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.count_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.count_item + .count_item {
+  margin-top: 20px;
+}
+.count_item span {
+  font-size: 20px;
+}
+.count_item.danger .num {
+  color: #e5790d;
+}
+.count_item.error .num {
+  color: #e41f17;
+}
+.count_item .num {
+  margin-left: 10px;
+}
+.count_item .count-icon {
+  font-size: 30px;
+  margin-right: 10px;
+}
+.count_item.danger .count-icon {
+  color: #e5790d;
+}
+.count_item.error .count-icon {
+  color: #e41f17;
+}
+.square.left {
+  position: absolute;
+  left: -320px;
+  top: 60px;
+  z-index: 40;
+}
+.square.right {
+  position: absolute;
+  right: -320px;
+  top: 60px;
+  z-index: 40;
+}
+.square.left > div {
+  background: #fff;
+  width: 8px;
+  height: 15px;
+  float: left;
+  margin-right: 10px;
+  transform: skew(45deg);
+}
+.square.right > div {
+  background: #fff;
+  width: 8px;
+  height: 15px;
+  float: left;
+  margin-right: 10px;
+  transform: skew(-45deg);
+}
+.square.left > div:nth-child(1),
+.square.right > div:nth-child(15) {
+  background: #081944;
+}
+.square.left > div:nth-child(2),
+.square.right > div:nth-child(14) {
+  background: #051d49;
+}
+.square.left > div:nth-child(3),
+.square.right > div:nth-child(13) {
+  background: #092554;
+}
+.square.left > div:nth-child(4),
+.square.right > div:nth-child(12) {
+  background: #012c57;
+}
+.square.left > div:nth-child(5),
+.square.right > div:nth-child(11) {
+  background: #073664;
+}
+.square.left > div:nth-child(6),
+.square.right > div:nth-child(10) {
+  background: #0a3263;
+}
+.square.left > div:nth-child(7),
+.square.right > div:nth-child(9) {
+  background: #073664;
+}
+.square.left > div:nth-child(8),
+.square.right > div:nth-child(8) {
+  background: #064278;
+}
+.square.left > div:nth-child(9),
+.square.right > div:nth-child(7) {
+  background: #025b87;
+}
+.square.left > div:nth-child(10),
+.square.right > div:nth-child(6) {
+  background: #075c95;
+}
+.square.left > div:nth-child(11),
+.square.right > div:nth-child(5) {
+  background: #07659b;
+}
+.square.left > div:nth-child(12),
+.square.right > div:nth-child(4) {
+  background: #0570a6;
+}
+.square.left > div:nth-child(13),
+.square.right > div:nth-child(3) {
+  background: #0375a9;
+}
+.square.left > div:nth-child(14),
+.square.right > div:nth-child(2) {
+  background: #007fb4;
+}
+.square.left > div:nth-child(15),
+.square.right > div:nth-child(1) {
+  background: #0487bf;
+}
+.square_list {
+  float: left;
+  overflow: hidden;
+  margin-left: 20px;
+  padding-left: 8px;
+}
+.square_list > div {
+  background: #fff;
+  width: 8px;
+  height: 15px;
+  float: left;
+  margin-right: 8px;
+  transform: skew(-30deg);
+}
+.square_list > div:first-child {
+  background: #02b6f3;
+}
+.square_list > div:nth-child(2) {
+  background: #019ade;
+}
+.square_list > div:nth-child(3) {
+  background: #0a7fb3;
+}
+.square_list > div:nth-child(4) {
+  background: #006597;
+}
+.square_list > div:nth-child(5) {
+  background: #004776;
+}
+.main_title {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #01bbff;
+  font-size: 30px;
+  font-weight: bold;
+}
+.top-title {
+  padding: 20px 0;
+  position: relative;
+}
+.top-title::before {
+  content: "";
+  position: absolute;
+  top: 40px;
+  right: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  border-bottom: 80px solid #071748;
+  border-left: 80px solid transparent;
+  z-index: 20;
+}
+.top-title::after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 40px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 80px solid #071748;
+  border-right: 80px solid transparent;
+  z-index: 20;
+}
+.date_time {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #4b95c2;
+  font-size: 22px;
+  margin-top: 10px;
+}
+.platform-top-left {
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(to right, #071748, #132962);
+}
+.platform-top-right {
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(to right, #132962, #071748);
+  position: relative;
+}
+.rectangle_left {
+  position: absolute;
+  bottom: -10px;
+  left: 60px;
+  width: 50px;
+  height: 10px;
+  background: #132962;
+  z-index: 10;
+}
+.rectangle_left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  border-bottom: 10px solid #071748;
+  border-left: 10px solid transparent;
+  z-index: 20;
+}
+.rectangle_right {
+  position: absolute;
+  bottom: -10px;
+  right: 60px;
+  width: 50px;
+  height: 10px;
+  background: #132962;
+  z-index: 10;
+}
+.rectangle_right::before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 10px solid #071748;
+  border-right: 10px solid transparent;
+  z-index: 20;
+}
+.detail-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.platform-dropdown {
+  position: absolute;
+  right: 50px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+}
+.platform-dropdown .el-dropdown-link {
+  color: #fff;
+}
+.platform-dropdown .el-icon--right {
+  margin-left: 0;
+}
+.gradient_line {
+  position: absolute;
+  left: 50%;
+  margin-left: -200px;
+  top: 105px;
+  width: 400px;
+  height: 4px;
+  background: -webkit-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
+  background: -o-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
+  background: -moz-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
+  background: -ms-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
 }
 /* 动画 */
 #platform-left {

@@ -49,7 +49,10 @@ export default {
     // var degrees = (15 - value) / 2.5 * 30; //蓝色刻度尺计算
     // // 蓝色背景
     // var num = value / 15;
-    var colorSet = [[0.91, color], [1, bcolor]];
+    var colorSet = [
+      [0.91, color],
+      [1, bcolor]
+    ];
     var rich = {
       white: {
         fontSize: 35,

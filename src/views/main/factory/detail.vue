@@ -136,7 +136,7 @@ export default {
 
 <style lang="scss">
 .factory_detail {
-  background: #1e2d38;
+  background: rgb(48, 65, 86);
   color: #fff;
   .factory_logo {
     .logo_img {

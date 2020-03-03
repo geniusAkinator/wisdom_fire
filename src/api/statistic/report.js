@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 //人员统计
-export function getCount(query) {
+export function getStaffCount(query) {
     return request({
         url: '/system/statistics/analysisList',
         method: 'get',

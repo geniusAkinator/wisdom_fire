@@ -33,30 +33,11 @@ export default {
         text: "隐患统计"
       },
       dataset: {
-        dimensions: ["name", "上月", "本月"],
-        source: [
-          {
-            name: "隐患",
-            上月: 43.3,
-            本月: 85.8
-          },
-          { name: "忽略隐患", 上月: 83.1, 本月: 73.4 },
-          {
-            name: "复位隐患",
-            上月: 86.4,
-            本月: 65.2
-          },
-          {
-            name: "解决隐患",
-            上月: 72.4,
-            本月: 53.9
-          }
-        ]
+        dimensions: _this.data.dimensions,
+        source: _this.data.source
       },
       xAxis: { type: "category" },
       yAxis: {},
-      // Declare several bar series, each will be mapped
-      // to a column of dataset.source by default.
       series: [{ type: "bar" }, { type: "bar" }]
     };
     this.myCharts.setOption(option);
