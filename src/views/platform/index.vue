@@ -1,91 +1,118 @@
 <template>
   <div class="container platform">
-    <div class="platform-left">
-      <div class="echart-item">
-        <div class="item-title">在线统计</div>
-        <el-row>
-          <el-col :span="12" style="height:100%">
-            <my-echart-gauge :color="color1" :data="gauge1"></my-echart-gauge>
-          </el-col>
-          <el-col :span="12" style="height:100%">
-            <my-echart-gauge :color="color2" :data="gauge2"></my-echart-gauge>
-          </el-col>
-        </el-row>
+    <div class="platform-top">
+      <div class="el-col el-col-7">
+        <div class="platform-top-left"></div>
       </div>
-      <div class="echart-item">
-        <div class="item-title">高频异常设备排名</div>
-        <el-row>
-          <el-col :span="24" style="height:100%">
+      <div class="el-col el-col-10" style="position:relative">
+        <div class="platform-top-title">
+          <span class="main_title">数据平台</span>
+        </div>
+      </div>
+      <div class="el-col el-col-7">
+        <div class="platform-top-right"></div>
+      </div>
+    </div>
+    <el-row :gutter="10" class="platform-box">
+      <el-col :span="6">
+        <div class="echart-item">
+          <div class="inner">
+            <div class="item-title">
+              <span>在线统计</span>
+            </div>
+            <div style="height:100%;width:50%;float:left">
+              <my-echart-gauge :color="color1" :data="gauge1" :key="gaugeKey1"></my-echart-gauge>
+            </div>
+            <div style="height:100%;width:50%;float:left">
+              <my-echart-gauge :color="color2" :data="gauge2" :key="gaugeKey2"></my-echart-gauge>
+            </div>
+          </div>
+        </div>
+        <div class="echart-item">
+          <div class="inner">
+            <div class="item-title">
+              <span>高频异常设备排名</span>
+            </div>
             <my-echart-rose :data="errData"></my-echart-rose>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="echart-item">
-        <div class="item-title">设备故障事件中心</div>
-        <el-row>
-          <el-col :span="24" style="height:100%">
-            <el-table :data="hazardData" class="platform-table" style="width: 100%">
-              <el-table-column prop="id" label="ID" align="center" width="60"></el-table-column>
-              <el-table-column prop="datetime" label="时间" align="center"></el-table-column>
-              <el-table-column prop="pos" label="传感器位置" align="center"></el-table-column>
-              <el-table-column prop="state" label="状态" align="center"></el-table-column>
+          </div>
+        </div>
+        <div class="echart-item" id="tableContent">
+          <div class="inner">
+            <div class="item-title">
+              <span>设备故障事件中心</span>
+            </div>
+            <el-table
+              :data="errData"
+              class="platform-table"
+              :max-height="tableHeight"
+              style="width: 100%"
+            >
+              <el-table-column prop="currdate" label="时间" align="center" width="100">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.currdate">{{ parseTime(scope.row.currdate,"{y}-{m}-{d}") }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="currlocation" label="传感器位置" align="center"></el-table-column>
+              <el-table-column prop="type" label="状态" align="center"></el-table-column>
             </el-table>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <div class="pla-top">
-      <div class="echart-top-item">
-        <div class="top-item-title">注册单位总数</div>
-        <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
-      </div>
-      <div class="echart-top-item">
-        <div class="top-item-title">注册设备数量</div>
-        <count-to :start-val="0" :end-val="13088" :duration="2600" class="card-panel-num" />
-      </div>
-    </div>
-    <div class="platform-right">
-      <div class="echart-item">
-        <div class="item-title">高频隐患类型排名</div>
-        <el-row>
-          <el-col :span="24" style="height:100%">
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <!-- <div class="pla-top">
+          <div class="echart-top-item">
+            <div class="top-item-title">注册单位总数</div>
+            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+          </div>
+          <div class="echart-top-item">
+            <div class="top-item-title">注册设备数量</div>
+            <count-to :start-val="0" :end-val="13088" :duration="2600" class="card-panel-num" />
+          </div>
+        </div>-->
+        <my-echart-map class="platform-map"></my-echart-map>
+      </el-col>
+      <el-col :span="6">
+        <div class="echart-item">
+          <div class="inner">
+            <div class="item-title">
+              <span>高频隐患类型排名</span>
+            </div>
             <my-echart-rose :data="typeRankData" :key="rankKey"></my-echart-rose>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="echart-item">
-        <div class="item-title">重大隐患单位排名</div>
-        <el-row>
-          <el-col :span="24" style="height:100%">
-            <el-table :data="rankData" class="platform-table" style="width: 100%">
-              <el-table-column prop="id" label="ID" align="center"></el-table-column>
+          </div>
+        </div>
+        <div class="echart-item">
+          <div class="inner">
+            <div class="item-title">
+              <span>重大隐患单位排名</span>
+            </div>
+            <el-table
+              :data="rankData"
+              class="platform-table"
+              :max-height="tableHeight"
+              style="width: 100%"
+            >
               <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
               <el-table-column prop="count" label="隐患数量" align="center"></el-table-column>
             </el-table>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="echart-item">
-        <div class="item-title">隐患处理情况</div>
-        <el-row>
-          <el-col :span="24" style="height:100%">
+          </div>
+        </div>
+        <div class="echart-item">
+          <div class="inner">
+            <div class="item-title">
+              <span>隐患处理情况</span>
+            </div>
             <el-radio-group v-model="labelHazard" class="hazard_btn_group" size="small">
-              <el-radio-button label="weekly">近7天</el-radio-button>
-              <el-radio-button label="monthly">近30天</el-radio-button>
-              <el-radio-button label="yearly">近1年</el-radio-button>
+              <el-radio-button :label="1">周</el-radio-button>
+              <el-radio-button :label="2">月</el-radio-button>
+              <el-radio-button :label="3">年</el-radio-button>
             </el-radio-group>
-            <my-echart-line :chartData="weekData" :key="weekDataKey" v-if="labelHazard == 'weekly'"></my-echart-line>
-            <my-echart-range
-              :chartData="monthData"
-              :key="monthDataKey"
-              v-if="labelHazard == 'monthly'"
-            ></my-echart-range>
-            <my-echart-line :chartData="yearData" :key="yearDataKey" v-if="labelHazard == 'yearly'"></my-echart-line>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <my-echart-map class="platform-map"></my-echart-map>
+            <my-echart-line :chartData="weekData" :key="weekDataKey" v-if="labelHazard == 1"></my-echart-line>
+            <my-echart-range :chartData="monthData" :key="monthDataKey" v-if="labelHazard == 2"></my-echart-range>
+            <my-echart-line :chartData="yearData" :key="yearDataKey" v-if="labelHazard == 3"></my-echart-line>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template> 
 
@@ -101,51 +128,16 @@ import {
   getMonthly,
   getYearly,
   getHazardUnitsRank,
-  getHazardTypesRank
+  getHazardTypesRank,
+  getErrRank,
+  getPercentage
 } from "@/api/platform/platform";
 import CountTo from "vue-count-to";
 export default {
   data() {
     return {
-      labelHazard: "weekly",
-      hazardData: [
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        },
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        },
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        },
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        },
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        },
-        {
-          id: 1,
-          datetime: "2019-01-15",
-          pos: "aaa",
-          state: "异常"
-        }
-      ],
+      labelHazard: 1,
+      errData: [],
       rankData: [],
       color1: {
         scolor: "#e5790d",
@@ -159,11 +151,11 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 70
+        value: 0
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 30
+        value: 0
       },
       errData: [
         { value: 10, name: "二氧化碳" },
@@ -191,10 +183,19 @@ export default {
       monthDataKey: 10,
       yearDataKey: 20,
       rankKey: 30,
-      monthList: {}
+      gaugeKey1: 11,
+      gaugeKey2: 22,
+      monthList: {},
+      tableHeight: "250"
     };
   },
   methods: {
+    resizeTable() {
+      let _table = document.querySelector("#tableContent");
+      let _height = _table.offsetHeight - 40;
+      this.tableHeight = _height;
+      console.log(_table.offsetHeight)
+    },
     getWeeklyList() {
       getWeekly().then(response => {
         if (response.code == 200) {
@@ -326,6 +327,25 @@ export default {
           ++this.rankKey;
         }
       });
+    },
+    getErrRankList() {
+      getErrRank().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          console.log(_data);
+          this.errData = _data;
+        }
+      });
+    },
+    getOnlinePercentage() {
+      getPercentage().then(response => {
+        if (response.code == 200) {
+          this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
+          this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
+          ++this.gaugeKey1;
+          ++this.gaugeKey2;
+        }
+      });
     }
   },
   mounted() {
@@ -334,6 +354,13 @@ export default {
     this.getYearlyList();
     this.getUnitsRankList();
     this.getTypesRankList();
+    this.getErrRankList();
+    this.getOnlinePercentage();
+    // setInterval(() => {
+    //   this.labelHazard >= 3 ? (this.labelHazard = 0) : ++this.labelHazard;
+    // }, 1000);
+    this.resizeTable()
+    window.addEventListener("resize", this.resizeTable);
   },
   components: {
     MyEchartGauge,
@@ -347,17 +374,13 @@ export default {
 </script>
 
 <style lang="scss">
-$bgColor: #041a49;
+$bgColor: #061436;
 $font-color: #888;
 $item-bgColor: rgba(
   $color: lighten($bgColor, 20%),
   $alpha: 0.5
 );
 $item-alpha: 0.5;
-$left-item-width: 400px;
-$left-item-left: 30px;
-$left-item-top: 30px;
-$left-item-bottom: 30px;
 $top-item-width: 500px;
 $top-item-height: 100px;
 $top-item-top: 30px;
@@ -372,38 +395,24 @@ $border-radius: 4px;
   &.platform {
     width: 100%;
     height: 100%;
+    min-width: 1500px;
+    min-height: 800px;
+    overflow: hidden;
     background: $bgColor;
     position: relative;
     color: $font-color;
-    .platform-map {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 10;
-    }
-    .platform-left {
-      position: absolute;
-      overflow: hidden;
-      left: $left-item-left;
-      top: $left-item-top;
-      bottom: $left-item-bottom;
-      width: $left-item-width;
-      @include border-radius($border-radius);
-      z-index: 11;
-      .el-row {
-        height: 100%;
+    padding: 0;
+    .platform-box {
+      height: 100%;
+      padding: 0 20px;
+      & > div {
+        height: calc(100% - 130px);
       }
     }
+    .el-row {
+      height: 100%;
+    }
     .pla-top {
-      position: absolute;
-      left: 50%;
-      top: $top-item-top;
-      width: $top-item-width;
-      height: $top-item-height;
-      margin-left: -$top-item-width / 2;
-      @include border-radius($border-radius);
       z-index: 11;
       .echart-top-item {
         height: 50%;
@@ -427,20 +436,14 @@ $border-radius: 4px;
         margin-right: 20px;
       }
     }
-    .platform-right {
-      left: initial;
-      right: $left-item-left;
-      @extend .platform-left;
-    }
     .echart-item {
       height: 33.3%;
       position: relative;
-      overflow: hidden;
       .hazard_btn_group {
         position: absolute;
         z-index: 99;
-        top: 5px;
-        right: 10px;
+        top: 10px;
+        left: 150px;
         height: 28px;
         .el-radio-button--small .el-radio-button__inner {
           padding: 7px 15px;
@@ -451,17 +454,17 @@ $border-radius: 4px;
       }
       .item-title {
         position: absolute;
-        padding: 0 20px;
-        top: 10px;
+        left: 20px;
+        top: 15px;
         color: #fff;
         font-weight: bold;
-        text-shadow: 0 0 10px #fff;
+        // text-shadow: 0 0 4px #fff;
       }
       .platform-table {
         background: initial !important;
         width: 90% !important;
         margin: auto;
-        margin-top: 35px;
+        margin-top: 25px;
         th {
           padding: 0;
           background: initial !important;
@@ -475,7 +478,88 @@ $border-radius: 4px;
           background-color: rgba(9, 66, 161, 0.8) !important;
         }
       }
+      .el-radio-button__inner {
+        background: initial;
+        color: #fff;
+      }
+      .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+        background: #093a90;
+      }
+      .el-table--medium td {
+        padding: 4px 0;
+      }
     }
   }
+}
+.platform-top-left {
+  width: 100%;
+  height: 20px;
+  background: #0c3463;
+  border: 1px solid #0a40ba;
+  border-right: 0;
+}
+.platform-top-right {
+  width: 100%;
+  height: 20px;
+  background: #0c3463;
+  border: 1px solid #0a40ba;
+  border-left: 0;
+}
+.platform-top {
+  width: 100%;
+  display: flex;
+  margin-bottom: 20px;
+}
+.platform-top-title {
+  padding: 20px 0;
+  position: relative;
+  background: #0c3463;
+}
+.platform-top-title .main_title {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #01bbff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.platform-top-title::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  border-bottom: 80px solid #061436;
+  border-left: 80px solid transparent;
+  z-index: 20;
+}
+.platform-top-title::before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 20px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 80px solid #061436;
+  border-right: 80px solid transparent;
+  z-index: 20;
+}
+.echart-item {
+  border: 2px solid #fff;
+  border-image: url("../../assets/image/border.png") 51 38 21 132;
+  border-width: 2.125rem 1.583rem 0.875rem 5.5rem;
+  margin-top: 10px;
+}
+.echart-item > .inner {
+  position: absolute;
+  top: -2.125rem;
+  right: -1.583rem;
+  bottom: -0.875rem;
+  left: -5.5rem;
+  z-index: 99;
 }
 </style>

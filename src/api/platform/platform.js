@@ -37,3 +37,19 @@ export function getHazardTypesRank() {
         method: 'get',
     })
 }
+
+//设备故障事件中心接口
+export function getErrRank() {
+    return request({
+        url: '/system/bulletin/equipmentFailure',
+        method: 'get',
+    })
+}
+
+//在线统计
+export function getPercentage() {
+    return request({
+        url: '/system/bulletin/onlineStatistics',
+        method: 'get'
+    })
+}

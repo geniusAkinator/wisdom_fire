@@ -71,27 +71,18 @@ export default {
           }
         },
         grid: {
-          top: "20%",
-          left: "3%",
-          right: "3%",
-          bottom: "15%",
+          top: "60",
+          left: "20",
+          right: "20",
+          bottom: "18%",
           containLabel: true
         },
         legend: {
           data: _this.chartData.legend,
-          x: "right",
-          y: "12%",
+          x: "70%",
+          y: "15",
           textStyle: {
             color: "#ccc"
-          }
-        },
-        toolbox: {
-          feature: {
-            dataZoom: {
-              yAxisIndex: "none"
-            },
-            restore: {},
-            saveAsImage: {}
           }
         },
         xAxis: {
@@ -132,6 +123,7 @@ export default {
           {
             start: 0,
             end: 10,
+            bottom: 15,
             handleIcon:
               "M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z",
             handleSize: "80%",
@@ -142,9 +134,7 @@ export default {
               shadowOffsetX: 2,
               shadowOffsetY: 2
             },
-            dataBackground:{
-              
-            },
+            dataBackground: {},
             textStyle: {
               color: "#fff"
             }

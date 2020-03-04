@@ -165,7 +165,7 @@ export default {
       vertical-align: middle;
       float: left;
       font-size: 14px;
-      color: #81888e;
+      color: #e0e0e0;
       line-height: 40px;
       padding: 0 12px 0 0;
       box-sizing: border-box;

@@ -69,8 +69,8 @@ export default {
         textStyle: {
           color: "#ccc"
         },
-        x: "right",
-        y: "15%"
+        x: "70%",
+        y: "15"
       },
       color: ["#fff"],
       xAxis: {
@@ -89,10 +89,10 @@ export default {
         }
       },
       grid: {
-        top: "20%",
-        left: "3%",
-        right: "3%",
-        bottom: "0",
+        top: "50",
+        left: "20",
+        right: "20",
+        bottom: "15",
         containLabel: true
       },
       yAxis: {

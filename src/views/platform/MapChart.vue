@@ -1,5 +1,10 @@
 <template>
-  <div :id="id" class="chart"></div>
+  <div
+    style="width:100%;height:100%;background: url('../../assets/image/bg.png') 100% 100% no-repeat;position: relative;"
+  >
+    <div :id="id" class="chart"></div>
+    <!-- <div class="dd"></div> -->
+  </div>
 </template>
 
 <script>
@@ -14,7 +19,8 @@ export default {
           .substr(-8),
       myCharts: {},
       mapType: "china",
-      provinceData: {}
+      provinceData: {},
+      option: {}
     };
   },
   methods: {
@@ -67,14 +73,14 @@ export default {
           上海: [121.4648, 31.2891]
         };
         var data = [
-          {
-            name: "北京",
-            value: 199
-          },
-          {
-            name: "天津",
-            value: 42
-          }
+          // {
+          //   name: "北京",
+          //   value: 199
+          // },
+          // {
+          //   name: "天津",
+          //   value: 42
+          // }
         ];
         var max = 480,
           min = 9; // todo
@@ -93,13 +99,84 @@ export default {
           }
           return res;
         };
-        let option = {
+        _this.option = {
           animation: true, //过度动画
           animationDuration: 1000,
           animationEasing: "cubicInOut",
           animationDurationUpdate: 1000,
           animationEasingUpdate: "cubicInOut",
+          graphic: [
+            {
+              //上线条
+              type: "group",
+              left: 200,
+              top: 70,
+              children: [
+                {
+                  type: "line",
+                  left: 0,
+                  top: -20,
+                  shape: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 60,
+                    y2: 0
+                  },
+                  style: {
+                    stroke: "rgba(147, 235, 248, .8)"
+                  }
+                },
+                {
+                  //下线条
+                  type: "line",
+                  left: 0,
+                  top: 20,
+                  shape: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 60,
+                    y2: 0
+                  },
+                  style: {
+                    stroke: "rgba(147, 235, 248, .8)"
+                  }
+                }
+              ]
+            },
+            {
+              type: "group",
+              left: 215,
+              top: 80,
+              children: [
+                {
+                  type: "text",
+                  left: 0,
+                  top: "middle",
+                  style: {
+                    text: "中国",
+                    textAlign: "center",
+                    fill: "#fff",
+                    font: '12px "Microsoft YaHei", sans-serif'
+                  },
+                  onclick: function() {}
+                },
+                {
+                  type: "text",
+                  left: 0,
+                  top: 10,
+                  style: {
+                    text: "China",
+                    textAlign: "center",
+                    fill: "#fff",
+                    font: '12px "Microsoft YaHei", sans-serif'
+                  },
+                  onclick: function() {}
+                }
+              ]
+            }
+          ],
           backgroundColor: {
+            //背景颜色
             type: "linear",
             x: 0,
             y: 0,
@@ -108,11 +185,11 @@ export default {
             colorStops: [
               {
                 offset: 0,
-                color: "#08174b" // 0% 处的颜色 0f378f
+                color: "#061436" // 0% 处的颜色 0f378f
               },
               {
                 offset: 1,
-                color: "#08174b" // 100% 处的颜色 00091a
+                color: "#061436" // 100% 处的颜色 00091a
               }
             ],
             globalCoord: false // 缺省为 false
@@ -151,13 +228,34 @@ export default {
             },
             itemStyle: {
               normal: {
-                areaColor: "#3a7fd5",
-                borderColor: "#0a53e9", //线
-                shadowColor: "#092f8f", //外发光
-                shadowBlur: 20
+                borderColor: "rgba(147, 235, 248, 1)",
+                borderWidth: 1,
+                areaColor: {
+                  type: "radial",
+                  x: 0.5,
+                  y: 0.5,
+                  r: 0.8,
+                  colorStops: [
+                    {
+                      offset: 0,
+                      color: "rgba(147, 235, 248, 0)" // 0% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(147, 235, 248, .2)" // 100% 处的颜色
+                    }
+                  ],
+                  globalCoord: false // 缺省为 false
+                },
+                shadowColor: "rgba(128, 217, 248, 1)",
+                // shadowColor: 'rgba(255, 255, 255, 1)',
+                shadowOffsetX: -2,
+                shadowOffsetY: 2,
+                shadowBlur: 10
               },
               emphasis: {
-                areaColor: "#0a2dae" //悬浮区背景
+                areaColor: "#389BB7",
+                borderWidth: 0
               }
             }
           },
@@ -253,19 +351,81 @@ export default {
             }
           ]
         };
-        _this.myCharts.setOption(option);
+        _this.myCharts.setOption(_this.option);
         window.addEventListener("resize", _this.resizeChart);
         _this.myCharts.on("click", function(ev) {
           let key = ev.name;
           if (_this.provinceData.has(key)) {
+            console.log(key);
             _this.mapType = _this.provinceData.get(key);
+            _this.createBreadcrumb(key);
             _this.initChart();
           }
         });
       });
+    },
+    resetOption() {},
+    createBreadcrumb(name) {
+      //创建Echart Map Graphic Group
+      let _this = this;
+      let _pinyin = _this.provinceData.get(name);
+      let breadcrumb = {
+        type: "group",
+        left: 200,
+        top: 70,
+        children: [
+          {
+            type: "polyline",
+            left: -90,
+            top: -5,
+            shape: {
+              points: [
+                [0, 0],
+                [8, 11],
+                [0, 22]
+              ]
+            },
+            style: {
+              stroke: "#fff",
+              key: name
+              // lineWidth: 2,
+            },
+            onclick: function() {
+              var name = this.style.key;
+            }
+          },
+          {
+            type: "text",
+            left: 0,
+            top: "middle",
+            style: {
+              text: name,
+              textAlign: "center",
+              fill: "#efefef",
+              font: '12px "Microsoft YaHei", sans-serif'
+            },
+            onclick: function() {}
+          },
+          {
+            type: "text",
+            left: 0,
+            top: 10,
+            style: {
+              text: _pinyin,
+              textAlign: "center",
+              fill: "#efefef",
+              font: '12px "Microsoft YaHei", sans-serif'
+            },
+            onclick: function() {}
+          }
+        ]
+      };
+      return breadcrumb;
     }
   },
   mounted() {
+    let _this = this;
+    //手动set Map防止多音字和重名
     let myMap = new Map();
     myMap.set("安徽", "anhui");
     myMap.set("澳门", "aomen");
@@ -300,9 +460,9 @@ export default {
     myMap.set("西藏", "xizang");
     myMap.set("云南", "yunnan");
     myMap.set("浙江", "zhejiang");
-    this.provinceData = myMap;
+    _this.provinceData = myMap;
     // console.log(this.provinceData);
-    this.initChart();
+    _this.initChart();
   }
 };
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="container dark">
-    <div class="platform-top">
+    <div class="board-top">
       <div class="el-col el-col-7">
-        <div class="platform-top-left"></div>
+        <div class="board-top-left"></div>
       </div>
       <div class="el-col el-col-10" style="position:relative">
         <div class="top-title">
@@ -20,7 +20,7 @@
         <div class="gradient_line"></div>
       </div>
       <div class="el-col el-col-7">
-        <div class="platform-top-right">
+        <div class="board-top-right">
           <div class="platform-dropdown">
             <el-dropdown trigger="click">
               <span class="el-dropdown-link">
@@ -48,8 +48,8 @@
         </div>
       </div>
     </div>
-    <el-row :gutter="10" class="platform-box">
-      <el-col :span="6" id="platform-left">
+    <el-row :gutter="10" class="board-box">
+      <el-col :span="6" id="board-left">
         <el-col
           :span="24"
           class="box-item"
@@ -98,7 +98,12 @@
           </div>
           <div class="detail-box">
             <ul class="detail-list">
-              <li class="detail-item title">今日火警</li>
+              <li class="detail-item title">
+                <p>
+                  今日火警
+                  <span>5个</span>
+                </p>
+              </li>
               <li class="detail-item">
                 <i class="el-icon-time"></i>
                 <p>
@@ -122,7 +127,12 @@
               </li>
             </ul>
             <ul class="detail-list">
-              <li class="detail-item title">今日火警</li>
+              <li class="detail-item title">
+                <p>
+                  今日火警
+                  <span>5个</span>
+                </p>
+              </li>
               <li class="detail-item">
                 <i class="el-icon-time"></i>
                 <p>
@@ -172,7 +182,7 @@
           <div class="hightlight_line bottom_right"></div>
           <el-table
             :data="tableData"
-            class="platform-table"
+            class="board-table"
             style="width: 100%"
             border
             :max-height="tableHeight"
@@ -184,7 +194,7 @@
           </el-table>
         </el-col>
       </el-col>
-      <el-col :span="6" id="platform-right">
+      <el-col :span="6" id="board-right">
         <el-col :span="24" class="box-item">
           <div class="hightlight_line top_left"></div>
           <div class="hightlight_line top_right"></div>
@@ -356,6 +366,11 @@ export default {
     };
   },
   methods: {
+    resizeTable() {
+      let _table = document.querySelector("#tableBox");
+      let _height = _table.offsetHeight;
+      this.tableHeight = _height;
+    },
     initDateTime() {
       let date = new Date();
       let _day = date.getDate();
@@ -395,9 +410,6 @@ export default {
       _min = this.getNumFormat(_min);
       _sec = this.getNumFormat(_sec);
       this.nowDate = `${year}-${_month}-${_day} ${_hour}:${_min}:${_sec}  ${w}`;
-      // setInterval(() => {
-      //   this.initDateTime();
-      // }, 1000);
     },
     getNumFormat(num) {
       return num > 10 ? num : "0" + num;
@@ -405,7 +417,10 @@ export default {
   },
   mounted() {
     this.initDateTime();
-    window.addEventListener("resize", this.resizeChart);
+    setInterval(() => {
+      this.initDateTime();
+    }, 1000);
+    window.addEventListener("resize", this.resizeTable);
   },
   components: {
     MyEchartGauge,
@@ -429,11 +444,11 @@ export default {
   min-width: 1500px;
   min-height: 800px;
 }
-.platform-box {
+.board-box {
   height: 100%;
   padding: 0 20px;
 }
-.platform-box > div {
+.board-box > div {
   height: calc(100% - 60px);
 }
 .box-item {
@@ -492,27 +507,24 @@ export default {
   font-size: 18px;
   margin-right: 5px;
 }
-.platform-table {
+.board-table {
   background: initial;
 }
-.platform-table .platform-table {
+.board-table .board-table {
   background-color: initial;
 }
-.platform-table .el-table th {
+.board-table .el-table th {
   padding: 0;
 }
 div[id^="rchart"] {
   height: 100%;
   width: 100%;
 }
-.platform-top {
+.board-top {
   width: 100%;
   display: flex;
   margin-bottom: 20px;
 }
-/* .platform-top > div {
-  background: #132962;
-} */
 .top-title {
   background: #132962;
 }
@@ -599,21 +611,21 @@ div[id^="rchart"] {
   z-index: 10;
 }
 
-.platform-table.el-table tr {
+.board-table.el-table tr {
   background: initial !important;
 }
-.platform-table.el-table th {
+.board-table.el-table th {
   background: initial !important;
 }
-.platform-table.el-table th,
-.platform-table.el-table td {
+.board-table.el-table th,
+.board-table.el-table td {
   text-align: center;
   color: #fff;
 }
 .el-row {
   height: 100%;
 }
-.platform-table.el-table .el-table__row:hover td {
+.board-table.el-table .el-table__row:hover td {
   background-color: rgba(9, 66, 161, 0.8) !important;
 }
 #floorBox {
@@ -621,18 +633,18 @@ div[id^="rchart"] {
   box-shadow: initial;
   background: initial;
 }
-.platform-table.el-table--border {
+.board-table.el-table--border {
   border: 1px solid #096c7f;
 }
-.platform-table.el-table th.is-leaf,
-.platform-table.el-table td {
+.board-table.el-table th.is-leaf,
+.board-table.el-table td {
   border-bottom: 1px solid #096c7f;
 }
-.platform-table.el-table--border th,
-.platform-table.el-table--border td {
+.board-table.el-table--border th,
+.board-table.el-table--border td {
   border-right: 1px solid #096c7f;
 }
-.platform-table .el-table__row:hover {
+.board-table .el-table__row:hover {
   background: initial;
 }
 .count {
@@ -833,12 +845,12 @@ div[id^="rchart"] {
   font-size: 22px;
   margin-top: 10px;
 }
-.platform-top-left {
+.board-top-left {
   width: 100%;
   height: 40px;
   background: linear-gradient(to right, #071748, #132962);
 }
-.platform-top-right {
+.board-top-right {
   width: 100%;
   height: 40px;
   background: linear-gradient(to right, #132962, #071748);
@@ -912,16 +924,16 @@ div[id^="rchart"] {
   top: 105px;
   width: 400px;
   height: 4px;
-  background: -webkit-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
-  background: -o-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
-  background: -moz-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
-  background: -ms-linear-gradient(left, #132962, #04d4f0,#04d4f0, #132962);
+  background: -webkit-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -o-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -moz-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -ms-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
 }
 /* 动画 */
-#platform-left {
+#board-left {
   animation: fadeInLeft 2s ease 0s 1 both;
 }
-#platform-right {
+#board-right {
   animation: fadeInRight 2s ease 0s 1 both;
 }
 #tableBox {

@@ -275,7 +275,7 @@ export default {
   padding: 10px 20px;
 } */
 .el-table thead {
-  background: #f5f7fa !important;
+  background: #f5f7fa;
 }
 .el-card + .el-card {
   margin-top: 20px;
