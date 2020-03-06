@@ -6,8 +6,16 @@
       </div>
       <div class="el-col el-col-10" style="position:relative">
         <div class="platform-top-title">
-          <span class="main_title">数据平台</span>
+          <span class="main_title">安中云数据平台</span>
+          <span class="date_time">{{nowDate}}</span>
         </div>
+        <div class="rectangle left">
+          <div v-for="i in 8"></div>
+        </div>
+        <div class="rectangle right">
+          <div v-for="i in 8"></div>
+        </div>
+        <div class="gradient_line"></div>
       </div>
       <div class="el-col el-col-7">
         <div class="platform-top-right"></div>
@@ -130,7 +138,7 @@ import {
   getHazardUnitsRank,
   getHazardTypesRank,
   getErrRank,
-  getPercentage
+  getOnlineRate
 } from "@/api/platform/platform";
 import CountTo from "vue-count-to";
 export default {
@@ -186,7 +194,8 @@ export default {
       gaugeKey1: 11,
       gaugeKey2: 22,
       monthList: {},
-      tableHeight: "250"
+      tableHeight: "250",
+      nowDate: ""
     };
   },
   methods: {
@@ -194,7 +203,7 @@ export default {
       let _table = document.querySelector("#tableContent");
       let _height = _table.offsetHeight - 40;
       this.tableHeight = _height;
-      console.log(_table.offsetHeight)
+      console.log(_table.offsetHeight);
     },
     getWeeklyList() {
       getWeekly().then(response => {
@@ -322,7 +331,6 @@ export default {
             temp.value = item.count;
             _list.push(temp);
           });
-          console.log(_list);
           this.typeRankData = _list;
           ++this.rankKey;
         }
@@ -332,13 +340,12 @@ export default {
       getErrRank().then(response => {
         if (response.code == 200) {
           let _data = response.data;
-          console.log(_data);
           this.errData = _data;
         }
       });
     },
     getOnlinePercentage() {
-      getPercentage().then(response => {
+      getOnlineRate().then(response => {
         if (response.code == 200) {
           this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
           this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
@@ -346,6 +353,49 @@ export default {
           ++this.gaugeKey2;
         }
       });
+    },
+    initDateTime() {
+      let date = new Date();
+      let _day = date.getDate();
+      let year = date.getFullYear();
+      let _month = date.getMonth() + 1;
+      let _hour = date.getHours();
+      let _min = date.getMinutes();
+      let _sec = date.getSeconds();
+      let week = date.getDay();
+      let w = "";
+      switch (week) {
+        case 0:
+          w = "星期日";
+          break;
+        case 1:
+          w = "星期一";
+          break;
+        case 2:
+          w = "星期二";
+          break;
+        case 3:
+          w = "星期三";
+          break;
+        case 4:
+          w = "星期四";
+          break;
+        case 5:
+          w = "星期五";
+          break;
+        case 6:
+          w = "星期六";
+          break;
+      }
+      _day = this.getNumFormat(_day);
+      _month = this.getNumFormat(_month);
+      _hour = this.getNumFormat(_hour);
+      _min = this.getNumFormat(_min);
+      _sec = this.getNumFormat(_sec);
+      this.nowDate = `${year}-${_month}-${_day} ${_hour}:${_min}:${_sec}  ${w}`;
+    },
+    getNumFormat(num) {
+      return num > 10 ? num : "0" + num;
     }
   },
   mounted() {
@@ -359,8 +409,12 @@ export default {
     // setInterval(() => {
     //   this.labelHazard >= 3 ? (this.labelHazard = 0) : ++this.labelHazard;
     // }, 1000);
-    this.resizeTable()
+    this.resizeTable();
     window.addEventListener("resize", this.resizeTable);
+    this.initDateTime();
+    setInterval(() => {
+      this.initDateTime();
+    }, 1000);
   },
   components: {
     MyEchartGauge,
@@ -406,7 +460,7 @@ $border-radius: 4px;
       height: 100%;
       padding: 0 20px;
       & > div {
-        height: calc(100% - 130px);
+        height: calc(100% - 160px);
       }
     }
     .el-row {
@@ -494,15 +548,13 @@ $border-radius: 4px;
 .platform-top-left {
   width: 100%;
   height: 20px;
-  background: #0c3463;
-  border: 1px solid #0a40ba;
+  background: linear-gradient(to right, #071748, #132962);
   border-right: 0;
 }
 .platform-top-right {
   width: 100%;
   height: 20px;
-  background: #0c3463;
-  border: 1px solid #0a40ba;
+  background: linear-gradient(to right, #132962, #071748);
   border-left: 0;
 }
 .platform-top {
@@ -532,8 +584,8 @@ $border-radius: 4px;
   display: block;
   width: 0;
   height: 0;
-  border-bottom: 80px solid #061436;
-  border-left: 80px solid transparent;
+  border-bottom: 90px solid #061436;
+  border-left: 90px solid transparent;
   z-index: 20;
 }
 .platform-top-title::before {
@@ -544,8 +596,8 @@ $border-radius: 4px;
   left: 0;
   width: 0;
   height: 0;
-  border-bottom: 80px solid #061436;
-  border-right: 80px solid transparent;
+  border-bottom: 90px solid #061436;
+  border-right: 90px solid transparent;
   z-index: 20;
 }
 .echart-item {
@@ -561,5 +613,99 @@ $border-radius: 4px;
   bottom: -0.875rem;
   left: -5.5rem;
   z-index: 99;
+}
+.date_time {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #4b95c2;
+  font-size: 22px;
+  margin-top: 10px;
+}
+.rectangle.left {
+  position: absolute;
+  left: -130px;
+  top: 30px;
+  z-index: 40;
+  overflow: hidden;
+  padding-right: 60px;
+}
+.rectangle.right {
+  position: absolute;
+  right: -130px;
+  top: 30px;
+  z-index: 40;
+  overflow: hidden;
+  padding-left: 60px;
+}
+.rectangle > div {
+  width: 8px;
+  height: 15px;
+  background: #fff;
+}
+.rectangle.left > div {
+  margin-left: 10px;
+  float: left;
+  transform: skew(45deg);
+}
+.rectangle.right > div {
+  margin-right: 10px;
+  float: left;
+  transform: skew(-45deg);
+}
+.rectangle > div:nth-child(2) {
+  height: 15px;
+}
+@for $i from 1 to 9 {
+  .rectangle.left > div:nth-child(#{$i}) {
+    height: #{(15 + $i * 5)}px;
+  }
+  .rectangle.right > div:nth-child(#{$i}) {
+    height: #{(55 - $i * 5)}px;
+  }
+}
+.rectangle.left > div:nth-child(1),
+.rectangle.right > div:nth-child(8) {
+  background: #2a4d6a;
+}
+.rectangle.left > div:nth-child(2),
+.rectangle.right > div:nth-child(7) {
+  background: #34607f;
+}
+.rectangle.left > div:nth-child(3),
+.rectangle.right > div:nth-child(6) {
+  background: #3c7493;
+}
+.rectangle.left > div:nth-child(4),
+.rectangle.right > div:nth-child(5) {
+  background: #4489a8;
+}
+.rectangle.left > div:nth-child(5),
+.rectangle.right > div:nth-child(4) {
+  background: #4d9ebe;
+}
+.rectangle.left > div:nth-child(6),
+.rectangle.right > div:nth-child(3) {
+  background: #56b0d3;
+}
+.rectangle.left > div:nth-child(7),
+.rectangle.right > div:nth-child(2) {
+  background: #60c5e9;
+}
+.rectangle.left > div:nth-child(8),
+.rectangle.right > div:nth-child(1) {
+  background: #68dbfe;
+}
+.gradient_line {
+  position: absolute;
+  left: 50%;
+  margin-left: -200px;
+  top: 105px;
+  width: 400px;
+  height: 4px;
+  background: -webkit-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -o-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -moz-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+  background: -ms-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
 }
 </style>

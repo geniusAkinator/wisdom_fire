@@ -139,6 +139,9 @@ export default {
 .query-form {
   min-height: 80px;
 }
+.query-form .el-form-item{
+  margin-bottom: 10px;
+}
 .query-content {
   min-height: 80px;
 }

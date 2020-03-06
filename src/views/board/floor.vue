@@ -99,9 +99,7 @@ export default {
     }
   },
   watch: {
-    isEnter(nVal, oVal) {
-      console.log(nVal);
-    }
+    isEnter(nVal, oVal) {}
   },
   methods: {
     handleMouseEnter() {
@@ -319,7 +317,7 @@ export default {
   color: #fff;
   font-size: 16px;
 }
-.floor-box{
-  height: calc( 100% - 89px);
+.floor-box {
+  height: calc(100% - 89px);
 }
 </style>

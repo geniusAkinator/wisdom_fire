@@ -27,6 +27,8 @@ import 'vue-layer/lib/vue-layer.css'
 import global from '@/utils/global'
 // import vueJsonp from 'vue-jsonp'
 import VueClipboard from 'vue-clipboard2'
+import JsonExcel from 'vue-json-excel'
+
 
 // 全局方法挂载
 Vue.prototype.$layer = layer(Vue)
@@ -53,6 +55,7 @@ Vue.prototype.msgInfo = function (msg) {
 
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(permission)
 Vue.use(common)

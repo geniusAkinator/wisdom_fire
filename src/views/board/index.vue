@@ -187,10 +187,21 @@
             border
             :max-height="tableHeight"
           >
-            <el-table-column prop="datetime" label="时间"></el-table-column>
-            <el-table-column prop="pos" label="传感器位置"></el-table-column>
-            <el-table-column prop="type" label="类型"></el-table-column>
-            <el-table-column prop="state" label="状态"></el-table-column>
+            <el-table-column prop="createDateTime" label="时间">
+              <template slot-scope="scope">
+                <span
+                  v-if="scope.row.createDateTime"
+                >{{ parseTime(scope.row.createDateTime,"{y}-{m}-{d}") }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="factoryName" label="传感器位置"></el-table-column>
+            <el-table-column prop="name" label="类型"></el-table-column>
+            <el-table-column prop="deviceStatus" label="状态">
+              <template slot-scope="scope">
+                <span v-if="scope.row.deviceStatus == 0 ">正常</span>
+                <span v-if="scope.row.deviceStatus == 1 ">隐患原因</span>
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
       </el-col>
@@ -208,10 +219,10 @@
           </div>
           <el-row>
             <el-col :span="12" style="height:100%">
-              <my-echart-gauge :color="color1" :data="gauge1"></my-echart-gauge>
+              <my-echart-gauge :color="color1" :data="gauge1" :key="gaugeKey1"></my-echart-gauge>
             </el-col>
             <el-col :span="12" style="height:100%">
-              <my-echart-gauge :color="color2" :data="gauge2"></my-echart-gauge>
+              <my-echart-gauge :color="color2" :data="gauge2" :key="gaugeKey2"></my-echart-gauge>
             </el-col>
           </el-row>
         </el-col>
@@ -239,7 +250,7 @@
               <div v-for="i in 5"></div>
             </div>
           </div>
-          <my-echart-line :chartData="yearData"></my-echart-line>
+          <my-echart-line :chartData="yearData" :key="yearKey"></my-echart-line>
         </el-col>
       </el-col>
     </el-row>
@@ -253,59 +264,15 @@ import MyEchartPie from "@/views/board/PieChart";
 import MyEchartMeter from "@/views/board/MeterChart";
 import MyEchartRadar from "@/views/board/RadarChart";
 import MyFloor from "@/views/board/floor";
+import {
+  getHazardResult,
+  getEventDoneRate,
+  getSensorData
+} from "@/api/platform/board";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        },
-        {
-          datetime: "2019-12-06",
-          pos: "苏州市振兴化工厂",
-          type: "烟感",
-          state: 0
-        }
-      ],
+      tableData: [],
       tchart: {},
       bchart: {},
       rchart1: {},
@@ -330,11 +297,11 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 70
+        value: 0
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 30
+        value: 0
       },
       form: {
         id: 1
@@ -343,26 +310,13 @@ export default {
         id: 1 //工厂id
       },
       yearData: {
-        legend: ["2018年", "2019年"],
-        xdata: [
-          "1月",
-          "2月",
-          "3月",
-          "4月",
-          "5月",
-          "6月",
-          "7月",
-          "8月",
-          "9月",
-          "10月",
-          "11月",
-          "12月"
-        ], //横坐标的值
-        ydata: [
-          [820, 932, 901, 934, 1290, 1330, 1320, 901, 934, 1290, 1330, 1320],
-          [901, 934, 1290, 1330, 1320, 100, 100, 100, 290, 1330, 1320, 100]
-        ] //纵坐标的值
-      }
+        legend: ["已解决数", "隐患总数"],
+        xdata: [], //横坐标的值
+        ydata: [[], []] //纵坐标的值
+      },
+      yearKey: 1,
+      gaugeKey1: 10,
+      gaugeKey2: 20
     };
   },
   methods: {
@@ -413,14 +367,81 @@ export default {
     },
     getNumFormat(num) {
       return num > 10 ? num : "0" + num;
+    },
+    getHazardResultList() {
+      let _this = this;
+      getHazardResult().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _xdata = [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+          ];
+          let _allList = [...Array(_xdata.length)].map(_ => 0);
+          let _doneList = [...Array(_xdata.length)].map(_ => 0);
+          _xdata.map((xitem, i) => {
+            _data.hiddenDangerSum.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month) {
+                _allList[i] = item.count;
+              }
+            });
+            _data.hiddenDangerOverSum.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month) {
+                _doneList[i] = item.count;
+              }
+            });
+          });
+          _this.yearData.xdata = _xdata;
+          _this.yearData.ydata[0] = _doneList;
+          _this.yearData.ydata[1] = _allList;
+          _this.yearKey++;
+        }
+      });
+    },
+    getEventDoneRateList() {
+      let _this = this;
+      getEventDoneRate().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          _this.gauge1.value = _data.dangerPercentage.dangerPercentage * 1;
+          _this.gauge2.value = _data.faultPercentage.faultPercentage * 1;
+          ++this.gaugeKey1;
+          ++this.gaugeKey2;
+        }
+      });
+    },
+    getSensorList() {
+      let _this = this;
+      getSensorData().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          _this.tableData = _data;
+        }
+      });
     }
   },
   mounted() {
-    this.initDateTime();
+    let _this = this;
+    _this.initDateTime();
     setInterval(() => {
-      this.initDateTime();
+      _this.initDateTime();
     }, 1000);
-    window.addEventListener("resize", this.resizeTable);
+    _this.getHazardResultList();
+    _this.getEventDoneRateList();
+    _this.getSensorList();
+    window.addEventListener("resize", _this.resizeTable);
   },
   components: {
     MyEchartGauge,
@@ -646,6 +667,12 @@ div[id^="rchart"] {
 }
 .board-table .el-table__row:hover {
   background: initial;
+}
+.board-table.el-table::before {
+  background-color: initial;
+}
+.board-table.el-table--border::after {
+  background-color: initial;
 }
 .count {
   height: 100%;

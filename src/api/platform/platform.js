@@ -47,9 +47,10 @@ export function getErrRank() {
 }
 
 //在线统计
-export function getPercentage() {
+export function getOnlineRate() {
     return request({
         url: '/system/bulletin/onlineStatistics',
         method: 'get'
     })
 }
+

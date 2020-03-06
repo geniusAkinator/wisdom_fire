@@ -40,13 +40,6 @@
           </el-form>
         </template>
         <template slot="end">
-          <el-dropdown size="small" split-button @command="handleClick">
-            导出
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="csv">导出到 Csv 文件</el-dropdown-item>
-              <el-dropdown-item command="excel">导出到 Excel 文件</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </template>
@@ -254,7 +247,6 @@ export default {
         })
         .catch(function() {});
     },
-    handleClick() {}
   },
   components: {
     MySearchTool
