@@ -16,7 +16,10 @@ export default {
     };
   },
   props: {
-    data: {}
+    data: {
+       type: Array,
+       required: true
+    }
   },
   methods: {
     resizeChart() {
@@ -37,10 +40,7 @@ export default {
             type: "pie",
             radius: "55%",
             center: ["50%", "60%"],
-            data: [
-              { value: 335, name: "在线" },
-              { value: 310, name: "离线" }
-            ],
+            data:_this.data,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

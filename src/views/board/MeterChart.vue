@@ -20,10 +20,7 @@ export default {
     }
   },
   props: {
-    chartData: {
-      type: Object,
-      deep: true
-    }
+    data: 0
   },
   mounted() {
     let _this = this;
@@ -31,13 +28,13 @@ export default {
     let option = {
       series: [
         {
-          name: "刻度",
+          name: "内部刻度",
           type: "gauge",
-          radius: "58%",
+          radius: "63%",
           center: ["50%", "60%"],
           min: 0,
-          max: 1000,
-          splitNumber: 5, //刻度数量
+          max: 100,
+          splitNumber: 4, //刻度数量
           startAngle: 210,
           endAngle: -30,
           axisLine: {
@@ -51,8 +48,8 @@ export default {
             show: true,
             splitNumber: 10,
             lineStyle: {
-              color: "#09C2FF",
-              width: 2
+              color: "#27f8fc",
+              width: 1
             },
             length: -10
           }, //刻度样式
@@ -68,9 +65,30 @@ export default {
           },
           pointer: {
             show: false
+          },
+          axisLabel: {
+            show: true,
+            color: "#27f8fc",
+            distance: 15,
+            formatter: function(v) {
+              console.log(v);
+              switch (v + "") {
+                case "0":
+                  return "0";
+                case "25":
+                  return "25";
+                case "50":
+                  return "50";
+                case "75":
+                  return "75";
+                case "100":
+                  return "100";
+              }
+            }
           }
         },
         {
+          name:"背景",
           type: "gauge",
           radius: "90%",
           center: ["50%", "60%"],
@@ -136,7 +154,7 @@ export default {
               width: 15,
               color: [
                 [
-                  0.5,
+                  _this.data / 100,
                   new echarts.graphic.LinearGradient(0, 0, 1, 0, [
                     {
                       offset: 0,
@@ -165,14 +183,12 @@ export default {
           pointer: {
             // show: false,
             length: "75%",
-            width: 8
+            width: 6
           },
           markPoint: {
             symbol: "circle",
-            symbolSize: 5,
-            data: [
-              { x: "50%", y: "60%", itemStyle: { color: "#09194A" } }
-            ]
+            symbolSize: 4,
+            data: [{ x: "50%", y: "60%", itemStyle: { color: "#09194A" } }]
           },
           //仪表盘详情，用于显示数据。
           detail: {
@@ -184,10 +200,10 @@ export default {
             },
             textStyle: {
               fontSize: 34,
-              fontWeight:'bold'
+              fontWeight: "bold"
             }
           },
-          data: [{ name: "", value: 40 }]
+          data: [{ name: "", value: _this.data }]
         }
       ]
     };

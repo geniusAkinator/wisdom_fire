@@ -106,6 +106,6 @@ export default {
 <style>
 .echart {
   width: 100%;
-  height: 400px;
+  height: 100%;
 }
 </style>

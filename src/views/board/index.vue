@@ -64,17 +64,20 @@
           </div>
           <el-row style="width:100%">
             <el-col :span="12" style="height:100%">
-              <my-echart-meter></my-echart-meter>
+              <my-echart-meter :data="meterData"></my-echart-meter>
             </el-col>
             <el-col :span="12" style="height:100%">
               <div class="count">
                 <div class="count_item danger">
-                  <svg-icon class-name="count-icon" icon-class="info" />
+                  <div class="circle_mark">
+                    <svg-icon class-name="count-icon" icon-class="mark2" />
+                  </div>
                   <span>隐患</span>
                   <span class="num">(02)</span>
                 </div>
                 <div class="count_item error">
-                  <svg-icon class-name="count-icon" icon-class="error" />
+                  <div class="triangle_mark"></div>
+                  <svg-icon class-name="count-icon" icon-class="mark1" />
                   <span>故障</span>
                   <span class="num">(02)</span>
                 </div>
@@ -229,7 +232,7 @@
               <div v-for="i in 5"></div>
             </div>
           </div>
-          <my-echart-pie></my-echart-pie>
+          <my-echart-pie :data="pieData" :key="pieKey"></my-echart-pie>
         </el-col>
         <el-col :span="24" class="box-item">
           <div class="hightlight_line top_left"></div>
@@ -259,7 +262,8 @@ import MyFloor from "@/views/board/floor";
 import {
   getHazardResult,
   getEventDoneRate,
-  getSensorData
+  getSensorData,
+  getOnlineRate
 } from "@/api/platform/board";
 export default {
   data() {
@@ -306,14 +310,18 @@ export default {
         xdata: [], //横坐标的值
         ydata: [[], []] //纵坐标的值
       },
+      pieData: [],
+      meterData: 20,
       yearKey: 1,
       gaugeKey1: 10,
-      gaugeKey2: 20
+      gaugeKey2: 20,
+      pieKey: 30
     };
   },
   methods: {
     resizeTable() {
       let _table = document.querySelector("#tableBox");
+      console.log(_table.offsetHeight);
       let _height = _table.offsetHeight;
       this.tableHeight = _height;
     },
@@ -358,7 +366,7 @@ export default {
       this.nowDate = `${year}-${_month}-${_day} ${_hour}:${_min}:${_sec}  ${w}`;
     },
     getNumFormat(num) {
-      return num > 10 ? num : "0" + num;
+      return num >= 10 ? num : "0" + num;
     },
     getHazardResultList() {
       let _this = this;
@@ -420,7 +428,27 @@ export default {
         if (response.code == 200) {
           let _data = response.data;
           _this.tableData = _data;
-          console.log(_data);
+        }
+      });
+    },
+    getOnlineRateList() {
+      let _this = this;
+      getOnlineRate().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _arr = [];
+          _data.map((item, i) => {
+            let temp = {};
+            if (item.deviceStatus == 0) {
+              temp.name = "离线";
+            } else if (item.deviceStatus == 1) {
+              temp.name = "在线";
+            }
+            temp.value = item.count;
+            _arr.push(temp);
+          });
+          _this.pieData = _arr;
+          ++_this.pieKey;
         }
       });
     }
@@ -434,6 +462,7 @@ export default {
     _this.getHazardResultList();
     _this.getEventDoneRateList();
     _this.getSensorList();
+    _this.getOnlineRateList();
     window.addEventListener("resize", _this.resizeTable);
   },
   components: {
@@ -520,7 +549,7 @@ export default {
   display: flex;
   width: 100%;
 }
-.detail-item span {
+.detail-item p span {
   font-size: 18px;
   margin-left: auto;
   color: #02addb;
@@ -682,6 +711,7 @@ div[id^="rchart"] {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 .count_item + .count_item {
   margin-top: 20px;
@@ -700,13 +730,56 @@ div[id^="rchart"] {
 }
 .count_item .count-icon {
   font-size: 30px;
-  margin-right: 10px;
+  padding: 5px;
 }
 .count_item.danger .count-icon {
-  color: #e5790d;
+  color: #fff;
 }
 .count_item.error .count-icon {
-  color: #e41f17;
+  color: #fff;
+}
+.triangle_mark + svg {
+  position: absolute;
+  left: -2px;
+  top: -1px;
+  z-index: 99;
+}
+.circle_mark {
+  border-radius: 50%;
+  background: #e5790d;
+  margin-right: 10px;
+}
+
+.triangle_mark {
+  position: relative;
+  background-color: #e41f17;
+  text-align: left;
+  margin-right: 18px;
+  margin-left: 4px;
+}
+.triangle_mark:before,
+.triangle_mark:after {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+}
+.triangle_mark,
+.triangle_mark:before,
+.triangle_mark:after {
+  width: 18px;
+  height: 18px;
+  border-top-right-radius: 30%;
+}
+
+.triangle_mark {
+  transform: rotate(-60deg) skewX(-30deg) scale(1, 0.866);
+}
+.triangle_mark:before {
+  transform: rotate(-135deg) skewX(-45deg) scale(1.414, 0.707)
+    translate(0, -50%);
+}
+.triangle_mark:after {
+  transform: rotate(135deg) skewY(-45deg) scale(0.707, 1.414) translate(50%);
 }
 .square.left {
   position: absolute;
