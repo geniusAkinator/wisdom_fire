@@ -36,8 +36,6 @@
     </div>
     <div class="floor-box">
       <div class="floor-picker">
-        <!-- <i class="el-icon-arrow-up" id="floor-button-next" @click="handleNext"></i>
-        <i class="el-icon-arrow-down" id="floor-button-prev" @click="handlePrev"></i>-->
         <div
           class="floor-picker-inner"
           @mouseenter="handleMouseEnter"
@@ -68,30 +66,10 @@ export default {
     return {
       index: 0,
       floorList: [
-        {
-          floorName: "1F"
-        },
-        {
-          floorName: "2F"
-        },
-        {
-          floorName: "3F"
-        },
-        {
-          floorName: "4F"
-        },
-        {
-          floorName: "5F"
-        },
-        {
-          floorName: "6F"
-        },
-        {
-          floorName: "7F"
-        },
-        {
-          floorName: "8F"
-        }
+        { floorName: "4F" },
+        { floorName: "3F" },
+        { floorName: "2F" },
+        { floorName: "1F" }
       ],
       isEnter: false,
       src:

@@ -60,11 +60,8 @@ export default {
       _this.option = {
         tooltip: {
           trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985"
-            }
+          position: function(pt) {
+            return [pt[0], "10%"];
           }
         },
         legend: {

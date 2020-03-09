@@ -46,7 +46,7 @@ export default {
         }
       ]);
       var colorSet = [
-        [_this.data.value / 100 , color],
+        [_this.data.value / 100, color],
         [1, bcolor]
       ];
       var rich = {

@@ -1,9 +1,6 @@
 <template>
   <div style="width:100%;height:calc( 100% - 70px );position: relative;">
     <div :id="id" class="chart"></div>
-    <div class="rank-content">
-      <span class="rank_title">全国排名</span>
-    </div>
   </div>
 </template>
 
@@ -21,7 +18,11 @@ export default {
       myCharts: {},
       mapType: "china",
       provinceData: {},
-      option: {}
+      option: {},
+      pos: {
+        left: 50,
+        top: 50
+      }
     };
   },
   methods: {
@@ -37,7 +38,6 @@ export default {
       axios.get(`static/js/province/${mtype}.json`).then(response => {
         _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
         let geoData = response.data;
-        // console.log(geoData);
         echarts.registerMap(mtype, geoData);
         _this.myCharts.setOption(_this.option);
         window.addEventListener("resize", _this.resizeChart);
@@ -128,8 +128,8 @@ export default {
       _pinyin = _pinyin.replace(/\d+/g, "");
       let breadcrumb = {
         type: "group",
-        left: 255,
-        top: 80,
+        left: _this.pos.left + 55,
+        top: _this.pos.top,
         children: [
           {
             type: "polyline",
@@ -219,14 +219,14 @@ export default {
     _this.provinceData = myMap;
     // console.log(this.provinceData);
     var data = [
-      // {
-      //   name: "北京",
-      //   value: 199
-      // },
-      // {
-      //   name: "天津",
-      //   value: 42
-      // }
+      {
+        name: "北京",
+        value: 199
+      },
+      {
+        name: "天津",
+        value: 42
+      }
     ];
 
     _this.option = {
@@ -239,8 +239,8 @@ export default {
         {
           //上线条
           type: "group",
-          left: 200,
-          top: 70,
+          left: _this.pos.left,
+          top: _this.pos.top - 10,
           children: [
             {
               type: "line",
@@ -275,8 +275,8 @@ export default {
         },
         {
           type: "group",
-          left: 215,
-          top: 80,
+          left: _this.pos.left + 15,
+          top: _this.pos.top,
           children: [
             {
               type: "text",
@@ -334,8 +334,8 @@ export default {
       },
       legend: {
         orient: "vertical",
-        y: "10%",
-        x: "70%",
+        y: "bottom",
+        x: "right",
         data: ["隐患"],
         textStyle: {
           color: "#fff"
@@ -393,7 +393,8 @@ export default {
           },
           emphasis: {
             areaColor: "#389BB7",
-            borderWidth: 0
+            borderWidth: 0,
+            zlevel:1
           }
         }
       },
@@ -440,7 +441,8 @@ export default {
             normal: {
               formatter: "{b}",
               position: "right",
-              show: false
+              show: true,
+              color: "#fff"
             },
             emphasis: {
               show: true
@@ -448,44 +450,13 @@ export default {
           },
           itemStyle: {
             normal: {
-              color: "#ddb926"
+              color: "#d9100b",
+              shadowBlur: 10,
+              shadowColor: "#333",
+              borderColor: "#fff",
+              borderWidth: 2
             }
           }
-        },
-        {
-          name: "隐患", //前五个
-          type: "effectScatter",
-          coordinateSystem: "geo",
-          data: _this.convertData(
-            data
-              .sort(function(a, b) {
-                return b.value - a.value;
-              })
-              .slice(0, 6)
-          ),
-          symbolSize: function(val) {
-            return val[2] / 10;
-          },
-          showEffectOn: "render",
-          rippleEffect: {
-            brushType: "stroke"
-          },
-          hoverAnimation: true,
-          label: {
-            normal: {
-              formatter: "{b}",
-              position: "right",
-              show: true
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: "#f4e925",
-              shadowBlur: 10,
-              shadowColor: "#333"
-            }
-          },
-          zlevel: 1
         }
       ]
     };
@@ -498,22 +469,5 @@ export default {
 .chart {
   width: 100%;
   height: 100%;
-}
-.rank-content {
-  position: absolute;
-  bottom: 10px;
-  right: 0;
-  left: 0;
-  height: 200px;
-  width: 100%;
-  background: rgba(11, 38, 74, 0.5);
-  border: 1px solid #345f92;
-  padding: 15px;
-  color: #fff;
-}
-.rank_title {
-  color: #fff;
-  font-size: 22px;
-  font-weight: bold;
 }
 </style>

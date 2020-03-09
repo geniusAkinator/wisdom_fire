@@ -1,8 +1,9 @@
 <template>
-  <div :id="id" class="echart"></div>
+  <div :id="id" class="echart" style="height:300px"></div>
 </template>
 
 <script>
+import utils from "@/utils/utils";
 export default {
   data() {
     return {
@@ -11,7 +12,8 @@ export default {
         Math.random()
           .toString(36)
           .substr(-8),
-      myCharts: {}
+      myCharts: {},
+      option: {}
     };
   },
   props: {
@@ -38,7 +40,7 @@ export default {
           data: _this.chartData.ydata[i]
         });
       }
-      let option = {
+      _this.option = {
         tooltip: {
           trigger: "axis",
           position: function(pt) {
@@ -47,15 +49,6 @@ export default {
         },
         legend: {
           data: _this.chartData.legend
-        },
-        toolbox: {
-          feature: {
-            dataZoom: {
-              yAxisIndex: "none"
-            },
-            restore: {},
-            saveAsImage: {}
-          }
         },
         xAxis: {
           type: "category",
@@ -89,8 +82,9 @@ export default {
         ],
         series: _series
       };
-      _this.myCharts.setOption(option);
+      _this.myCharts.setOption(_this.option);
       window.addEventListener("resize", _this.resizeRangeChart);
+      utils.loopChart(_this.myCharts, _this.option);
     }
   },
   mounted() {
@@ -106,6 +100,5 @@ export default {
 <style>
 .echart {
   width: 100%;
-  height: 100%;
 }
 </style>

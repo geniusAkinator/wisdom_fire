@@ -197,21 +197,21 @@ const Utils = {
             let i = 0;
             let _len = option.series[i].data.length;
             setInterval(function () {
+                // chart.dispatchAction({
+                //     type: "hideTip",
+                //     seriesIndex: j,
+                //     dataIndex: _len - 1
+                // });
                 chart.dispatchAction({
-                    type: "downplay",
-                    seriesIndex: j,
-                    dataIndex: _len - 1
-                });
-                chart.dispatchAction({
-                    type: "highlight",
+                    type: "showTip",
                     seriesIndex: j,
                     dataIndex: i
                 });
-                chart.dispatchAction({
-                    type: "downplay",
-                    seriesIndex: j,
-                    dataIndex: i - 1
-                });
+                // chart.dispatchAction({
+                //     type: "hideTip",
+                //     seriesIndex: j,
+                //     dataIndex: i - 1
+                // });
                 i++;
                 if (i == _len) {
                     i = 0;
