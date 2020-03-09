@@ -141,8 +141,8 @@ const Utils = {
         var minWidth = layerInitWidth > docWidth ? docWidth : layerInitWidth;
         var minHeight = layerInitHeight > docHeight ? docHeight : layerInitHeight;
         let nowLayer = document.querySelector("#" + layerIndex);
-        let nowLayerContent = nowLayer.querySelector(".vl-notify-content");
-        let nowLayerTitle = nowLayer.querySelector(".vl-notice-title");
+        // let nowLayerContent = nowLayer.querySelector(".vl-notify-content");
+        // let nowLayerTitle = nowLayer.querySelector(".vl-notice-title");
         if (layerInitHeight > docHeight) {  //遮挡归位
             nowLayer.style.top = "50%";
             // nowLayerContent.style.height = docHeight - nowLayerTitle.offsetHeight + 'px'; //更新高度，让scroll正常
@@ -191,5 +191,33 @@ const Utils = {
             }
         });
     },
+    loopChart(chart, option) {
+        let _slen = option.series.length;
+        for (let j = 0; j < _slen; j++) {
+            let i = 0;
+            let _len = option.series[i].data.length;
+            setInterval(function () {
+                chart.dispatchAction({
+                    type: "downplay",
+                    seriesIndex: j,
+                    dataIndex: _len - 1
+                });
+                chart.dispatchAction({
+                    type: "highlight",
+                    seriesIndex: j,
+                    dataIndex: i
+                });
+                chart.dispatchAction({
+                    type: "downplay",
+                    seriesIndex: j,
+                    dataIndex: i - 1
+                });
+                i++;
+                if (i == _len) {
+                    i = 0;
+                }
+            }, 2500);
+        }
+    }
 }
 export default Utils

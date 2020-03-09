@@ -10,16 +10,18 @@
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
     <ul class="left-menu">
       <li @click="toggleMain">切换主体</li>
+      <li @click="doJump">数据看板</li>
+      <li @click="doJumpBoard">阿米看板</li>
     </ul>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <div class="right-menu-item hover-effect">
+        <!-- <div class="right-menu-item hover-effect">
           <svg-icon class-name="board-icon" icon-class="international" @click="doJump" />
         </div>
         <div class="right-menu-item hover-effect">
           <svg-icon class-name="board-icon" icon-class="board" @click="doJumpBoard" />
-        </div>
+        </div>-->
         <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -77,7 +79,7 @@ export default {
   },
   methods: {
     toggleMain() {
-      this.$emit("parentDrawerChange","");
+      this.$emit("parentDrawerChange", "");
     },
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
@@ -98,7 +100,7 @@ export default {
         name: "Platform"
       });
     },
-    doJumpBoard(){
+    doJumpBoard() {
       this.$router.push({
         name: "Board"
       });
@@ -148,6 +150,8 @@ export default {
     font-size: 14px;
     li {
       cursor: pointer;
+      float: left;
+      margin-right: 20px;
     }
   }
   .right-menu {

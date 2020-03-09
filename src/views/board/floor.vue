@@ -4,25 +4,33 @@
       <div class="info-item">
         <span class="info_name">建筑面积</span>
         <div class="gradient_line"></div>
-        <span class="info_value">400平米</span>
+        <span class="info_value">
+          <count-to :start-val="0" :end-val="400" :duration="2600" class="card-panel-num" />平米
+        </span>
         <div class="border_line"></div>
       </div>
       <div class="info-item">
         <span class="info_name">建造高度</span>
         <div class="gradient_line"></div>
-        <span class="info_value">100米</span>
+        <span class="info_value">
+          <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />米
+        </span>
         <div class="border_line"></div>
       </div>
       <div class="info-item">
         <span class="info_name">地上层数</span>
         <div class="gradient_line"></div>
-        <span class="info_value">3层</span>
+        <span class="info_value">
+          <count-to :start-val="0" :end-val="3" :duration="2600" class="card-panel-num" />层
+        </span>
         <div class="border_line"></div>
       </div>
       <div class="info-item">
         <span class="info_name">地下层数</span>
         <div class="gradient_line"></div>
-        <span class="info_value">2层</span>
+        <span class="info_value">
+          <count-to :start-val="0" :end-val="2" :duration="2600" class="card-panel-num" />层
+        </span>
         <div class="border_line"></div>
       </div>
     </div>
@@ -53,8 +61,8 @@
     </div>
   </div>
 </template>
-
 <script>
+import CountTo from "vue-count-to";
 export default {
   data() {
     return {
@@ -146,6 +154,9 @@ export default {
     }
     //滚动滑轮触发scrollFunc方法
     picker.onmousewheel = this.handleScroll;
+  },
+  components: {
+    CountTo
   }
 };
 </script>

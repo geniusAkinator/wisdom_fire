@@ -67,7 +67,7 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <!-- <div class="pla-top">
+        <div class="pla-top">
           <div class="echart-top-item">
             <div class="top-item-title">注册单位总数</div>
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
@@ -76,7 +76,7 @@
             <div class="top-item-title">注册设备数量</div>
             <count-to :start-val="0" :end-val="13088" :duration="2600" class="card-panel-num" />
           </div>
-        </div>-->
+        </div>
         <my-echart-map class="platform-map"></my-echart-map>
       </el-col>
       <el-col :span="6">

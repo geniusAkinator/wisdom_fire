@@ -18,28 +18,28 @@
         <el-col :span="8">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_name">上报时间</span>
-              <span class="info_value">2019-11-16 13:59:24</span>
+              <span class="info_item_name">上报时间</span>
+              <span class="info_item_value">2019-11-16 13:59:24</span>
             </li>
             <li class="info_item">
-              <span class="info_name">更新时间</span>
-              <span class="info_value">2019-11-16 13:59:24</span>
+              <span class="info_item_name">更新时间</span>
+              <span class="info_item_value">2019-11-16 13:59:24</span>
             </li>
           </ul>
         </el-col>
         <el-col :span="8">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_name">处理人</span>
-              <span class="info_value">刘XX</span>
+              <span class="info_item_name">处理人</span>
+              <span class="info_item_value">刘XX</span>
             </li>
             <li class="info_item">
-              <span class="info_name">处理时间</span>
-              <span class="info_value">2019-11-16 13:59:24</span>
+              <span class="info_item_name">处理时间</span>
+              <span class="info_item_value">2019-11-16 13:59:24</span>
             </li>
             <li class="info_item">
-              <span class="info_name">处理结果</span>
-              <span class="info_value">确认火灾</span>
+              <span class="info_item_name">处理结果</span>
+              <span class="info_item_value">确认火灾</span>
             </li>
           </ul>
         </el-col>

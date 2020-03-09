@@ -28,9 +28,8 @@
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                <el-dropdown-item>AAA</el-dropdown-item>
+                <el-dropdown-item>BBB</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>/
             <el-dropdown trigger="click">
@@ -39,9 +38,7 @@
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>AAA</el-dropdown-item>
-                <el-dropdown-item>BBB</el-dropdown-item>
-                <el-dropdown-item>CCC</el-dropdown-item>
+                <el-dropdown-item>退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -108,21 +105,21 @@
                 <i class="el-icon-time"></i>
                 <p>
                   等待处理
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   处理中
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   已完成
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
             </ul>
@@ -137,21 +134,21 @@
                 <i class="el-icon-time"></i>
                 <p>
                   等待处理
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   处理中
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   已完成
-                  <span>0</span>个
+                  <span>0个</span>
                 </p>
               </li>
             </ul>
@@ -196,12 +193,7 @@
             </el-table-column>
             <el-table-column prop="factoryName" label="传感器位置"></el-table-column>
             <el-table-column prop="name" label="类型"></el-table-column>
-            <el-table-column prop="deviceStatus" label="状态">
-              <template slot-scope="scope">
-                <span v-if="scope.row.deviceStatus == 0 ">正常</span>
-                <span v-if="scope.row.deviceStatus == 1 ">隐患原因</span>
-              </template>
-            </el-table-column>
+            <el-table-column prop="deviceStatus" label="状态"></el-table-column>
           </el-table>
         </el-col>
       </el-col>
@@ -428,6 +420,7 @@ export default {
         if (response.code == 200) {
           let _data = response.data;
           _this.tableData = _data;
+          console.log(_data);
         }
       });
     }
@@ -494,6 +487,7 @@ export default {
 .detail-item p {
   margin: 0;
   padding: 0;
+  font-size: 12px;
 }
 .box-item {
   padding-left: 0 !important;
@@ -523,10 +517,13 @@ export default {
 .detail-item p {
   color: #fff;
   font-size: 12px;
+  display: flex;
+  width: 100%;
 }
 .detail-item span {
   font-size: 18px;
-  margin-right: 5px;
+  margin-left: auto;
+  color: #02addb;
 }
 .board-table {
   background: initial;
@@ -807,10 +804,10 @@ div[id^="rchart"] {
 }
 .square_list > div {
   background: #fff;
-  width: 8px;
+  width: 6px;
   height: 15px;
   float: left;
-  margin-right: 8px;
+  margin-right: 6px;
   transform: skew(-30deg);
 }
 .square_list > div:first-child {

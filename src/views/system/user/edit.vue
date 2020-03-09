@@ -8,8 +8,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="归属部门" prop="deptId">
-            <treeselect v-model="form.deptId" :options="deptOptions" placeholder="请选择归属部门" />
+          <el-form-item label="归属公司" prop="deptId">
+            <treeselect v-model="form.deptId" :options="deptOptions" placeholder="请选择归属公司" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -129,7 +129,7 @@ export default {
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
         deptId: [
-          { required: true, message: "归属部门不能为空", trigger: "blur" }
+          { required: true, message: "归属公司不能为空", trigger: "blur" }
         ],
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" }

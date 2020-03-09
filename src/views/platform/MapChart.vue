@@ -1,13 +1,14 @@
 <template>
-  <div
-    style="width:100%;height:100%;background: url('../../assets/image/bg.png') 100% 100% no-repeat;position: relative;"
-  >
+  <div style="width:100%;height:calc( 100% - 70px );position: relative;">
     <div :id="id" class="chart"></div>
-    <!-- <div class="dd"></div> -->
+    <div class="rank-content">
+      <span class="rank_title">全国排名</span>
+    </div>
   </div>
 </template>
 
 <script>
+import MyPieRange from "@/views/platform/RangeChart";
 import axios from "axios";
 export default {
   data() {
@@ -497,5 +498,22 @@ export default {
 .chart {
   width: 100%;
   height: 100%;
+}
+.rank-content {
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  height: 200px;
+  width: 100%;
+  background: rgba(11, 38, 74, 0.5);
+  border: 1px solid #345f92;
+  padding: 15px;
+  color: #fff;
+}
+.rank_title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
 }
 </style>

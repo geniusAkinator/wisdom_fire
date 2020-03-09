@@ -71,7 +71,14 @@
         <p
           class="statistics"
         >{{nowYear}}年{{nowMonth?nowMonth:12}}月共有{{this.staffCount}}人参与到安中云日常管理中，所有工作人员共在云平台中处理故障{{this.errCount}}次，处理隐患{{this.hazardCount}}次。</p>
-        <el-table stripe border :data="tableData" align="center" style="width: 100%">
+        <el-table
+          class="statistic_table"
+          stripe
+          border
+          :data="tableData"
+          align="center"
+          style="width: 100%"
+        >
           <el-table-column prop="name" label="人员姓名"></el-table-column>
           <el-table-column prop="errCount" label="处理故障"></el-table-column>
           <el-table-column prop="hazardCount" label="处理隐患"></el-table-column>
@@ -237,11 +244,11 @@ export default {
           }
           let _count = 0;
           _current.map((item, i) => {
-            console.log(item.state,item.count)
+            console.log(item.state, item.count);
             _list[item.state].本月 = item.count;
             _count = _count + item.count;
-            if(item.state == 3){
-              this.doneCount = item.count
+            if (item.state == 3) {
+              this.doneCount = item.count;
             }
           });
           _before.map((item, i) => {
@@ -274,7 +281,7 @@ export default {
 .el-card__header {
   padding: 10px 20px;
 } */
-.el-table thead {
+.el-table.statistic_table thead {
   background: #f5f7fa;
 }
 .el-card + .el-card {
