@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import utils from "@/utils/utils";
 export default {
   data() {
     return {
@@ -11,7 +12,8 @@ export default {
         Math.random()
           .toString(36)
           .substr(-8),
-      myCharts: {}
+      myCharts: {},
+      option: {}
     };
   },
   props: {
@@ -63,7 +65,7 @@ export default {
           }
         });
       }
-      let option = {
+      _this.option = {
         tooltip: {
           trigger: "axis",
           position: function(pt) {
@@ -142,8 +144,9 @@ export default {
         ],
         series: _series
       };
-      _this.myCharts.setOption(option);
+      _this.myCharts.setOption(_this.option);
       window.addEventListener("resize", _this.resizeRangeChart);
+      utils.loopChart(_this.myCharts, _this.option);
     }
   },
   mounted() {
@@ -154,8 +157,6 @@ export default {
   }
 };
 </script>
-
-
 <style>
 .echart {
   width: 100%;

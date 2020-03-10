@@ -100,58 +100,29 @@
             <ul class="detail-list">
               <li class="detail-item title">
                 <p>
-                  今日火警
-                  <span>5个</span>
+                  今日隐患
+                  <span>{{this.totalHazard}}个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-time"></i>
                 <p>
-                  等待处理
-                  <span>0个</span>
+                  待处理
+                  <span>{{this.waitHazard}}个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   处理中
-                  <span>0个</span>
+                  <span>{{this.processingHazard}}个</span>
                 </p>
               </li>
               <li class="detail-item">
                 <i class="el-icon-stopwatch"></i>
                 <p>
                   已完成
-                  <span>0个</span>
-                </p>
-              </li>
-            </ul>
-            <ul class="detail-list">
-              <li class="detail-item title">
-                <p>
-                  今日火警
-                  <span>5个</span>
-                </p>
-              </li>
-              <li class="detail-item">
-                <i class="el-icon-time"></i>
-                <p>
-                  等待处理
-                  <span>0个</span>
-                </p>
-              </li>
-              <li class="detail-item">
-                <i class="el-icon-stopwatch"></i>
-                <p>
-                  处理中
-                  <span>0个</span>
-                </p>
-              </li>
-              <li class="detail-item">
-                <i class="el-icon-stopwatch"></i>
-                <p>
-                  已完成
-                  <span>0个</span>
+                  <span>{{this.solvedHazard}}个</span>
                 </p>
               </li>
             </ul>
@@ -168,7 +139,7 @@
               <div v-for="i in 5"></div>
             </div>
           </div>
-          <my-echart-radar></my-echart-radar>
+          <my-echart-radar :data="radarData" :key="radarkey" v-if="radarData.indicator.length"></my-echart-radar>
         </el-col>
       </el-col>
       <el-col :span="12">
@@ -263,7 +234,9 @@ import {
   getHazardResult,
   getEventDoneRate,
   getSensorData,
-  getOnlineRate
+  getOnlineRate,
+  getNormalEquipment,
+  getHandleDetail
 } from "@/api/platform/board";
 export default {
   data() {
@@ -311,17 +284,25 @@ export default {
         ydata: [[], []] //纵坐标的值
       },
       pieData: [],
+      radarData: {
+        indicator: [],
+        value: [0, 10, 10]
+      },
       meterData: 20,
       yearKey: 1,
       gaugeKey1: 10,
       gaugeKey2: 20,
-      pieKey: 30
+      pieKey: 30,
+      radarkey: 40,
+      totalHazard: 0,
+      waitHazard: 0,
+      processingHazard: 0,
+      solvedHazard: 0
     };
   },
   methods: {
     resizeTable() {
       let _table = document.querySelector("#tableBox");
-      console.log(_table.offsetHeight);
       let _height = _table.offsetHeight;
       this.tableHeight = _height;
     },
@@ -451,6 +432,44 @@ export default {
           ++_this.pieKey;
         }
       });
+    },
+    getNormalEquipmentList() {
+      let _this = this;
+      getNormalEquipment().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _arr1 = [];
+          let _arr2 = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.text = item.name;
+            temp.max = item.countSum;
+            _arr1.push(temp);
+            _arr2.push(item.count);
+          });
+          _this.radarData.value = _arr2;
+          _this.radarData.indicator = _arr1;
+          ++_this.radarkey;
+        }
+      });
+    },
+    getHandleDetailList() {
+      let _this = this;
+      getHandleDetail().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          _data.map((item, i) => {
+            if (item.state == 0) {
+              this.waitHazard = item.count;
+            } else if (item.state == 1) {
+              this.processingHazard = item.count;
+            } else if (item.state == 2) {
+              this.solvedHazard = item.count;
+            }
+            this.totalHazard = this.totalHazard + item.count;
+          });
+        }
+      });
     }
   },
   mounted() {
@@ -463,6 +482,8 @@ export default {
     _this.getEventDoneRateList();
     _this.getSensorList();
     _this.getOnlineRateList();
+    _this.getNormalEquipmentList();
+    _this.getHandleDetailList();
     window.addEventListener("resize", _this.resizeTable);
   },
   components: {

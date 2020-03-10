@@ -31,3 +31,20 @@ export function getOnlineRate() {
         method: 'get'
     })
 }
+//本日设备正常运行统计接口
+export function getNormalEquipment() {
+    return request({
+        url: '/system/bulletin/equipmentNormalFunctionToday',
+        method: 'get'
+    })
+}
+
+// /system/transducer/recvfrom
+
+//处理详情接口
+export function getHandleDetail() {
+    return request({
+        url: '/system/bulletin/handlingDetails',
+        method: 'get'
+    })
+}

@@ -71,7 +71,6 @@ export default {
             color: "#27f8fc",
             distance: 15,
             formatter: function(v) {
-              console.log(v);
               switch (v + "") {
                 case "0":
                   return "0";
