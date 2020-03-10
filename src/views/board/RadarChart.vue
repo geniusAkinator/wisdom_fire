@@ -119,7 +119,7 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    this.initChart();
   },
   beforeDestroy() {
     this.myCharts.clear();

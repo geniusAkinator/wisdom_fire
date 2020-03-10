@@ -22,23 +22,25 @@
       <div class="el-col el-col-7">
         <div class="board-top-right">
           <div class="platform-dropdown">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="click" tabindex="0">
               <span class="el-dropdown-link">
-                负责建筑
+                {{factoryName}}
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>AAA</el-dropdown-item>
-                <el-dropdown-item>BBB</el-dropdown-item>
+                <el-dropdown-item
+                  v-for="(item,index) in factoryList"
+                  :command="item.id"
+                >{{item.name}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>/
-            <el-dropdown trigger="click">
+            <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
-                管理员
+                {{userName}}
                 <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -238,6 +240,7 @@ import {
   getNormalEquipment,
   getHandleDetail
 } from "@/api/platform/board";
+import { listFactory } from "@/api/main/factory";
 export default {
   data() {
     return {
@@ -297,14 +300,21 @@ export default {
       totalHazard: 0,
       waitHazard: 0,
       processingHazard: 0,
-      solvedHazard: 0
+      solvedHazard: 0,
+      userName: this.$store.getters.name,
+      factoryList: [],
+      factoryName: "",
+      factoryId:0
     };
   },
   methods: {
     resizeTable() {
-      let _table = document.querySelector("#tableBox");
-      let _height = _table.offsetHeight;
-      this.tableHeight = _height;
+      let _this = this;
+      _this.$nextTick(() => {
+        let _table = document.querySelector("#tableBox");
+        let _height = _table.offsetHeight;
+        _this.tableHeight = _height;
+      });
     },
     initDateTime() {
       let date = new Date();
@@ -470,6 +480,31 @@ export default {
           });
         }
       });
+    },
+    logout() {
+      console.log("dafas");
+      this.$confirm("确定注销并退出系统吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$store.dispatch("LogOut").then(() => {
+          location.reload();
+        });
+      });
+    },
+    handleCommand(command) {
+      if (command == "logout") {
+        this.logout();
+      }
+    }
+  },
+  watch: {
+    factoryList(nVal, oVal) {
+      if (nVal.length) {
+        this.factoryName = nVal[0].name;
+        this.factoryId = nVal[0].id;
+      }
     }
   },
   mounted() {
@@ -484,6 +519,19 @@ export default {
     _this.getOnlineRateList();
     _this.getNormalEquipmentList();
     _this.getHandleDetailList();
+    listFactory().then(response => {
+      if (response.code == 200) {
+        let _data = response.rows;
+        let _arr = [];
+        _data.map((item, i) => {
+          let temp = {};
+          temp.id = item.factoryId;
+          temp.name = item.factoryName;
+          _arr.push(temp);
+        });
+        _this.factoryList = _arr;
+      }
+    });
     window.addEventListener("resize", _this.resizeTable);
   },
   components: {
@@ -523,16 +571,8 @@ export default {
 .middle {
   height: calc((200% - 170px) / 3);
 }
-.detail-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
 .detail-item {
   display: flex;
-}
-.detail-item.title {
-  font-weight: bold;
 }
 .detail-item p {
   margin: 0;
@@ -547,7 +587,11 @@ export default {
   background-image: radial-gradient(#07133b, #071844, rgba(7, 38, 84, 0.8));
 }
 .detail-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
   width: 45%;
+  height: calc(100% - 70px);
   padding: 10px 20px;
   margin-top: 40px;
   color: #fff;
@@ -556,7 +600,7 @@ export default {
 .detail-item {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: #fff;
   line-height: 25px;
 }
@@ -574,6 +618,9 @@ export default {
   font-size: 18px;
   margin-left: auto;
   color: #02addb;
+}
+.detail-item.title p {
+  font-size: 20px;
 }
 .board-table {
   background: initial;
@@ -1018,6 +1065,7 @@ div[id^="rchart"] {
 }
 .detail-box {
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;

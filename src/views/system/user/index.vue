@@ -347,6 +347,7 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
+      console.log(data.id)
       this.queryParams.deptId = data.id;
       this.getList();
     },

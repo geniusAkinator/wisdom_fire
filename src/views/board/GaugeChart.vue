@@ -31,8 +31,6 @@ export default {
       let bcolor = this.color.bcolor;
       let lcolor = this.color.lcolor;
       let center = ["50%", "55%"];
-      //08BBB7
-      //91D86C
       var dataArr = [
         {
           value: this.data.value,
@@ -46,7 +44,7 @@ export default {
         }
       ]);
       var colorSet = [
-        [_this.data.value / 100, color],
+        [this.data.value / 100, color],
         [1, bcolor]
       ];
       var rich = {
@@ -54,16 +52,15 @@ export default {
           fontSize: 35,
           color: "#fff",
           fontWeight: "500",
-          padding: [-20, 0, 0, 0]
+          padding: [-10, 0, 0, 0]
         },
         bule: {
           fontSize: 35,
           color: "#fff",
           fontWeight: "500",
-          padding: [-20, 0, 0, 0]
+          padding: [-10, 0, 0, 0]
         },
         radius: {
-          // lineHeight:80,
           borderWidth: 1,
           borderColor: "#0092F2",
           fontSize: 12,

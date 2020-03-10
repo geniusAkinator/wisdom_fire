@@ -10,8 +10,8 @@
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
     <ul class="left-menu">
       <li @click="toggleMain">切换主体</li>
-      <li @click="doJump">数据看板</li>
-      <li @click="doJumpBoard">阿米看板</li>
+      <li @click="doJump('Platform')">数据看板</li>
+      <li @click="doJump('Board')">阿米看板</li>
     </ul>
 
     <div class="right-menu">
@@ -26,7 +26,7 @@
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip> -->
+        </el-tooltip>-->
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
@@ -95,14 +95,9 @@ export default {
         });
       });
     },
-    doJump() {
+    doJump(name) {
       this.$router.push({
-        name: "Platform"
-      });
-    },
-    doJumpBoard() {
-      this.$router.push({
-        name: "Board"
+        name: name
       });
     }
   }
