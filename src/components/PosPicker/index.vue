@@ -51,6 +51,7 @@ export default {
   },
   methods: {
     handleClick(e) {
+      console.log(e)
       let _marker = this.$refs.marker;
       let _img = this.$refs.floorImg;
       let x = e.offsetX - _marker.offsetWidth / 2;

@@ -16,7 +16,7 @@
           <el-option
             v-for="(item,index) in buildingList"
             :key="index"
-            :label="item.buildingName"
+            :label="item.name"
             :value="item.buildingId"
           ></el-option>
         </el-select>

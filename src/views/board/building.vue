@@ -5,7 +5,16 @@
         <span class="info_name">建筑面积</span>
         <div class="gradient_line"></div>
         <span class="info_value">
-          <count-to :start-val="0" :end-val="400" :duration="2600" class="card-panel-num" />平米
+          <template v-if="data[0].area == 0 || data[0].area ==null || data[0].area ==''">N/A</template>
+          <template v-else>
+            <count-to
+              :start-val="0"
+              :end-val="data[0].area"
+              :duration="2600"
+              class="card-panel-num"
+            />
+          </template>
+          平米
         </span>
         <div class="border_line"></div>
       </div>
@@ -13,7 +22,16 @@
         <span class="info_name">建造高度</span>
         <div class="gradient_line"></div>
         <span class="info_value">
-          <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />米
+          <template v-if="data[0].height == 0 || data[0].height ==null || data[0].height ==''">N/A</template>
+          <template v-else>
+            <count-to
+              :start-val="0"
+              :end-val="data[0].height"
+              :duration="2600"
+              class="card-panel-num"
+            />
+          </template>
+          米
         </span>
         <div class="border_line"></div>
       </div>
@@ -21,7 +39,17 @@
         <span class="info_name">地上层数</span>
         <div class="gradient_line"></div>
         <span class="info_value">
-          <count-to :start-val="0" :end-val="3" :duration="2600" class="card-panel-num" />层
+          <template
+            v-if="data[0].upperLevel == 0 || data[0].upperLevel ==null || data[0].upperLevel ==''"
+          >N/A</template>
+          <template v-else>
+            <count-to
+              :start-val="0"
+              :end-val="data[0].upperLevel"
+              :duration="2600"
+              class="card-panel-num"
+            />
+          </template>层
         </span>
         <div class="border_line"></div>
       </div>
@@ -29,7 +57,16 @@
         <span class="info_name">地下层数</span>
         <div class="gradient_line"></div>
         <span class="info_value">
-          <count-to :start-val="0" :end-val="2" :duration="2600" class="card-panel-num" />层
+          <template v-if=" data[0].underLevel ==null || data[0].underLevel ==''">N/A</template>
+          <template v-else>
+            <count-to
+              :start-val="0"
+              :end-val="data[0].underLevel"
+              :duration="2600"
+              class="card-panel-num"
+            />
+          </template>
+          层
         </span>
         <div class="border_line"></div>
       </div>
@@ -47,14 +84,17 @@
             :style="`transform: perspective(1000px) rotateY(0deg) rotateX(${index*20}deg);`"
           >
             <li
-              v-for="(item,idx) in floorList"
+              v-for="(item,idx) in data[0].children"
               :key="idx"
               :class="idx==index?'floor-item center':'floor-item'"
               :style="`transform-origin: center center -90px; transform: translateZ(90px) rotateX(-${idx*20}deg);`"
               @click="handleClick(item,idx)"
-            >{{item.floorName}}</li>
+            >{{item.level}}F</li>
           </ul>
         </div>
+      </div>
+      <div>
+        
       </div>
     </div>
   </div>
@@ -65,23 +105,20 @@ export default {
   data() {
     return {
       index: 0,
-      floorList: [
-        { floorName: "4F" },
-        { floorName: "3F" },
-        { floorName: "2F" },
-        { floorName: "1F" }
-      ],
       isEnter: false,
       src:
         "http://192.168.10.65:8888/images/0a2967e6-53ef-4630-9a47-0bd055ad25fe.jpg"
     };
   },
   props: {
-    height: ""
+    data: {
+      type: Array,
+      deep: true
+    }
   },
   computed: {
     len: function() {
-      return this.floorList.length;
+      return this.data[0].length;
     }
   },
   watch: {

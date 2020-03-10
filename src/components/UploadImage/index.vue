@@ -44,7 +44,7 @@ export default {
     },
     imgs(nVal, oVal) {
       this.$emit("sendImage", nVal);
-      if (nVal == "") {
+      if (nVal == "" || nVal == null) {
         this.list = [];
       } else {
         this.list = nVal.split("|");

@@ -62,7 +62,9 @@ export default {
           trigger: "axis",
           position: function(pt) {
             return [pt[0], "10%"];
-          }
+          },
+          extraCssText:"z-index:9999",
+          confine:true
         },
         legend: {
           data: _this.chartData.legend,

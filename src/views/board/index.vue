@@ -22,7 +22,7 @@
       <div class="el-col el-col-7">
         <div class="board-top-right">
           <div class="platform-dropdown">
-            <el-dropdown trigger="click" tabindex="0">
+            <el-dropdown trigger="click" v-if="factoryName!=''">
               <span class="el-dropdown-link">
                 {{factoryName}}
                 <i class="el-icon-caret-bottom el-icon--right"></i>
@@ -146,7 +146,7 @@
       </el-col>
       <el-col :span="12">
         <el-col :span="24" class="box-item middle" id="floorBox">
-          <my-floor></my-floor>
+          <my-building :data="buildingData" v-if="buildingData.length"></my-building>
         </el-col>
         <el-col :span="24" class="box-item" id="tableBox">
           <div class="hightlight_line top_left"></div>
@@ -231,14 +231,15 @@ import MyEchartLine from "@/views/board/LineChart";
 import MyEchartPie from "@/views/board/PieChart";
 import MyEchartMeter from "@/views/board/MeterChart";
 import MyEchartRadar from "@/views/board/RadarChart";
-import MyFloor from "@/views/board/floor";
+import MyBuilding from "@/views/board/building";
 import {
   getHazardResult,
   getEventDoneRate,
   getSensorData,
   getOnlineRate,
   getNormalEquipment,
-  getHandleDetail
+  getHandleDetail,
+  getBuildingDetail
 } from "@/api/platform/board";
 import { listFactory } from "@/api/main/factory";
 export default {
@@ -304,17 +305,26 @@ export default {
       userName: this.$store.getters.name,
       factoryList: [],
       factoryName: "",
-      factoryId:0
+      factoryId: 0,
+      buildingData: []
     };
+  },
+  watch: {
+    factoryList(nVal, oVal) {
+      let _this = this;
+      if (nVal.length) {
+        _this.factoryName = nVal[0].name;
+        _this.factoryId = nVal[0].id;
+        _this.getBuilding();
+      }
+    }
   },
   methods: {
     resizeTable() {
       let _this = this;
-      _this.$nextTick(() => {
-        let _table = document.querySelector("#tableBox");
-        let _height = _table.offsetHeight;
-        _this.tableHeight = _height;
-      });
+      let _table = document.querySelector("#tableBox");
+      let _height = _table.offsetHeight;
+      _this.tableHeight = _height;
     },
     initDateTime() {
       let date = new Date();
@@ -466,6 +476,7 @@ export default {
     getHandleDetailList() {
       let _this = this;
       getHandleDetail().then(response => {
+        console.log(response.data);
         if (response.code == 200) {
           let _data = response.data;
           _data.map((item, i) => {
@@ -478,6 +489,31 @@ export default {
             }
             this.totalHazard = this.totalHazard + item.count;
           });
+        }
+      });
+    },
+    getFactoryList() {
+      let _this = this;
+      listFactory().then(response => {
+        if (response.code == 200) {
+          let _data = response.rows;
+          let _arr = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.id = item.factoryId;
+            temp.name = item.factoryName;
+            _arr.push(temp);
+          });
+          _this.factoryList = _arr;
+        }
+      });
+    },
+    getBuilding() {
+      let _this = this;
+      getBuildingDetail({ factoryIds: _this.factoryId }).then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          _this.buildingData = _data;
         }
       });
     },
@@ -499,14 +535,7 @@ export default {
       }
     }
   },
-  watch: {
-    factoryList(nVal, oVal) {
-      if (nVal.length) {
-        this.factoryName = nVal[0].name;
-        this.factoryId = nVal[0].id;
-      }
-    }
-  },
+
   mounted() {
     let _this = this;
     _this.initDateTime();
@@ -519,20 +548,10 @@ export default {
     _this.getOnlineRateList();
     _this.getNormalEquipmentList();
     _this.getHandleDetailList();
-    listFactory().then(response => {
-      if (response.code == 200) {
-        let _data = response.rows;
-        let _arr = [];
-        _data.map((item, i) => {
-          let temp = {};
-          temp.id = item.factoryId;
-          temp.name = item.factoryName;
-          _arr.push(temp);
-        });
-        _this.factoryList = _arr;
-      }
+    _this.getFactoryList();
+    _this.$nextTick(() => {
+      window.addEventListener("resize", _this.resizeTable);
     });
-    window.addEventListener("resize", _this.resizeTable);
   },
   components: {
     MyEchartGauge,
@@ -540,7 +559,7 @@ export default {
     MyEchartPie,
     MyEchartMeter,
     MyEchartRadar,
-    MyFloor
+    MyBuilding
   }
 };
 </script>
@@ -566,7 +585,6 @@ export default {
 .box-item {
   height: calc((100% - 100px) / 3);
   margin-top: 10px;
-  overflow: hidden;
 }
 .middle {
   height: calc((200% - 170px) / 3);

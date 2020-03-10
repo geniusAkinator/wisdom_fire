@@ -16,7 +16,7 @@
           <el-option
             v-for="(item,index) in buildingList"
             :key="index"
-            :label="item.buildingName"
+            :label="item.name"
             :value="item.buildingId"
           ></el-option>
         </el-select>
@@ -220,6 +220,7 @@ export default {
       listBuilding(this.bform).then(response => {
         if (response.code === 200) {
           this.buildingList = response.rows;
+          console.log(this.buildingList)
         }
       });
     },

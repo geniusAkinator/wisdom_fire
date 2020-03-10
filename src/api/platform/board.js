@@ -48,3 +48,12 @@ export function getHandleDetail() {
         method: 'get'
     })
 }
+
+// 楼层接口
+export function getBuildingDetail(query) {
+    return request({
+        url: '/system/bulletin/floorStatistics',
+        method: 'get',
+        params: query
+    })
+}
