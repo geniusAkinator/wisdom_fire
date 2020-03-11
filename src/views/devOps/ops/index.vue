@@ -23,25 +23,35 @@
         </el-col>
       </el-row>
     </el-card>
-
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="devops-tab">
       <el-tab-pane label="待处理" name="first">
         <el-table
           stripe
           border
-          :data="overviewList"
+          :data="waitingList"
           align="center"
           style="width: 100%"
-          v-loading="loading"
+          v-loading="loading1"
         >
-          <el-table-column prop="hdId" label="ID" width="80"></el-table-column>
-          <el-table-column prop="hdId" label="时间"></el-table-column>
-          <el-table-column prop="hdId" label="单位"></el-table-column>
-          <el-table-column prop="type" label="设备类型"></el-table-column>
+          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+
+          <el-table-column prop="factoryName" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="200px">
+          <el-table-column prop="content" label="故障内容"></el-table-column>
+          <el-table-column prop="uptime" label="更新时间" width="160px">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.uptime) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right" width="180px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleAppoint(scope.$index, scope.row)"
+              >指派任务</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -50,18 +60,23 @@
         <el-table
           stripe
           border
-          :data="overviewList"
+          :data="processingList"
           align="center"
           style="width: 100%"
-          v-loading="loading"
+          v-loading="loading2"
         >
-          <el-table-column prop="hdId" label="ID" width="80"></el-table-column>
-          <el-table-column prop="hdId" label="时间"></el-table-column>
-          <el-table-column prop="hdId" label="单位"></el-table-column>
-          <el-table-column prop="type" label="设备类型"></el-table-column>
+          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+
+          <el-table-column prop="factoryName" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="type" label="处理人"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="200px">
+          <el-table-column prop="content" label="故障内容"></el-table-column>
+          <el-table-column prop="uptime" label="更新时间" width="160px">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.uptime) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             </template>
@@ -72,19 +87,21 @@
         <el-table
           stripe
           border
-          :data="overviewList"
+          :data="handledList"
           align="center"
           style="width: 100%"
-          v-loading="loading"
+          v-loading="loading3"
         >
-          <el-table-column prop="hdId" label="ID" width="80"></el-table-column>
-          <el-table-column prop="hdId" label="时间"></el-table-column>
-          <el-table-column prop="hdId" label="单位"></el-table-column>
-          <el-table-column prop="type" label="设备类型"></el-table-column>
+          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column prop="factoryName" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="type" label="处理人"></el-table-column>
-          <el-table-column prop="date" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="200px">
+          <el-table-column prop="uptime" label="更新时间" width="160px">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.uptime) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             </template>
@@ -96,71 +113,109 @@
 </template>
 
 <script>
-import { listOverview } from "@/api/hazard/overview";
-
+import { getSensorFaultList } from "@/api/devops/ops";
+import { parseTimeStr, parseTime } from "@/utils/common";
+import MyAppointAdd from "@/views/devOps/ops/add";
 export default {
   name: "OverView",
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading1: true,
+      loading2: true,
+      loading3: true,
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
-        menuName: "",
-        visible: ""
+        pageSize: 10
       },
-      overviewList: [],
+      waitingList: [],
+      processingList: [],
+      handledList: [],
       // 表单参数
-      form: {},
+      form: {
+        pageNum: 1,
+        pageSize: 10,
+        state: 0
+      },
       rowId: 0,
       layerId: "",
       eid: 0,
       total: 0,
-      activeName: "first"
+      activeName: "first",
+      layerId: "",
+      rowFactoryName: ""
     };
   },
-  created() {
-    this.getList();
+  watch: {
+    activeName(nVal, oVal) {
+      let _this = this;
+      if (nVal == "first") {
+        _this.form.state = 0;
+      } else if (nVal == "second") {
+        _this.form.state = 1;
+      } else if (nVal == "third") {
+        _this.form.state = 2;
+      }
+      _this.getList();
+    }
   },
   methods: {
     handleClick() {},
     /** 查询菜单列表 */
     getList() {
-      this.loading = true;
-      listOverview(this.queryParams).then(response => {
+      let _this = this;
+      getSensorFaultList(_this.form).then(response => {
         if (response.code == 200) {
-          this.overviewList = response.rows;
-          console.log(this.overviewList);
-          this.total = response.total;
-          this.loading = false;
+          let _data = response.data;
+          let _row = _data.sensorFaultList;
+          let _factoryName = _data.factoryName;
+          let _arr = [];
+          _row.map((item, i) => {
+            let temp = {};
+            temp.id = item.id;
+            temp.factoryName = _factoryName;
+            temp.sensorName = item.sensorName;
+            temp.type = item.type;
+            temp.uptime = item.uptime;
+            temp.content = item.content;
+            _arr.push(temp);
+          });
+          _this.waitingList = _row;
+          if (_this.form.state == 0) {
+            _this.loading1 = false;
+            _this.waitingList = _arr;
+          } else if (_this.form.state == 1) {
+            _this.loading2 = false;
+            _this.processingList = _arr;
+          } else if (_this.form.state == 2) {
+            _this.loading3 = false;
+            _this.handledList = _arr;
+          }
+          console.log(_data);
         }
       });
     },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {};
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.getList();
-    },
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
     handleDetail(index, row) {
-      this.$router.push({ name: "OpsDetail", params: { id: row.hdId } });
+      this.$router.push({ name: "OpsDetail", params: { id: row.id } });
+    },
+    handleAppoint(index, row) {
+      var index = this.$layer.iframe({
+        content: {
+          content: MyAppointAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["800px", "600px"],
+        title: "指派任务",
+        target: ".app-main"
+      });
+      this.layerId = index;
+      this.rowFactoryName = row.factoryName;
     }
   },
-  mounted() {
+  created() {
     this.getList();
   }
 };

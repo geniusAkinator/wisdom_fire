@@ -22,7 +22,7 @@
       <div class="el-col el-col-7">
         <div class="board-top-right">
           <div class="platform-dropdown">
-            <el-dropdown trigger="click" v-if="factoryName!=''">
+            <el-dropdown @command="switchFactory" v-if="factoryName!=''">
               <span class="el-dropdown-link">
                 {{factoryName}}
                 <i class="el-icon-caret-bottom el-icon--right"></i>
@@ -315,8 +315,11 @@ export default {
       if (nVal.length) {
         _this.factoryName = nVal[0].name;
         _this.factoryId = nVal[0].id;
-        _this.getBuilding();
       }
+    },
+    factoryId(nVal, oVal) {
+      let _this = this;
+      _this.getBuilding();
     }
   },
   methods: {
@@ -533,6 +536,10 @@ export default {
       if (command == "logout") {
         this.logout();
       }
+    },
+    switchFactory(command) {
+      let _this = this;
+      _this.factoryId = command;
     }
   },
 
