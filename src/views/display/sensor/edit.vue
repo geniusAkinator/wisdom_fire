@@ -101,7 +101,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -138,7 +138,26 @@ export default {
       buildingList: [],
       floorList: [],
       typeList: [],
-      rules: {},
+      rules: {
+        factoryId: [
+          { required: true, message: "请选择所属工厂", trigger: "change" }
+        ],
+        buildingId: [
+          { required: true, message: "请选择所属楼宇", trigger: "change" }
+        ],
+        floorId: [
+          { required: true, message: "请选择所属楼层", trigger: "change" }
+        ],
+        currlocation: [
+          { required: true, message: "点位描述不能为空", trigger: "blur" }
+        ],
+        deviceNumber: [
+          { required: true, message: "设备编号不能为空", trigger: "blur" }
+        ],
+        expirationDate: [
+          { required: true, message: "到期时间不能为空", trigger: "change" }
+        ]
+      },
       floorImg: "",
       bform: {
         factoryId: 0
@@ -178,14 +197,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      updateTransducer(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateTransducer(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

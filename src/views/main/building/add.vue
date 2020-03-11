@@ -14,22 +14,32 @@
       <el-form-item label="楼宇名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入楼宇名称" />
       </el-form-item>
-      <el-form-item label="面积" prop="area">
-        <el-input v-model="form.area" type="number" placeholder="请输入面积" />
+      <el-form-item label="建筑面积" prop="area">
+        <el-input v-model="form.area" type="number" placeholder="请输入建筑面积">
+          <template slot="append">
+            m
+            <sup>2</sup>
+          </template>
+        </el-input>
       </el-form-item>
-      <el-form-item label="图片" prop="picture" class="readonly">
+
+      <el-form-item label="楼上层数" prop="upperLevel">
+        <el-input v-model="form.upperLevel" type="number" placeholder="请输入楼上层数">
+          <template slot="append">层</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="楼下层数" prop="underLevel">
+        <el-input v-model="form.underLevel" type="number" placeholder="请输入楼下层数">
+          <template slot="append">层</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="建筑图片" prop="picture" class="readonly">
         <el-input v-model="form.picture" placeholder="请输入图片" readonly />
         <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
-      <el-form-item label="楼上层数" prop="upperLevel">
-        <el-input v-model="form.upperLevel" type="number" placeholder="请输入楼上层数" />
-      </el-form-item>
-      <el-form-item label="楼下层数" prop="underLevel">
-        <el-input v-model="form.underLevel" type="number" placeholder="请输入楼下层数" />
-      </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -55,7 +65,16 @@ export default {
         factoryId: ""
       },
       factoryList: [],
-      rules: {}
+      rules: {
+        name: [{ required: true, message: "请输入楼宇名称", trigger: "blur" }],
+        area: [{ required: true, message: "请输入建筑面积", trigger: "blur" }],
+        upperLevel: [
+          { required: true, message: "请输入楼上层数", trigger: "blur" }
+        ],
+        underLevel: [
+          { required: true, message: "请输入楼下层数", trigger: "blur" }
+        ]
+      }
     };
   },
   watch: {
@@ -64,14 +83,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      addBuilding(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addBuilding(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

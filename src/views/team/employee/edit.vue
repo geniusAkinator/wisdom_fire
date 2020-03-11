@@ -57,7 +57,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -81,7 +81,17 @@ export default {
         departmentId: "",
         employeeId: this.$parent.eid
       },
-      rules: {},
+      rules: {
+        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        idCard: [
+          { required: true, message: "身份证不能为空", trigger: "blur" }
+        ],
+        phone: [{ required: true, message: "手机不能为空", trigger: "blur" }],
+        duty: [{ required: true, message: "职位不能为空", trigger: "blur" }],
+        joinTime: [
+          { required: true, message: "请选择入职时间", trigger: "change" }
+        ]
+      },
       factoryList: [],
       departmentList: [],
       sexOptions: [],
@@ -94,14 +104,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      updateEmployee(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateEmployee(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-row>
+      <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="上级菜单">
             <treeselect
@@ -107,7 +107,7 @@
       </el-row>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -152,14 +152,18 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      addMenu(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addMenu(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

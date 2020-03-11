@@ -31,7 +31,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -54,7 +54,15 @@ export default {
         sort: 0
       },
       typeList: [],
-      rules: {}
+      rules: {
+        name: [{ required: true, message: "地址不能为空", trigger: "blur" }],
+        min: [{ required: true, message: "最小值不能为空", trigger: "blur" }],
+        max: [{ required: true, message: "最大值不能为空", trigger: "blur" }],
+        keyname: [
+          { required: true, message: "类型名称不能为空", trigger: "blur" }
+        ],
+        unit: [{ required: true, message: "单位不能为空", trigger: "blur" }]
+      }
     };
   },
   watch: {
@@ -63,14 +71,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      addThreshold(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addThreshold(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

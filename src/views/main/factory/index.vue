@@ -155,7 +155,9 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        
+      },
       eid: 0,
       layerId: ""
     };

@@ -6,18 +6,19 @@
           <ul class="state_block">
             <li class="state_item">
               <span>实时待处理</span>
-              <div class="border-circle warning">0</div>
+              <div class="border-circle warning">{{realTimeCount}}</div>
             </li>
             <li class="state_item">
               <span>累计故障</span>
-              <div class="border-circle danger">0</div>
+              <div class="border-circle danger">{{allCount}}</div>
             </li>
           </ul>
         </el-col>
         <el-col :span="12">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_name">故障最多单位</span>
+              <span class="info_name">故障最多单位:</span>
+              <span>{{mostFactory}}</span>
             </li>
           </ul>
         </el-col>
@@ -34,11 +35,16 @@
           v-loading="loading1"
         >
           <el-table-column prop="id" label="ID" width="80"></el-table-column>
-
           <el-table-column prop="factoryName" label="单位"></el-table-column>
           <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
           <el-table-column prop="content" label="故障内容"></el-table-column>
+          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
+          <el-table-column prop="currdate" label="首次上报时间" width="160px">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.currdate) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="uptime" label="更新时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.uptime) }}</span>
@@ -66,11 +72,11 @@
           v-loading="loading2"
         >
           <el-table-column prop="id" label="ID" width="80"></el-table-column>
-
           <el-table-column prop="factoryName" label="单位"></el-table-column>
           <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
           <el-table-column prop="content" label="故障内容"></el-table-column>
+          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
           <el-table-column prop="uptime" label="更新时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.uptime) }}</span>
@@ -96,9 +102,10 @@
           <el-table-column prop="factoryName" label="单位"></el-table-column>
           <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="uptime" label="更新时间" width="160px">
+          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
+          <el-table-column prop="repair" label="解决时间" width="160px">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.uptime) }}</span>
+              <span>{{ parseTime(scope.row.repair) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" fixed="right" width="80px">
@@ -140,11 +147,11 @@ export default {
       },
       rowId: 0,
       layerId: "",
-      eid: 0,
-      total: 0,
       activeName: "first",
-      layerId: "",
-      rowFactoryName: ""
+      rowFactoryId: "",
+      realTimeCount: 0,
+      allCount: 0,
+      mostFactory: ""
     };
   },
   watch: {
@@ -168,6 +175,9 @@ export default {
       getSensorFaultList(_this.form).then(response => {
         if (response.code == 200) {
           let _data = response.data;
+          _this.realTimeCount = _data.realTimeCount;
+          _this.allCount = _data.sum;
+          _this.mostFactory = _data.factoryName;
           let _row = _data.sensorFaultList;
           let _factoryName = _data.factoryName;
           let _arr = [];
@@ -179,6 +189,10 @@ export default {
             temp.type = item.type;
             temp.uptime = item.uptime;
             temp.content = item.content;
+            temp.currdate = item.currdate;
+            temp.repair = item.repair;
+            temp.currlocation = item.currlocation;
+            temp.factoryId = item.factoryId;
             _arr.push(temp);
           });
           _this.waitingList = _row;
@@ -212,7 +226,8 @@ export default {
         target: ".app-main"
       });
       this.layerId = index;
-      this.rowFactoryName = row.factoryName;
+      console.log(row)
+      this.rowFactoryId = row.factoryId;
     }
   },
   created() {
@@ -253,5 +268,20 @@ export default {
 }
 .devops-tab {
   margin-top: 10px;
+}
+.info_block {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding: 0 20px;
+}
+.info_item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.info_item:last-child {
+  margin-bottom: 0;
 }
 </style>

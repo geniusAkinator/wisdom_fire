@@ -1,7 +1,7 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-      <el-form-item label="所属代理商">
+      <el-form-item label="所属代理商" prop="dept">
         <el-select v-model="deptId" placeholder="请选择所属代理商" @change="handleSelect">
           <el-option
             v-for="(item,index) in dlist"
@@ -11,7 +11,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="工厂名称">
+      <el-form-item label="工厂名称" prop="deptId">
         <el-select
           v-model="form.deptId"
           placeholder="请选择工厂名称"
@@ -26,7 +26,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="工厂类型">
+      <el-form-item label="工厂类型" prop="factoryType">
         <el-select v-model="form.factoryType" placeholder="请选择工厂类型">
           <el-option
             v-for="dict in typeOptions"
@@ -96,7 +96,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -113,6 +113,53 @@ import MyEditor from "@/components/Editor";
 
 export default {
   data() {
+    let validateProvince = (rule, value, callback) => {
+      if (this.form.province === "") {
+        callback(new Error("请选择省/市/区"));
+      } else {
+        callback();
+      }
+    };
+    let validatePos = (rule, value, callback) => {
+      if (
+        this.form.latitude === "" ||
+        this.form.longitude === "" ||
+        this.form.latitude === 0 ||
+        this.form.latitude === 0
+      ) {
+        callback(new Error("请选择经纬度"));
+      } else {
+        callback();
+      }
+    };
+    let validatePhone = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入手机号码"));
+      } else {
+        if (!isPhone(value)) {
+          callback(new Error("手机号码格式不正确"));
+        }
+        callback();
+      }
+    };
+    let validateTel = (rule, value, callback) => {
+      if (this.form.tel === "") {
+        callback(new Error("电话不能为空"));
+      } else {
+        if (!isTel(this.form.tel)) {
+          callback(new Error("电话格式不正确"));
+        } else {
+          callback();
+        }
+      }
+    };
+    let validateDept = (rule, value, callback) => {
+      if (this.deptId === "") {
+        callback(new Error("请选择所属代理商"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
         factoryName: "",
@@ -129,7 +176,25 @@ export default {
         factoryId: this.$parent.eid,
         deptId: ""
       },
-      rules: {},
+      rules: {
+        deptId: [
+          { required: true, message: "请选择工厂名称", trigger: "change" }
+        ],
+        factoryType: [
+          { required: true, message: "请选择工厂类型", trigger: "change" }
+        ],
+        province: [
+          { required: true, validator: validateProvince, trigger: "change" }
+        ],
+        pos: [{ required: true, validator: validatePos, trigger: "change" }],
+        address: [{ required: true, message: "地址不能为空", trigger: "blur" }],
+        leader: [
+          { required: true, message: "负责人不能为空", trigger: "blur" }
+        ],
+        phone: [{ required: true, validator: validatePhone, trigger: "blur" }],
+        tel: [{ required: true, validator: validateTel, trigger: "blur" }],
+        dept: [{ required: true, validator: validateDept, trigger: "change" }]
+      },
       dlist: [],
       flist: [],
       deptId: "",
@@ -155,14 +220,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      updateFactory(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("编辑成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateFactory(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

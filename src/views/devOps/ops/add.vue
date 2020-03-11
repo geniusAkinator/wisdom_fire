@@ -2,20 +2,29 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="所属工厂" prop="name">
-        <el-input v-model="form.factoryName" disabled />
+        <el-select v-model="form.factoryId" disabled>
+          <el-option
+            v-for="(item,index) in flist"
+            :key="index"
+            :label="item.factoryName"
+            :value="item.factoryId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="选择团队">
-        <el-select v-model="form.deptId" placeholder="请选择团队" @change="handleSelectTeam($event)">
+        <el-select v-model="form.departmentId" placeholder="请选择团队">
           <el-option
             v-for="(item,index) in tlist"
             :key="index"
-            :label="item.deptName"
-            :value="item.deptId"
+            :label="item.departmentName"
+            :value="item.departmentId"
           ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择成员">
-        <el-transfer v-model="value" :data="data"></el-transfer>
+        <el-transfer v-model="value" :titles="['待选成员列表', '选定成员列表']" :data="slist">
+          <span slot-scope="{ option }">{{ option.key }} - {{ option.duty }}</span>
+        </el-transfer>
       </el-form-item>
       <el-form-item label="备注" prop="description">
         <el-input v-model="form.description" type="textarea" placeholder="请输入备注" />
@@ -31,19 +40,28 @@
 <script>
 import { addConfig } from "@/api/system/config";
 import { Loading } from "element-ui";
+import { listFactory } from "@/api/main/factory";
+import { getTeamList } from "@/api/devops/ops";
+import { listEmployee } from "@/api/team/employee";
 export default {
   data() {
     return {
       form: {
-        factoryName: this.$parent.rowFactoryName,
-        deptId: ""
+        factoryId: this.$parent.rowFactoryId,
+        departmentId: ""
       },
       flist: [],
       tlist: [],
-      data: [],
+      slist: [],
       value: [1, 4],
       rules: {}
     };
+  },
+  watch: {
+    "form.departmentId"(nVal, oVal) {
+      let _this = this;
+      _this.getStaffList();
+    }
   },
   methods: {
     handleBack() {
@@ -64,16 +82,52 @@ export default {
       });
     },
     initForm() {
+      let _this = this;
       let options = {
         target: document.querySelector(`#${this.$parent.layerId}`),
         text: "加载中"
       };
+      listFactory().then(response => {
+        if (response.code == 200) {
+          _this.flist = response.rows;
+        }
+      });
+      getTeamList({ factoryId: _this.form.factoryId }).then(response => {
+        if (response.code == 200) {
+          console.log(response.data);
+          let _data = response.data;
+          _this.tlist = _data;
+        }
+      });
       let loadingInstance = Loading.service(options);
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
     },
-    handleSelectTeam() {}
+    getStaffList() {
+      let _this = this;
+      listEmployee({ departmentId: _this.form.departmentId }).then(response => {
+        if (response.code == 200) {
+          console.log(response.rows);
+          let _data = response.rows;
+          let _arr = [];
+          _data.map((item, i) => {
+            console.log(item);
+            let temp = {};
+            temp.id = item.employeeId;
+            temp.key = item.name;
+            temp.duty = item.duty;
+            if (item.state == 0) {
+              temp.disabled = false;
+            } else {
+              temp.disabled = true;
+            }
+            _arr.push(temp);
+          });
+          _this.slist = _arr;
+        }
+      });
+    }
   },
   created() {
     this.initForm();

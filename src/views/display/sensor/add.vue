@@ -11,7 +11,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所属楼宇" prop="factoryId">
+      <el-form-item label="所属楼宇" prop="buildingId">
         <el-select v-model="form.buildingId" placeholder="请选择所属楼宇">
           <el-option
             v-for="(item,index) in buildingList"
@@ -98,7 +98,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -137,7 +137,26 @@ export default {
       buildingList: [],
       floorList: [],
       typeList: [],
-      rules: {},
+      rules: {
+        factoryId: [
+          { required: true, message: "请选择所属工厂", trigger: "change" }
+        ],
+        buildingId: [
+          { required: true, message: "请选择所属楼宇", trigger: "change" }
+        ],
+        floorId: [
+          { required: true, message: "请选择所属楼层", trigger: "change" }
+        ],
+        currlocation: [
+          { required: true, message: "点位描述不能为空", trigger: "blur" }
+        ],
+        deviceNumber: [
+          { required: true, message: "设备编号不能为空", trigger: "blur" }
+        ],
+        expirationDate: [
+          { required: true, message: "到期时间不能为空", trigger: "change" }
+        ]
+      },
       bform: {
         factoryId: 0
       },
@@ -177,14 +196,18 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      addTransducer(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addTransducer(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
@@ -220,7 +243,7 @@ export default {
       listBuilding(this.bform).then(response => {
         if (response.code === 200) {
           this.buildingList = response.rows;
-          console.log(this.buildingList)
+          console.log(this.buildingList);
         }
       });
     },

@@ -85,7 +85,7 @@ export default {
           this.form.menuIds = this.getMenuAllCheckedKeys();
           updateRole(this.form).then(response => {
             if (response.code === 200) {
-              this.msgSuccess("编辑成功");
+              this.msgSuccess("更新成功");
               this.$parent.getList();
               this.closeDialog();
             } else {

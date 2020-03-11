@@ -19,11 +19,11 @@
           <ul class="info_block">
             <li class="info_item">
               <span class="info_item_name">上报时间</span>
-              <span class="info_item_value">2019-11-16 13:59:24</span>
+              <span class="info_item_value"></span>
             </li>
             <li class="info_item">
               <span class="info_item_name">更新时间</span>
-              <span class="info_item_value">2019-11-16 13:59:24</span>
+              <span class="info_item_value"></span>
             </li>
           </ul>
         </el-col>
@@ -31,15 +31,15 @@
           <ul class="info_block">
             <li class="info_item">
               <span class="info_item_name">处理人</span>
-              <span class="info_item_value">刘XX</span>
+              <span class="info_item_value"></span>
             </li>
             <li class="info_item">
               <span class="info_item_name">处理时间</span>
-              <span class="info_item_value">2019-11-16 13:59:24</span>
+              <span class="info_item_value"></span>
             </li>
             <li class="info_item">
               <span class="info_item_name">处理结果</span>
-              <span class="info_item_value">确认火灾</span>
+              <span class="info_item_value"></span>
             </li>
           </ul>
         </el-col>
@@ -88,7 +88,7 @@ export default {
     return {
       tableData: [],
       imgUrl: "",
-      icon: require("@/assets/image/map-marker.png"),
+      icon: require("@/assets/image/map-marker.png")
     };
   },
   watch: {},
@@ -171,6 +171,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  line-height: 102px;
 }
 .state_paging {
   display: flex;
@@ -235,10 +237,7 @@ export default {
   padding: 10px;
   border-radius: 5px;
 }
-.not_found {
-  height: 100%;
-  line-height: 102px;
-}
+
 .border-circle {
   width: 100px;
   height: 100px;

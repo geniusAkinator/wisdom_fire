@@ -11,11 +11,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="部门名称" prop="departmentName">
-        <el-input v-model="form.departmentName" placeholder="请输入部门名称" />
+      <el-form-item label="团队名称" prop="departmentName">
+        <el-input v-model="form.departmentName" placeholder="请输入团队名称" />
       </el-form-item>
-      <el-form-item label="部门领导人" prop="leader">
-        <el-input v-model="form.leader" placeholder="请输入部门领导人" />
+      <el-form-item label="团队领导人" prop="leader">
+        <el-input v-model="form.leader" placeholder="请输入团队领导人" />
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号" />
@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -37,6 +37,16 @@ import { listFactory } from "@/api/main/factory";
 import { Loading } from "element-ui";
 export default {
   data() {
+    let validatePhone = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入手机号码"));
+      } else {
+        if (!isPhone(value)) {
+          callback(new Error("手机号码格式不正确"));
+        }
+        callback();
+      }
+    };
     return {
       form: {
         departmentId: this.$parent.eid,
@@ -47,19 +57,34 @@ export default {
         tel: "",
         factoryId: 0
       },
-      rules: {},
+      rules: {
+        factoryId: [
+          { required: true, message: "请选择所属工厂", trigger: "change" }
+        ],
+        departmentName: [
+          { required: true, message: "团队名称不能为空", trigger: "blur" }
+        ],
+        leader: [
+          { required: true, message: "团队领导人不能为空", trigger: "blur" }
+        ],
+        phone: [{ required: true, validator: validatePhone, trigger: "change" }]
+      },
       factoryList: []
     };
   },
   methods: {
-    handleSubmit() {
-      updateDepartment(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateDepartment(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
