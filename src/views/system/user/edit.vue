@@ -13,8 +13,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="手机号码" prop="phonenumber">
-            <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
+          <el-form-item label="联系电话" prop="phonenumber">
+            <el-input v-model="form.phonenumber" placeholder="请输入联系电话" maxlength="11" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -143,10 +143,10 @@ export default {
           }
         ],
         phonenumber: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          { required: true, message: "联系电话不能为空", trigger: "blur" },
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
+            message: "请输入正确的联系电话",
             trigger: "blur"
           }
         ]

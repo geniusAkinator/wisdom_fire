@@ -24,14 +24,14 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { updateConfig,getConfig } from "@/api/system/config";
+import { updateConfig, getConfig } from "@/api/system/config";
 import { Loading } from "element-ui";
 export default {
   data() {
@@ -58,14 +58,18 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      updateConfig(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateConfig(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

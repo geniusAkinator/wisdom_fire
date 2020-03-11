@@ -24,7 +24,7 @@
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -40,7 +40,7 @@ export default {
         configName: "",
         configKey: "",
         configType: "0",
-        remark:""
+        remark: ""
       },
       rules: {
         configName: [
@@ -57,14 +57,18 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      addConfig(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addConfig(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

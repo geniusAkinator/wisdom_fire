@@ -1,7 +1,7 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-row>
+      <el-row :gutter="20">
         <el-col :span="24" v-if="form.parentId !== 0">
           <el-form-item label="上级代理" prop="parentId">
             <treeselect v-model="form.parentId" :options="deptOptions" placeholder="选择上级代理" />
@@ -46,7 +46,7 @@
       </el-row>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -57,6 +57,16 @@ import Treeselect from "@riophae/vue-treeselect";
 import { treeselect, addDept } from "@/api/system/dept";
 export default {
   data() {
+    let validatePhone = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入联系电话"));
+      } else {
+        if (!isPhone(value)) {
+          callback(new Error("联系电话格式不正确"));
+        }
+        callback();
+      }
+    };
     return {
       form: {
         deptId: "",
@@ -70,18 +80,30 @@ export default {
       },
       deptOptions: [],
       statusOptions: [],
-      rules: {}
+      rules: {
+        deptName: [
+          { required: true, message: "代理名称不能为空", trigger: "blur" }
+        ],
+        leader: [
+          { required: true, message: "负责人不能为空", trigger: "blur" }
+        ],
+        phone: [{ required: true, validator: validatePhone, trigger: "blur" }]
+      }
     };
   },
   methods: {
-    handleSubmit() {
-      addDept(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          addDept(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },

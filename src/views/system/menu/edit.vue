@@ -155,7 +155,7 @@ export default {
         if (valid) {
           updateMenu(this.form).then(response => {
             if (response.code === 200) {
-              this.msgSuccess("新增成功");
+              this.msgSuccess("更新成功");
               this.$parent.getList();
               this.closeDialog();
             } else {

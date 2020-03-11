@@ -256,7 +256,7 @@ export default {
           if (this.form.employeeId != "") {
             updateEmployee(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("更新成功");
                 this.open = false;
                 this.getList();
               } else {

@@ -133,10 +133,10 @@ export default {
     };
     let validatePhone = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入手机号码"));
+        callback(new Error("请输入联系电话"));
       } else {
         if (!isPhone(value)) {
-          callback(new Error("手机号码格式不正确"));
+          callback(new Error("联系电话格式不正确"));
         }
         callback();
       }

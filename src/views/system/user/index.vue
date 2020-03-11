@@ -58,10 +58,10 @@
                     @keyup.enter.native="handleQuery"
                   />
                 </el-form-item>
-                <el-form-item label="手机号码" prop="phonenumber">
+                <el-form-item label="联系电话" prop="phonenumber">
                   <el-input
                     v-model="queryParams.phonenumber"
-                    placeholder="请输入手机号码"
+                    placeholder="请输入联系电话"
                     clearable
                     size="small"
                     style="width: 240px"
@@ -123,7 +123,7 @@
           <el-table-column label="用户名称" align="center" prop="userName" />
           <el-table-column label="用户昵称" align="center" prop="nickName" />
           <el-table-column label="所属公司" align="center" prop="dept.deptName" />
-          <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
+          <el-table-column label="联系电话" align="center" prop="phonenumber" width="120" />
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <el-switch
