@@ -18,4 +18,11 @@ export function getTeamList(query) {
     })
 }
 
-
+//运维详情
+export function getAllData(query) {
+    return request({
+        url: '/system/fault/AllData',
+        method: 'get',
+        params: query
+    })
+}

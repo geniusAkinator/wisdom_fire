@@ -164,4 +164,8 @@ export default {
 .autocomplete {
   line-height: 30px;
 }
+.map-picker .el-autocomplete input {
+  border: 1px solid #dcdfe6 !important;
+  background-color: #fff !important;
+}
 </style>

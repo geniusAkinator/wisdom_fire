@@ -182,6 +182,7 @@ export default {
           let _factoryName = _data.factoryName;
           let _arr = [];
           _row.map((item, i) => {
+            console.log(item);
             let temp = {};
             temp.id = item.id;
             temp.factoryName = _factoryName;
@@ -193,6 +194,7 @@ export default {
             temp.repair = item.repair;
             temp.currlocation = item.currlocation;
             temp.factoryId = item.factoryId;
+            temp.sid = item.transducerId;
             _arr.push(temp);
           });
           _this.waitingList = _row;
@@ -211,7 +213,11 @@ export default {
       });
     },
     handleDetail(index, row) {
-      this.$router.push({ name: "OpsDetail", params: { id: row.id } });
+      console.log(row);
+      this.$router.push({
+        name: "OpsDetail",
+        params: { id: row.id, sid: row.sid }
+      });
     },
     handleAppoint(index, row) {
       var index = this.$layer.iframe({
@@ -226,7 +232,7 @@ export default {
         target: ".app-main"
       });
       this.layerId = index;
-      console.log(row)
+      console.log(row);
       this.rowFactoryId = row.factoryId;
     }
   },
@@ -284,7 +290,7 @@ export default {
 .info_item:last-child {
   margin-bottom: 0;
 }
-.info_name{
+.info_name {
   font-weight: bold;
 }
 </style>

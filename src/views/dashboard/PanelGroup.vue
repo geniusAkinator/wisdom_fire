@@ -43,7 +43,7 @@
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
-        <router-link class="item" :to="''">
+        <router-link class="item" :to="'/hazard/overview'">
           <div>
             处理总数:
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
@@ -54,15 +54,15 @@
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
         <i class="el-icon-s-order"></i>
-        <router-link class="item" :to="''">
+        <router-link class="item" :to="'/devOps/ops'">
           <div>
-            任务总数:
+            故障总数:
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
-        <router-link class="item" :to="''">
+        <router-link class="item" :to="'/devOps/ops'">
           <div>
-            完成总数:
+            处理总数:
             <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>

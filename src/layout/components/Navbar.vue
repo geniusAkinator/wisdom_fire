@@ -9,7 +9,7 @@
 
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
     <ul class="left-menu">
-      <li @click="toggleMain">切换主体</li>
+      <li @click="toggleMain">主体概况</li>
       <li @click="doJump('Platform')">数据看板</li>
       <li @click="doJump('Board')">阿米看板</li>
     </ul>

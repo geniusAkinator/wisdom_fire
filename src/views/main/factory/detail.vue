@@ -8,35 +8,38 @@
         <el-row>
           <el-col :span="8">
             <div class="factory_logo">
-              <template v-if="this.form.picture!=''">
-                <el-image class="logo_img" :src="baseUrl+this.form.picture" fit="contain"></el-image>
-              </template>
-              <span class="logo_name">{{this.form.factoryName}}</span>
+              <el-image class="logo_img" :src="baseUrl+form.picture" fit="contain">
+                <div slot="error" class="logo_img_err">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </el-image>
+              <span class="logo_name">{{form.factoryName}}</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="detail-item">
               <label for>所属代理商:</label>
-              <span>{{this.deptName}}</span>
+              <span>{{deptName}}</span>
             </div>
             <div class="detail-item">
               <label for>工厂类型:</label>
-              <span>{{this.factoryTypeName}}</span>
+              <span>{{factoryTypeName}}</span>
             </div>
             <div class="detail-item">
               <label for>负责人:</label>
-              <span>{{this.form.leader}}&nbsp;&nbsp;{{this.form.phone}}</span>
+              <span>{{form.leader}}&nbsp;&nbsp;{{form.phone}}</span>
             </div>
             <div class="detail-item">
               <label for>座机号:</label>
-              <span>{{this.form.tel}}</span>
+              <span>{{form.tel}}</span>
             </div>
             <div class="detail-item">
               <label for>地址:</label>
-              <span>{{this.form.address}}</span>
+              <span>{{form.address}}</span>
             </div>
             <div class="detail-item">
               <label for>位置:</label>
+              <my-map-pos :data="pos" v-if="pos.lat!=''&&pos.lng!=''&&update"></my-map-pos>
             </div>
           </el-col>
           <el-col :span="8">
@@ -58,7 +61,7 @@
 <script>
 import { getFactory } from "@/api/main/factory";
 import { listDept } from "@/api/system/dept";
-
+import MyMapPos from "@/views/main/factory/map";
 export default {
   data() {
     return {
@@ -79,6 +82,11 @@ export default {
         factoryId: this.$parent.eid,
         deptId: ""
       },
+      pos: {
+        lat: "",
+        lng: ""
+      },
+      update: true,
       dlist: [],
       deptName: "",
       factoryTypeName: "",
@@ -124,12 +132,24 @@ export default {
           let _data = response.data;
           this.deptId = _data.pId;
           this.form = _data.sysFactory;
+          this.pos.lat = _data.sysFactory.latitude;
+          this.pos.lng = _data.sysFactory.longitude;
         }
+      });
+    },
+    reload() {
+      this.update = false;
+      this.$nextTick(() => {
+        this.update = true;
       });
     }
   },
   mounted() {
     this.init();
+    window.addEventListener("resize", this.reload);
+  },
+  components: {
+    MyMapPos
   }
 };
 </script>
@@ -153,6 +173,17 @@ export default {
       width: 100%;
       text-align: center;
       margin-top: 20px;
+    }
+    .logo_img_err {
+      width: 200px;
+      height: 200px;
+      border-radius: 4px;
+      background: #f5f7fa;
+      color: #909399;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
     }
   }
   .detail-item {
