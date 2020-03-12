@@ -6,14 +6,14 @@
       </el-col>
       <el-col :md="16">
         <el-col :md="24">
-          <el-card class="box-card no-padding" shadow="hover">
+          <el-card class="box-card no-padding" shadow="never">
             <div class="text item" style="height:700px">
               <my-map :list.sync="geoList"></my-map>
             </div>
           </el-card>
         </el-col>
         <el-col :md="24" style="margin-top:10px">
-          <el-card class="box-card no-padding" shadow="hover">
+          <el-card class="box-card no-padding" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-receiving"></i>
               <span>数据概览</span>
@@ -35,7 +35,7 @@
       </el-col>
       <el-col :md="8">
         <el-col :md="24">
-          <el-card class="box-card" shadow="hover">
+          <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-s-promotion"></i>
               <span>日历</span>
@@ -60,7 +60,7 @@
           </el-card>
         </el-col>
         <el-col :md="24" style="margin-top:10px">
-          <el-card class="box-card" shadow="hover">
+          <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-data-line"></i>
               <span>本月隐患</span>
@@ -83,7 +83,7 @@
           </el-card>
         </el-col>
         <el-col :md="24" style="margin-top:10px">
-          <el-card class="box-card" shadow="hover">
+          <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-edit-outline"></i>
               <span>操作日志</span>
@@ -97,7 +97,7 @@
                     placement="top"
                     :key="index"
                   >
-                    <el-card shadow="hover">
+                    <el-card shadow="never">
                       <h4>{{item.title}}</h4>
                       <p>{{item.operName}}</p>
                     </el-card>

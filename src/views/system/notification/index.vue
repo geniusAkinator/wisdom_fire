@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="padding-bottom:54px">
     <el-form ref="form" :model="form" label-width="140px">
       <el-row>
         <el-col :span="2" style="position:relative">
@@ -50,10 +50,10 @@
                 <span class="member_label">提醒人:</span>
                 <li v-for="(item,index) in elist" :key="index">
                   <span>{{item.label}}</span>
-                  <i class="el-icon-close" @click="handleDel(index)"></i>
+                  <i class="el-icon-close" @click="handleErrNotifyStaffDel(index)"></i>
                 </li>
               </ul>
-              <el-button size="medium" icon="el-icon-plus" round @click="handleNotifyClick"></el-button>
+              <el-button size="medium" icon="el-icon-plus" round @click="handleErrNotifyStaffAdd"></el-button>
             </div>
           </el-form-item>
           <div class="divider_line dash"></div>
@@ -74,10 +74,15 @@
               <span class="member_label">提醒人:</span>
               <li v-for="(item,index) in item.children" :key="index">
                 <span>{{item.label}}</span>
-                <i class="el-icon-close"></i>
+                <i class="el-icon-close" @click="handleRuleErrNotifyStaffDel(i,index)"></i>
               </li>
             </ul>
-            <el-button size="medium" icon="el-icon-plus" round @click="handleClick"></el-button>
+            <el-button
+              size="medium"
+              icon="el-icon-plus"
+              round
+              @click="handleRuleErrNotifyStaffAdd(i)"
+            ></el-button>
           </el-form-item>
         </el-col>
         <div class="divider_line"></div>
@@ -117,16 +122,45 @@
                 <span class="member_label">提醒人:</span>
                 <li v-for="(item,index) in hlist" :key="index">
                   <span>{{item.label}}</span>
-                  <i class="el-icon-close" @click="handleHazardDel(index)"></i>
+                  <i class="el-icon-close" @click="handleHazardNotifyStaffDel(index)"></i>
                 </li>
               </ul>
-              <el-button size="medium" icon="el-icon-plus" round @click="handleHazardNotifyClick"></el-button>
+              <el-button
+                size="medium"
+                icon="el-icon-plus"
+                round
+                @click="handleHazardNotifyStaffClick"
+              ></el-button>
             </div>
           </el-form-item>
           <div class="divider_line dash"></div>
           <div class="add_box">
-            <el-button type="primary" icon="el-icon-plus" size="medium">新增规则</el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="medium"
+              @click="handleAddHazardRule"
+            >新增规则</el-button>
           </div>
+          <el-form-item v-for="(item,i) in hazardRule" :key="i">
+            <div>
+              <el-input-number v-model="item.num" :min="1" label="描述文字" size="mini"></el-input-number>
+              <span>分钟</span>
+            </div>
+            <ul class="member_ul">
+              <span class="member_label">提醒人:</span>
+              <li v-for="(item,index) in item.children" :key="index">
+                <span>{{item.label}}</span>
+                <i class="el-icon-close" @click="handleRuleHazardNotifyStaffDel(i,index)"></i>
+              </li>
+            </ul>
+            <el-button
+              size="medium"
+              icon="el-icon-plus"
+              round
+              @click="handleRuleHazardNotifyStaffAdd(i)"
+            ></el-button>
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -154,15 +188,19 @@ export default {
         isOvertimeHazard: false,
         isNotifyHazard: false
       },
-      num: 1,
+      num: 5,
       show: false,
       elist: [],
       hlist: [],
+      rlist: [],
       drawer: false,
       direction: "rtl",
       nlist: [],
       errRule: [],
-      which: ""
+      hazardRule: [],
+      which: "",
+      errIdx: 0,
+      hazardIdx: 0
     };
   },
   methods: {
@@ -170,40 +208,76 @@ export default {
       done();
     },
     handleChange() {},
-    handleNotifyClick() {
-      this.drawer = true;
-      this.nlist = this.elist;
-      this.which = "first";
+    handleErrNotifyStaffAdd() {
+      //故障处理通知超时添加提醒人
+      this.drawer = true; //打开抽屉
+      this.nlist = this.elist; //设置memberpicker回显
+      this.which = 0; //getMember根据0拿值
     },
-    handleHazardNotifyClick() {
-      this.drawer = true;
-      this.nlist = this.hlist;
-      this.which = "second";
+    handleHazardNotifyStaffClick() {
+      //隐患处理通知超时添加提醒人
+      this.drawer = true; //打开抽屉
+      this.nlist = this.hlist; //设置memberpicker回显
+      this.which = 1; //getMember根据1拿值
     },
     handleClose(e) {},
     getMember(e) {
-      if (this.which == "first") {
+      //抽屉拿值
+      if (this.which == 0) {
+        //更新故障处理通知超时提醒人列表
         this.elist = e;
-      } else if (this.which == "second") {
+      } else if (this.which == 1) {
+        //更新隐患处理通知超时提醒人列表
         this.hlist = e;
+      } else if (this.which == 2) {
+        //更新故障处理通知超时-新增规则的提醒人列表
+        this.errRule[this.errIdx].children = e;
+      } else if (this.which == 3) {
+        //更新隐患处理通知超时-新增规则的提醒人列表
+        this.hazardRule[this.hazardIdx].children = e;
       }
     },
-    handleDel(e) {
+    handleErrNotifyStaffDel(e) {
+      //删除更新故障处理通知超时提醒人列表
       this.elist.splice(e, 1);
     },
-    handleHazardDel(e) {
+    handleHazardNotifyStaffDel(e) {
+      //删除更新隐患处理通知超时提醒人列表
       this.hlist.splice(e, 1);
     },
+    handleRuleErrNotifyStaffDel(idx1, idx2) {
+      this.errRule[idx1].children.splice(idx2, 1);
+    },
+    handleRuleHazardNotifyStaffDel(idx1, idx2) {
+      this.hazardRule[idx1].children.splice(idx2, 1);
+    },
     handleAddErrRule() {
+      //新增故障规则
       let temp = {};
-      temp.num = 1;
+      temp.num = 5;
       temp.children = [];
       this.errRule.push(temp);
-      console.log(this.errRule);
     },
-    handleClick() {
-      console.log("dafsd");
-      this.drawer = true;
+    handleAddHazardRule() {
+      //新增隐患规则
+      let temp = {};
+      temp.num = 5;
+      temp.children = [];
+      this.hazardRule.push(temp);
+    },
+    handleRuleErrNotifyStaffAdd(idx) {
+      //故障处理通知超时-新增规则的提醒人列表
+      this.drawer = true; //打开抽屉
+      this.errIdx = idx;
+      this.nlist = this.errRule[this.errIdx].children;
+      this.which = 2; //getMember根据2拿值
+    },
+    handleRuleHazardNotifyStaffAdd(idx) {
+      //隐患处理通知超时-新增规则的提醒人列表
+      this.drawer = true; //打开抽屉
+      this.hazardIdx = idx;
+      this.nlist = this.hazardRule[this.hazardIdx].children;
+      this.which = 3; //getMember根据2拿值
     }
   },
   components: {

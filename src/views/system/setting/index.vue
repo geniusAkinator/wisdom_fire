@@ -341,7 +341,7 @@ export default {
         pushUrl: ""
       },
       themeForm: {
-        theme: 1,
+        theme: "1",
         menuColor: "",
         backgroundColor: "",
         buttonColor: "",
@@ -487,6 +487,7 @@ export default {
         this.getDicts("sys_theme_type").then(response => {
           if (response.code == 200) {
             this.themeOptions = response.data;
+            console.log(this.themeOptions);
           }
         });
         getTheme().then(response => {
@@ -495,6 +496,7 @@ export default {
             for (let key in _data) {
               this.themeForm[key] = _data[key];
             }
+            this.themeForm.theme = _data.theme + "";
           }
         });
       } else if (_activeName == "fourth") {
@@ -535,7 +537,7 @@ export default {
             for (let key in _data) {
               this.platformForm[key] = _data[key];
             }
-            this.platformForm.pwd = ""
+            this.platformForm.pwd = "";
           }
         });
       } else if (_activeName == "eighth") {
@@ -562,7 +564,7 @@ export default {
     },
     getLogo(e) {
       this.platformForm.logo = e;
-    },
+    }
   },
   mounted() {
     this.initForm();

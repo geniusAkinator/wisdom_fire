@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span>1.消防安全评分</span>
         <div class="header_right">
@@ -23,7 +23,7 @@
         <div id="rate_chart"></div>
       </div>
     </el-card>
-    <!-- <el-card class="box-card" shadow="hover">
+    <!-- <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span>2.故障</span>
       </div>
@@ -52,7 +52,7 @@
         </div>
       </div>
     </el-card>-->
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span>2.隐患</span>
       </div>
@@ -63,7 +63,7 @@
         <my-echart-bar :data="hazardData" :key="hazardKey" style="height:400px;"></my-echart-bar>
       </div>
     </el-card>
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span>3.人员统计</span>
       </div>
@@ -97,7 +97,7 @@
         </div>-->
       </div>
     </el-card>
-    <el-card class="box-card" shadow="hover">
+    <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
         <span>4.服务统计</span>
       </div>

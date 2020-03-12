@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-card class="state-card" shadow="hover">
+    <el-card class="state-card" shadow="never">
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="10">
           <ul class="state_block">
             <li class="state_item">
               <span>实时待处理</span>
@@ -14,8 +14,8 @@
             </li>
           </ul>
         </el-col>
-        <el-col :span="12">
-          <ul class="info_block">
+        <el-col :span="14">
+          <ul class="info_block" style="width:50%">
             <li class="info_item">
               <span class="info_name">故障最多单位:</span>
               <span>{{mostFactory}}</span>
@@ -283,5 +283,8 @@ export default {
 }
 .info_item:last-child {
   margin-bottom: 0;
+}
+.info_name{
+  font-weight: bold;
 }
 </style>
