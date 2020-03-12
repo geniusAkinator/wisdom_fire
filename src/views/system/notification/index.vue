@@ -2,8 +2,9 @@
   <div class="container">
     <el-form ref="form" :model="form" label-width="140px">
       <el-row>
-        <el-col :span="2">
-          <i class="el-icon-warning-outline notice_icon"></i>
+        <el-col :span="2" style="position:relative">
+          <div class="notification_triangle_mark"></div>
+          <svg-icon class-name="count-icon" icon-class="mark1" />
         </el-col>
         <el-col :span="22">
           <el-form-item label="误报故障自动处理">
@@ -46,32 +47,44 @@
                 <span>分钟</span>
               </div>
               <ul class="member_ul">
-                <span class="member_label">提醒人</span>
+                <span class="member_label">提醒人:</span>
                 <li v-for="(item,index) in elist" :key="index">
                   <span>{{item.label}}</span>
                   <i class="el-icon-close" @click="handleDel(index)"></i>
                 </li>
               </ul>
-              <el-button
-                size="medium"
-                icon="el-icon-plus"
-                round
-                @click="handleNotifyClick"
-                ref="notifyBtn"
-              ></el-button>
+              <el-button size="medium" icon="el-icon-plus" round @click="handleNotifyClick"></el-button>
             </div>
           </el-form-item>
           <div class="divider_line dash"></div>
           <div class="add_box">
-            <el-button type="primary" icon="el-icon-plus" size="medium">新增规则</el-button>
-            <ul>
-              <li></li>
-            </ul>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="medium"
+              @click="handleAddErrRule"
+            >新增规则</el-button>
           </div>
+          <el-form-item v-for="(item,i) in errRule" :key="i">
+            <div>
+              <el-input-number v-model="item.num" :min="1" label="描述文字" size="mini"></el-input-number>
+              <span>分钟</span>
+            </div>
+            <ul class="member_ul">
+              <span class="member_label">提醒人:</span>
+              <li v-for="(item,index) in item.children" :key="index">
+                <span>{{item.label}}</span>
+                <i class="el-icon-close"></i>
+              </li>
+            </ul>
+            <el-button size="medium" icon="el-icon-plus" round @click="handleClick"></el-button>
+          </el-form-item>
         </el-col>
         <div class="divider_line"></div>
-        <el-col :span="2">
-          <i class="iconfont icon-iconset0211 notice_icon"></i>
+        <el-col :span="2" style="position:relative">
+          <div class="notification_circle_mark">
+            <svg-icon class-name="count-icon" icon-class="mark2" />
+          </div>
         </el-col>
         <el-col :span="22">
           <el-form-item label="隐患处理超时设置">
@@ -101,19 +114,13 @@
                 <span>分钟</span>
               </div>
               <ul class="member_ul">
-                <span class="member_label">提醒人</span>
+                <span class="member_label">提醒人:</span>
                 <li v-for="(item,index) in hlist" :key="index">
                   <span>{{item.label}}</span>
                   <i class="el-icon-close" @click="handleHazardDel(index)"></i>
                 </li>
               </ul>
-              <el-button
-                size="medium"
-                icon="el-icon-plus"
-                round
-                @click="handleHazardNotifyClick"
-                ref="notifyBtn"
-              ></el-button>
+              <el-button size="medium" icon="el-icon-plus" round @click="handleHazardNotifyClick"></el-button>
             </div>
           </el-form-item>
           <div class="divider_line dash"></div>
@@ -154,6 +161,7 @@ export default {
       drawer: false,
       direction: "rtl",
       nlist: [],
+      errRule: [],
       which: ""
     };
   },
@@ -185,6 +193,17 @@ export default {
     },
     handleHazardDel(e) {
       this.hlist.splice(e, 1);
+    },
+    handleAddErrRule() {
+      let temp = {};
+      temp.num = 1;
+      temp.children = [];
+      this.errRule.push(temp);
+      console.log(this.errRule);
+    },
+    handleClick() {
+      console.log("dafsd");
+      this.drawer = true;
     }
   },
   components: {
@@ -293,5 +312,60 @@ export default {
 .member_label {
   margin-right: 10px;
   float: left;
+}
+.notification_circle_mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e5790d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification_triangle_mark {
+  position: relative;
+  background-color: #e41f17;
+  text-align: left;
+  margin-left: 4px;
+}
+.notification_triangle_mark:before,
+.notification_triangle_mark:after {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+}
+.notification_triangle_mark,
+.notification_triangle_mark:before,
+.notification_triangle_mark:after {
+  width: 18px;
+  height: 18px;
+  border-top-right-radius: 30%;
+}
+
+.notification_triangle_mark {
+  transform: rotate(-60deg) skewX(-30deg) scale(1, 0.866);
+}
+.notification_triangle_mark:before {
+  transform: rotate(-135deg) skewX(-45deg) scale(1.414, 0.707)
+    translate(0, -50%);
+}
+.notification_triangle_mark:after {
+  transform: rotate(135deg) skewY(-45deg) scale(0.707, 1.414) translate(50%);
+}
+.notification_circle_mark svg {
+  text-align: center;
+  width: 100%;
+  line-height: 40px;
+  color: #fff;
+  font-size: 22px;
+}
+.notification_triangle_mark + svg {
+  color: #fff;
+  font-size: 22px;
+  position: absolute;
+  left: 2px;
+  top: 0;
+  z-index: 10;
 }
 </style>

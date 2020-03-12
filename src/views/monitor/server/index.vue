@@ -186,25 +186,14 @@ export default {
   },
   created() {
     this.getList();
-    this.openLoading();
   },
   methods: {
     /** 查询服务器信息 */
     getList() {
       getServer().then(response => {
         this.server = response.data;
-        this.loading.close();
       });
     },
-    // 打开加载层
-    openLoading() {
-      this.loading = this.$loading({
-        lock: true,
-        text: "拼命读取中",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
-    }
   }
 };
 </script>

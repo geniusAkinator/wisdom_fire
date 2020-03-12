@@ -6,7 +6,7 @@
       </div>
       <div class="el-col el-col-10" style="position:relative">
         <div class="top-title">
-          <span class="main_title">安中云数据平台</span>
+          <span class="main_title">阿米华晟安中云数据平台</span>
           <span class="date_time">{{nowDate}}</span>
         </div>
         <div class="rectangle_left"></div>

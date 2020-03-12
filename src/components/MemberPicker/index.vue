@@ -92,19 +92,23 @@ export default {
       if (!this.teamerList[index].isFirst) {
         return;
       }
+      let _rowId = this.teamerList[index].id;
       listEmployee(this.eform)
         .then(res => {
           if (res.code == 200) {
+            console.log(res.rows);
             let list = res.rows;
             if (list.length) {
               let arr = [];
               list.map((item, i) => {
-                let temp = {};
-                temp.id = item.employeeId;
-                temp.label = item.name;
-                temp.duty = item.duty;
-                temp.checked = false;
-                arr.push(temp);
+                if (item.departmentId == _rowId) {
+                  let temp = {};
+                  temp.id = item.employeeId;
+                  temp.label = item.name;
+                  temp.duty = item.duty;
+                  temp.checked = false;
+                  arr.push(temp);
+                }
               });
               this.$set(this.teamerList[index], "children", arr);
               this.$set(this.teamerList[index], "isFirst", false);

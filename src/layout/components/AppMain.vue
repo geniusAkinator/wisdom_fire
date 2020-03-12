@@ -53,7 +53,7 @@ export default {
   position: absolute;
   overflow-y: scroll;
   bottom: 0;
-  top: 140px;
+  top: 141px;
 }
 
 .fixed-header + .app-main {
