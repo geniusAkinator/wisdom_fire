@@ -26,3 +26,21 @@ export function getAllData(query) {
         params: query
     })
 }
+
+//指派
+export function addAppoint(data) {
+    return request({
+        url: '/system/fault',
+        method: 'put',
+        data: data
+    })
+}
+
+//撤销
+export function revokeAppoint(query) {
+    return request({
+        url: '/system/fault/revoke',
+        method: 'get',
+        params: query
+    })
+}

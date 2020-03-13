@@ -2,104 +2,100 @@
   <div class="container">
     <el-card class="state-card" shadow="never">
       <el-row :gutter="20">
-        <el-col :span="16">
-          <el-col :span="8">
-            <ul class="info_block">
-              <li class="info_item">
-                <span class="info_item_name">所属工厂:</span>
-                <span class="info_item_value">{{info.factoryName}}</span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">所属楼宇:</span>
-                <span class="info_item_value">{{info.buildingName}}</span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">所属楼层:</span>
-                <span class="info_item_value">{{info.floorName}}</span>
-              </li>
-            </ul>
-          </el-col>
-          <el-col :span="8">
-            <ul class="info_block">
-              <li class="info_item">
-                <span class="info_item_name">设备编号:</span>
-                <span class="info_item_value">
-                  <template
-                    v-if="info.deviceNumber!=null&&info.deviceNumber!=''"
-                  >{{info.deviceNumber}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">设备型号:</span>
-                <span class="info_item_value">
-                  <template v-if="info.ttId!=null&&info.ttId!=''">{{info.type}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">点位描述:</span>
-                <span class="info_item_value">
-                  <template
-                    v-if="info.currLocation!=null&&info.currLocation!=''"
-                  >{{info.currLocation}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-            </ul>
-          </el-col>
-          <el-col :span="8">
-            <ul class="info_block">
-              <li class="info_item">
-                <span class="info_item_name">故障类型:</span>
-                <span class="info_item_value">{{info.type}}</span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">故障状态:</span>
-                <span class="info_item_value">
-                  <template v-if="info.state == 0">待处理</template>
-                  <template v-else-if="info.state == 1">处理中</template>
-                  <template v-else-if="info.state == 2">已处理</template>
-                </span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">故障描述:</span>
-                <span class="info_item_value">{{info.content}}</span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">上报时间:</span>
-                <span class="info_item_value">
-                  <template
-                    v-if="info.currDate!=null&&info.currDate!=''"
-                  >{{parseTime(info.currDate)}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">更新时间:</span>
-                <span class="info_item_value">
-                  <template v-if="info.uptime!=null&&info.uptime!=''">{{parseTime(info.uptime)}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-              <li class="info_item">
-                <span class="info_item_name">完成时间:</span>
-                <span class="info_item_value">
-                  <template v-if="info.repair!=null&&info.repair!=''">{{parseTime(info.repair)}}</template>
-                  <template v-else>N/A</template>
-                </span>
-              </li>
-            </ul>
-          </el-col>
+        <el-col :span="8">
+          <ul class="info_block">
+            <li class="info_item">
+              <span class="info_item_name">所属工厂:</span>
+              <span class="info_item_value">{{info.factoryName}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">所属楼宇:</span>
+              <span class="info_item_value">{{info.buildingName}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">所属楼层:</span>
+              <span class="info_item_value">{{info.floorName}}</span>
+            </li>
+          </ul>
         </el-col>
         <el-col :span="8">
-          <div class="detail_img_content">
-            <div class="not_found">暂无楼层图，请先到工厂管理中添加</div>
-          </div>
+          <ul class="info_block">
+            <li class="info_item">
+              <span class="info_item_name">设备编号:</span>
+              <span class="info_item_value">
+                <template
+                  v-if="info.deviceNumber!=null&&info.deviceNumber!=''"
+                >{{info.deviceNumber}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">设备型号:</span>
+              <span class="info_item_value">
+                <template v-if="info.ttId!=null&&info.ttId!=''">{{info.type}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">点位描述:</span>
+              <span class="info_item_value">
+                <template
+                  v-if="info.currLocation!=null&&info.currLocation!=''"
+                >{{info.currLocation}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+          </ul>
+        </el-col>
+        <el-col :span="8">
+          <ul class="info_block">
+            <li class="info_item">
+              <span class="info_item_name">故障类型:</span>
+              <span class="info_item_value">{{info.type}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">故障状态:</span>
+              <span class="info_item_value">
+                <template v-if="info.state == 0">待处理</template>
+                <template v-else-if="info.state == 1">处理中</template>
+                <template v-else-if="info.state == 2">已处理</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">故障描述:</span>
+              <span class="info_item_value">{{info.content}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">上报时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.currDate!=null&&info.currDate!=''">{{parseTime(info.currDate)}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">更新时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.uptime!=null&&info.uptime!=''">{{parseTime(info.uptime)}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">完成时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.repair!=null&&info.repair!=''">{{parseTime(info.repair)}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+          </ul>
         </el-col>
       </el-row>
     </el-card>
     <el-row :gutter="20" style="margin-top:20px">
+      <el-col :span="12">
+        <div class="detail_img_content">
+          <div class="not_found">暂无楼层图，请先到工厂管理中添加</div>
+        </div>
+      </el-col>
       <el-col :span="12">
         <span class="subtitle">维修进度预览</span>
         <el-timeline>
@@ -165,7 +161,6 @@ export default {
     getAllInfoData() {
       let _this = this;
       console.log(_this.dform);
-
       getAllData(_this.dform).then(response => {
         if (response.code == 200) {
           let _data = response.data;
@@ -231,7 +226,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex:1;
-  text-align: right
+  flex: 1;
+  text-align: right;
 }
 </style>

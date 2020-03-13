@@ -82,9 +82,10 @@
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="80px">
+          <el-table-column label="操作" fixed="right" width="160px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+              <el-button size="mini" type="danger" @click="handleRevoke(scope.$index, scope.row)">撤销</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -123,6 +124,8 @@
 import { getSensorFaultList } from "@/api/devops/ops";
 import { parseTimeStr, parseTime } from "@/utils/common";
 import MyAppointAdd from "@/views/devOps/ops/add";
+import { revokeAppoint } from "@/api/devops/ops";
+
 export default {
   name: "OverView",
   data() {
@@ -151,7 +154,8 @@ export default {
       rowFactoryId: "",
       realTimeCount: 0,
       allCount: 0,
-      mostFactory: ""
+      mostFactory: "",
+      eid: 0
     };
   },
   watch: {
@@ -182,10 +186,9 @@ export default {
           let _factoryName = _data.factoryName;
           let _arr = [];
           _row.map((item, i) => {
-            console.log(item);
             let temp = {};
             temp.id = item.id;
-            temp.factoryName = _factoryName;
+            temp.factoryName = item.factoryName;
             temp.sensorName = item.sensorName;
             temp.type = item.type;
             temp.uptime = item.uptime;
@@ -208,12 +211,10 @@ export default {
             _this.loading3 = false;
             _this.handledList = _arr;
           }
-          console.log(_data);
         }
       });
     },
     handleDetail(index, row) {
-      console.log(row);
       this.$router.push({
         name: "OpsDetail",
         params: { id: row.id, sid: row.sid }
@@ -232,8 +233,17 @@ export default {
         target: ".app-main"
       });
       this.layerId = index;
-      console.log(row);
       this.rowFactoryId = row.factoryId;
+      this.eid = row.id;
+    },
+    handleRevoke(index, row) {
+      //撤销，无操作步骤的即为刚下发的任务可以撤销
+      revokeAppoint({ sensorId: row.id }).then(response => {
+        if (response.code === 200) {
+          this.msgSuccess("撤销成功");
+           this.getList();
+        }
+      });
     }
   },
   created() {

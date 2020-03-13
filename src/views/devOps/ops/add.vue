@@ -1,7 +1,7 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="所属工厂" prop="name">
+      <el-form-item label="所属工厂">
         <el-select v-model="form.factoryId" disabled>
           <el-option
             v-for="(item,index) in flist"
@@ -11,7 +11,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择团队">
+      <el-form-item label="选择团队" prop="departmentId">
         <el-select v-model="form.departmentId" placeholder="请选择团队">
           <el-option
             v-for="(item,index) in tlist"
@@ -21,46 +21,72 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择成员">
-        <el-transfer v-model="value" :titles="['待选成员列表', '选定成员列表']" :data="slist">
-          <span slot-scope="{ option }">{{ option.key }} - {{ option.duty }}</span>
+      <el-form-item label="选择成员" prop="staff">
+        <el-transfer v-model="staffList" :titles="['待选成员列表', '选定成员列表']" :data="slist">
+          <div slot-scope="{ option }">
+            <del v-if="option.disabled">{{ option.name }}({{option.duty}})</del>
+            <span v-else>{{ option.name }}({{option.duty}})</span>
+          </div>
         </el-transfer>
       </el-form-item>
-      <el-form-item label="备注" prop="description">
-        <el-input v-model="form.description" type="textarea" placeholder="请输入备注" />
+      <el-form-item label="备注">
+        <el-input v-model="form.remarks" type="textarea" placeholder="请输入备注" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { addConfig } from "@/api/system/config";
 import { Loading } from "element-ui";
 import { listFactory } from "@/api/main/factory";
-import { getTeamList } from "@/api/devops/ops";
+import { getTeamList, addAppoint } from "@/api/devops/ops";
 import { listEmployee } from "@/api/team/employee";
 export default {
   data() {
+    let validateStaff = (rule, value, callback) => {
+      if (this.staffList.length == 0) {
+        callback(new Error("选定成员列表不能为空"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
+        id: this.$parent.eid,
         factoryId: this.$parent.rowFactoryId,
-        departmentId: ""
+        departmentId: "",
+        remarks: ""
       },
       flist: [],
       tlist: [],
       slist: [],
-      value: [1, 4],
-      rules: {}
+      staffList: [],
+      rules: {
+        departmentId: [
+          { required: true, message: "请选择指派团队", trigger: "change" }
+        ],
+        staff: [{ required: true, validator: validateStaff, trigger: "change" }]
+      }
     };
   },
   watch: {
     "form.departmentId"(nVal, oVal) {
       let _this = this;
       _this.getStaffList();
+    },
+    staffList(nVal, oVal) {
+      let str = "";
+      if (nVal.length > 0) {
+        nVal.forEach(function(val) {
+          str = str + val + ",";
+        });
+        if (str.length > 0) str = str.substr(0, str.length - 1);
+      }
+      this.form.employeeId = str;
     }
   },
   methods: {
@@ -70,14 +96,19 @@ export default {
     closeDialog() {
       this.$parent.$layer.close(this.$parent.layerId);
     },
-    handleSubmit() {
-      addConfig(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("新增成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          console.log(this.form);
+          addAppoint(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("指派成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
@@ -114,8 +145,8 @@ export default {
           _data.map((item, i) => {
             console.log(item);
             let temp = {};
-            temp.id = item.employeeId;
-            temp.key = item.name;
+            temp.name = item.name;
+            temp.key = item.employeeId;
             temp.duty = item.duty;
             if (item.state == 0) {
               temp.disabled = false;

@@ -66,5 +66,6 @@ export default {
 .map-viewer .map {
   height: 200px;
   cursor: crosshair;
+  border-radius: 4px;
 }
 </style>

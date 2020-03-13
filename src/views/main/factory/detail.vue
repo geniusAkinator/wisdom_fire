@@ -27,11 +27,13 @@
             </div>
             <div class="detail-item">
               <label for>负责人:</label>
-              <span>{{form.leader}}&nbsp;&nbsp;{{form.phone}}</span>
+              <span>{{form.leader}}(+86&nbsp;{{form.phone}})</span>
             </div>
             <div class="detail-item">
               <label for>座机号:</label>
-              <span>{{form.tel}}</span>
+              <span>
+                <template>{{form.tel}}</template>
+              </span>
             </div>
             <div class="detail-item">
               <label for>地址:</label>
@@ -55,6 +57,12 @@
         </el-row>
       </div>
     </el-card>
+    
+    <div>
+
+      
+    </div>
+
   </div>
 </template>
 
