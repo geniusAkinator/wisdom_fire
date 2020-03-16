@@ -39,7 +39,8 @@ export default {
         systemId: this.$parent.pid,
         description: "",
         name: "",
-        ttId: this.$parent.eid
+        ttId: this.$parent.eid,
+        img:""
       },
       sysList: [],
       rules: {

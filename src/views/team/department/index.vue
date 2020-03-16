@@ -34,8 +34,6 @@
         </template>
       </el-table-column>
       <el-table-column label="团队名称" align="center" prop="departmentName" />
-      <el-table-column label="团队领导人" align="center" prop="leader" />
-      <el-table-column label="手机号" align="center" prop="phone" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="座机号" align="center" prop="tel" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">

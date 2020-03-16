@@ -20,8 +20,15 @@
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号" />
       </el-form-item>
-      <el-form-item label="职位" prop="duty">
-        <el-input v-model="form.duty" placeholder="请输入职位" />
+      <el-form-item label="职位" prop="postId">
+        <el-select v-model="form.postId" placeholder="请选择职位">
+          <el-option
+            v-for="(item,index) in postList"
+            :key="index"
+            :label="item.postName"
+            :value="item.postId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="性别">
         <el-radio-group v-model="form.sex">
@@ -52,6 +59,18 @@
           >{{dict.dictLabel}}</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="领导" prop="leader">
+        <el-radio-group v-model="form.leader">
+          <el-radio
+            v-for="dict in leaderOptions"
+            :key="dict.dictValue"
+            :label="dict.dictValue"
+          >{{dict.dictLabel}}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="微信号" prop="uid">
+        <wechat-picker @sendMember="getMember"></wechat-picker>
+      </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="form.remark" type="textarea"></el-input>
       </el-form-item>
@@ -67,24 +86,31 @@
 import { addEmployee } from "@/api/team/employee";
 import { listDepartment } from "@/api/team/department";
 import { Loading } from "element-ui";
+import { listPost } from "@/api/system/post";
+import WechatPicker from "@/components/WechatPicker/index";
 export default {
   data() {
     return {
       form: {
-        duty: "",
+        postId: "",
         idCard: "",
         joinTime: "",
         name: "",
         phone: "",
         sex: "0",
         state: "0",
-        departmentId: ""
+        departmentId: "",
+        uid: 0,
+        leader: "0",
+        nickName: ""
       },
       rules: {
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
-        idCard: [{ required: true, message: "身份证不能为空", trigger: "blur" }],
+        idCard: [
+          { required: true, message: "身份证不能为空", trigger: "blur" }
+        ],
         phone: [{ required: true, message: "手机不能为空", trigger: "blur" }],
-        duty: [{ required: true, message: "职位不能为空", trigger: "blur" }],
+        postId: [{ required: true, message: "请选择职位", trigger: "change" }],
         joinTime: [
           { required: true, message: "请选择入职时间", trigger: "change" }
         ]
@@ -92,7 +118,9 @@ export default {
       factoryList: [],
       departmentList: [],
       sexOptions: [],
-      statusOptions: []
+      statusOptions: [],
+      postList: [],
+      leaderOptions: []
     };
   },
   watch: {
@@ -133,6 +161,12 @@ export default {
           this.departmentList = response.rows;
         }
       });
+      listPost().then(response => {
+        if (response.code == 200) {
+          this.postList = response.rows;
+          console.log(response.rows);
+        }
+      });
       this.getDicts("team_employee_sex").then(response => {
         if (response.code == 200) {
           this.sexOptions = response.data;
@@ -143,16 +177,32 @@ export default {
           this.statusOptions = response.data;
         }
       });
+      this.getDicts("sys_team_leader").then(response => {
+        if (response.code == 200) {
+          this.leaderOptions = response.data;
+        }
+      });
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getMember(e) {
+      if (e.length > 0) {
+        this.form.uid = e[0].uid;
+      }
     }
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    WechatPicker
   }
 };
 </script>
 
 <style>
+.choosen {
+  cursor: pointer;
+}
 </style>

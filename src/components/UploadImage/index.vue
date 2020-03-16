@@ -32,7 +32,7 @@ import imgpicker from "@/views/common/imgpicker";
 export default {
   data() {
     return {
-      idx: "",
+      layerId: "",
       imgs: "",
       list: [],
       baseUrl: process.env.VUE_APP_BASE_API
@@ -68,7 +68,7 @@ export default {
         title: "图片选择器",
         target: ".app-main"
       });
-      this.idx = index;
+      this.layerId = index;
     },
     handleDel(index, row) {
       let temp = this.imgs.split("|");

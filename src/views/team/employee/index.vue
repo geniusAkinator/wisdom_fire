@@ -48,7 +48,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="employeeId" />
       <el-table-column label="部门外键" align="center" prop="departmentId" />
-      <el-table-column label="职位" align="center" prop="duty" />
+      <el-table-column label="职位" align="center" prop="postId" />
       <el-table-column label="身份证" align="center" prop="idCard" />
       <el-table-column label="人员姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="sex">

@@ -185,6 +185,7 @@ export default {
           let _row = _data.sensorFaultList;
           let _factoryName = _data.factoryName;
           let _arr = [];
+          console.log(response.data)
           _row.map((item, i) => {
             let temp = {};
             temp.id = item.id;

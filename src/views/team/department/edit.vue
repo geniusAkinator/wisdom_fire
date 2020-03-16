@@ -14,14 +14,11 @@
       <el-form-item label="团队名称" prop="departmentName">
         <el-input v-model="form.departmentName" placeholder="请输入团队名称" />
       </el-form-item>
-      <el-form-item label="团队领导人" prop="leader">
-        <el-input v-model="form.leader" placeholder="请输入团队领导人" />
-      </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input v-model="form.phone" placeholder="请输入手机号" />
-      </el-form-item>
       <el-form-item label="座机号" prop="tel">
         <el-input v-model="form.tel" placeholder="请输入座机号" />
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input v-model="form.remark" type="textarea"></el-input>
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -51,7 +48,6 @@ export default {
       form: {
         departmentId: this.$parent.eid,
         departmentName: "",
-        leader: "",
         phone: "",
         remark: "",
         tel: "",
@@ -63,9 +59,6 @@ export default {
         ],
         departmentName: [
           { required: true, message: "团队名称不能为空", trigger: "blur" }
-        ],
-        leader: [
-          { required: true, message: "团队领导人不能为空", trigger: "blur" }
         ],
         phone: [{ required: true, validator: validatePhone, trigger: "change" }]
       },

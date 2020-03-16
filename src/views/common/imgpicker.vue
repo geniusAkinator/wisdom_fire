@@ -159,7 +159,7 @@ export default {
       this.closeDialog();
     },
     closeDialog() {
-      this.$parent.$layer.close(this.$parent.idx);
+      this.$parent.$layer.close(this.$parent.layerId);
     },
     init() {
       listImage(this.form).then(response => {
