@@ -157,6 +157,7 @@ export default {
         ]
       },
       eid: 0,
+      fid:0,
       layerId: "",
       pid: this.$route.params.id,
       sensorTypeList: [],
@@ -355,6 +356,7 @@ export default {
     },
     /** 配置分数 **/
     handleConfig(row) {
+      this.fid = row.factoryId;
       this.eid = row.transducerId;
       var index = this.$layer.iframe({
         content: {

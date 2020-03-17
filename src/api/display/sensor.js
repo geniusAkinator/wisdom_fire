@@ -51,3 +51,21 @@ export function exportTransducer(query) {
     params: query
   })
 }
+
+//设定单个传感器分数
+export function updatePoint(data) {
+  return request({
+    url: '/system/point',
+    method: 'put',
+    data: data
+  })
+}
+
+//传感器分数回显
+export function getPointDetail(query) {
+  return request({
+    url: '/system/point/list',
+    method: 'get',
+    params: query
+  })
+}

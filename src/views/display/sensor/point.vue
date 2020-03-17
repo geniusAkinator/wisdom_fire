@@ -2,13 +2,13 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="分数A" prop="pointB">
-        <el-input v-model="form.pointA"  placeholder="请输入分数A" />
+        <el-input v-model="form.pointA" placeholder="请输入分数A" />
       </el-form-item>
       <el-form-item label="分数B" prop="pointB">
-        <el-input v-model="form.pointB"  placeholder="请输入分数B" />
+        <el-input v-model="form.pointB" placeholder="请输入分数B" />
       </el-form-item>
       <el-form-item label="分数C" prop="pointC">
-        <el-input v-model="form.pointC"  placeholder="请输入分数C" />
+        <el-input v-model="form.pointC" placeholder="请输入分数C" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -17,29 +17,36 @@
     </div>
   </div>
 </template>
-
 <script>
-import { addTransducer } from "@/api/display/sensor";
+import { updatePoint, getPointDetail } from "@/api/display/sensor";
+import { Loading } from "element-ui";
 export default {
   data() {
     return {
-      form: {},
+      form: {
+        transducerId: this.$parent.eid,
+        factoryId: this.$parent.fid,
+        pointA: 0,
+        pointB: 0,
+        pointC: 0
+      },
       rules: {}
     };
   },
   methods: {
     handleSubmit(form) {
+      console.log(this.form);
       this.$refs[form].validate(valid => {
         if (valid) {
-          //   addTransducer(this.form).then(response => {
-          //     if (response.code === 200) {
-          //       this.msgSuccess("新增成功");
-          //       this.$parent.getList();
-          //       this.closeDialog();
-          //     } else {
-          //       this.msgError(response.msg);
-          //     }
-          //   });
+          updatePoint(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
@@ -55,7 +62,14 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-
+      getPointDetail(this.form).then(response => {
+        if (response.code == 200) {
+          let _data = response.rows[0];
+          this.form.pointA = _data.pointA;
+          this.form.pointB = _data.pointB;
+          this.form.pointC = _data.pointC;
+        }
+      });
       setTimeout(() => {
         loadingInstance.close();
       }, 600);

@@ -65,7 +65,18 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="noticeId" width="100" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属工厂" align="center" prop="factoryId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in factoryList" :key="index">
+            <template v-if="scope.row.factoryId == item.factoryId">{{item.factoryName}}</template>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="公告标题"
         align="center"
@@ -79,14 +90,12 @@
         :formatter="typeFormat"
         width="100"
       />
-      <el-table-column
-        label="状态"
-        align="center"
-        prop="status"
-        :formatter="statusFormat"
-        width="100"
-      />
-      <el-table-column label="创建者" align="center" prop="createBy" width="100" />
+      <el-table-column label="状态" align="center" prop="status" width="100">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status==0?'success':'warning'">{{scope.row.status?'正常':'异常'}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建者" align="center" prop="createBy" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
@@ -130,9 +139,11 @@ import {
   updateNotice,
   exportNotice
 } from "@/api/system/notice";
+import { listFactory } from "@/api/main/factory";
 import MySearchTool from "@/components/SearchTool/index";
 import MyNoticeAdd from "@/views/system/notice/add";
 import MyNoticeEdit from "@/views/system/notice/edit";
+
 export default {
   name: "Notice",
   components: {
@@ -167,17 +178,23 @@ export default {
       // 表单参数
       form: {},
       layerId: "",
-      eid: 0
+      eid: 0,
+      factoryList: []
     };
   },
   created() {
-    this.getList();
     this.getDicts("sys_notice_status").then(response => {
       this.statusOptions = response.data;
     });
     this.getDicts("sys_notice_type").then(response => {
       this.typeOptions = response.data;
     });
+    listFactory().then(response => {
+      if (response.code == 200) {
+        this.factoryList = response.rows;
+      }
+    });
+    this.getList();
   },
   methods: {
     /** 查询公告列表 */
@@ -189,11 +206,7 @@ export default {
         this.loading = false;
       });
     },
-    // 公告状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
-    // 公告状态字典翻译
+    // 公告类型字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.noticeType);
     },

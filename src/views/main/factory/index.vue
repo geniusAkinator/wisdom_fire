@@ -58,16 +58,37 @@
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="LOGO" align="center" prop="picture">
+        <template slot-scope="scope">
+          <el-image class="factory_logo" :src="baseURL + scope.row.picture"></el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="工厂名称" align="center" prop="factoryName" />
-      <el-table-column label="工厂地址" align="center" prop="address" />
-      <el-table-column label="工厂类型" align="center" prop="factoryType" />
+      <el-table-column label="工厂类型" align="center" prop="factoryType">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in typeOptions" :key="index">
+            <template v-if="scope.row.factoryType == item.dictValue">{{item.dictLabel}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="地址">
+        <el-table-column label="省份">
+          <template slot-scope="scope">{{scope.row.province.split(',')[0]}}</template>
+        </el-table-column>
+        <el-table-column prop="city" label="市区">
+          <template slot-scope="scope">{{scope.row.province.split(',')[1]}}</template>
+        </el-table-column>
+        <el-table-column prop="city" label="区县">
+          <template slot-scope="scope">{{scope.row.province.split(',')[2]}}</template>
+        </el-table-column>
+        <el-table-column prop="address" label="详细地址"></el-table-column>
+      </el-table-column>
       <el-table-column label="负责人" align="center" prop="leader" />
       <el-table-column label="手机号" align="center" prop="phone">
         <template slot-scope="scope">
           <span :title="scope.row.phone">{{hidePhone(scope.row.phone)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="省市区" align="center" prop="province" />
       <el-table-column label="座机号" align="center" prop="tel" />
       <!-- <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
         <template slot-scope="scope">
@@ -164,10 +185,17 @@ export default {
       // 表单校验
       rules: {},
       eid: 0,
-      layerId: ""
+      layerId: "",
+      typeOptions: [],
+      baseURL: process.env.VUE_APP_BASE_API
     };
   },
   created() {
+    this.getDicts("main_factory_type").then(response => {
+      if (response.code == 200) {
+        this.typeOptions = response.data;
+      }
+    });
     this.getList();
   },
   methods: {
@@ -175,9 +203,11 @@ export default {
     getList() {
       this.loading = true;
       listFactory(this.queryParams).then(response => {
-        this.factoryList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+        if (response.code == 200) {
+          this.factoryList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }
       });
     },
     // 取消按钮
@@ -304,3 +334,12 @@ export default {
   }
 };
 </script>
+
+<style>
+.factory_logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+}
+</style>
+

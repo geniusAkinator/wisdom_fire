@@ -8,6 +8,7 @@
         class="floor_img_marker"
         :src="icon"
         alt
+        @click.stop
       />
     </div>
     <div class="floor_img_content" v-if="img==''">
@@ -51,7 +52,6 @@ export default {
   },
   methods: {
     handleClick(e) {
-      console.log(e)
       let _marker = this.$refs.marker;
       let _img = this.$refs.floorImg;
       let x = e.offsetX - _marker.offsetWidth / 2;
@@ -66,7 +66,8 @@ export default {
       nowPos.xAxis = _left;
       nowPos.yAxis = _top;
       this.$emit("sendPos", nowPos);
-    }
+    },
+
   }
 };
 </script>

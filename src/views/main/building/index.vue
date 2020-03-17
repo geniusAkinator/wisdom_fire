@@ -57,11 +57,32 @@
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="工厂id" align="center" prop="factoryId" />
-      <el-table-column label="面积" align="center" prop="area" />
+      <el-table-column label="所属工厂" align="center" prop="factoryId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in factoryList" :key="index">
+            <template v-if="scope.row.factoryId == item.factoryId">{{item.factoryName}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="面积" align="center" prop="area">
+        <template slot-scope="scope">
+          <span>
+            {{scope.row.area}}m
+            <sup>2</sup>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="楼宇名称" align="center" prop="name" />
-      <el-table-column label="楼下层数" align="center" prop="underLevel" />
-      <el-table-column label="楼上层数" align="center" prop="upperLevel" />
+      <el-table-column label="楼上层数" align="center" prop="upperLevel">
+        <template slot-scope="scope">
+          <span>{{scope.row.upperLevel}}层</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="楼下层数" align="center" prop="underLevel">
+        <template slot-scope="scope">
+          <span>{{scope.row.underLevel}}层</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="250">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼层</el-button>
@@ -99,6 +120,7 @@ import {
   delBuilding,
   exportBuilding
 } from "@/api/main/building";
+import { listFactory } from "@/api/main/factory";
 
 import MySearchTool from "@/components/SearchTool/index";
 import MyBuildingAdd from "@/views/main/building/add";
@@ -134,10 +156,16 @@ export default {
       rules: {},
       layerId: "",
       eid: 0,
-      pid: this.$route.params.id
+      pid: this.$route.params.id,
+      factoryList: []
     };
   },
   created() {
+    listFactory().then(response => {
+      if (response.code == 200) {
+        this.factoryList = response.rows;
+      }
+    });
     this.getList();
   },
   methods: {
@@ -145,9 +173,11 @@ export default {
     getList() {
       this.loading = true;
       listBuilding(this.queryParams).then(response => {
-        this.buildingList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+        if (response.code == 200) {
+          this.buildingList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }
       });
     },
     // 取消按钮
@@ -257,7 +287,7 @@ export default {
         })
         .catch(function() {});
     },
-    
+
     handleJump(row) {
       this.$router.push({ name: "Floor", params: { id: row.buildingId } });
     }

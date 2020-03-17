@@ -24,11 +24,11 @@
           @click="clickMarker(index,item,$event)"
         >
           <bm-label
-            :content="item.factoryId+''"
+            :content="index+1+''"
             :labelStyle="{color: 'white',textAlign:'center',
             border:0,width:'26px',height:'26px',diplay:'block',
             fontSize : '12px',background:'rgba(0,0,0,0)',zIndex:'99'}"
-            :offset="{width:item.index > 10 ? -2 : -1, height: 3}"
+            :offset="{width:index > 10 ? -2 : -1, height: 3}"
           />
         </bm-marker>
       </bm-marker-clusterer>
@@ -80,13 +80,10 @@
         @select="handleSelect"
       >
         <i class="el-icon-edit el-input__icon" slot="suffix"></i>
-        <template slot-scope="props">
-          <div class="result" :key="index" v-for="(item,index) in props">
-            <i>{{item.factoryId}}</i>
+        <template scope="scope">
+          <div class="result">
             <div class="info">
-              <span class="name">{{item.factoryName}}</span>
-              <!-- <span>{{item.factoryId}}</span>
-              <span class="address">{{item.address}}</span>-->
+              <span class="name">{{scope.item.factoryName}}</span>
             </div>
           </div>
         </template>
@@ -174,6 +171,7 @@ export default {
         ? list.filter(this.createFilter(queryString))
         : list;
       // 调用 callback 返回建议列表的数据
+      console.log("results",results)
       cb(results);
     },
     createFilter(queryString) {
@@ -193,7 +191,7 @@ export default {
         name: "FactoryDetail",
         params: { id: item.factoryId }
       });
-      
+
       // this.$router.push({
       //   name: "工厂管理"
       // });
