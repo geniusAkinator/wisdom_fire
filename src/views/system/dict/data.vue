@@ -60,7 +60,11 @@
     </div>
     <el-table v-loading="loading" border :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编码" align="center" prop="dictCode" />
+       <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="字典标签" align="center" prop="dictLabel" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="dictSort" />

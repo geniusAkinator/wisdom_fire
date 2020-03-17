@@ -34,7 +34,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" fixed width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="transducerId" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="所属工厂" align="center" prop="factoryId">
         <template slot-scope="scope">
           <span v-for="(item,index) in factoryList" :key="index">
@@ -60,7 +64,7 @@
       <el-table-column label="设备型号" align="center" prop="ttId">
         <template slot-scope="scope">
           <span v-for="(item,index) in sensorTypeList" :key="index">
-            <el-tag type="success" effect="dark" v-if="scope.row.ttId  == item.ttId">{{item.name}}</el-tag>
+            <el-tag type="success" v-if="scope.row.ttId  == item.ttId">{{item.name}}</el-tag>
           </span>
         </template>
       </el-table-column>

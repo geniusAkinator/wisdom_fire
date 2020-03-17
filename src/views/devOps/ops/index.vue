@@ -34,7 +34,11 @@
           style="width: 100%"
           v-loading="loading1"
         >
-          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column label="ID" type="index" align="center">
+            <template slot-scope="scope">
+              <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="factoryName" label="单位"></el-table-column>
           <el-table-column prop="sensorName" label="设备类型"></el-table-column>
           <el-table-column prop="type" label="故障类型"></el-table-column>
@@ -57,7 +61,7 @@
                 size="mini"
                 type="primary"
                 @click="handleAppoint(scope.$index, scope.row)"
-              >指派任务</el-button> -->
+              >指派任务</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -241,7 +245,7 @@ export default {
       revokeAppoint({ sensorId: row.id }).then(response => {
         if (response.code === 200) {
           this.msgSuccess("撤销成功");
-           this.getList();
+          this.getList();
         }
       });
     }

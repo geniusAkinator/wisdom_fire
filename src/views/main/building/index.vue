@@ -52,7 +52,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" fixed align="center" />
-      <el-table-column label="ID" align="center" prop="buildingId" width="80" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="工厂id" align="center" prop="factoryId" />
       <el-table-column label="面积" align="center" prop="area" />
       <el-table-column label="楼宇名称" align="center" prop="name" />

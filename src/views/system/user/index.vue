@@ -119,7 +119,11 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="40" align="center" />
-          <el-table-column label="用户编号" align="center" prop="userId" />
+          <el-table-column label="ID" type="index" align="center">
+            <template slot-scope="scope">
+              <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="用户名称" align="center" prop="userName" />
           <el-table-column label="用户昵称" align="center" prop="nickName" />
           <el-table-column label="所属公司" align="center" prop="dept.deptName" />
@@ -337,7 +341,7 @@ export default {
     getTreeselect() {
       treeselect().then(response => {
         this.deptOptions = response.data;
-        console.log(this.deptOptions)
+        console.log(this.deptOptions);
       });
     },
     // 筛选节点
@@ -347,7 +351,7 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      console.log(data.id)
+      console.log(data.id);
       this.queryParams.deptId = data.id;
       this.getList();
     },

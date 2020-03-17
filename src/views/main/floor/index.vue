@@ -52,7 +52,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" fixed align="center" />
-      <el-table-column label="ID" align="center" prop="floorId" width="80"/>
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="楼层名称" align="center" prop="floorName" />
       <el-table-column label="层级" align="center" prop="level" />
       <el-table-column label="操作" align="center" fixed="right" width="180">

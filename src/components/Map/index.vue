@@ -191,8 +191,9 @@ export default {
     jump(index, item) {
       this.$router.push({
         name: "FactoryDetail",
-        params: { id: item.id }
+        params: { id: item.factoryId }
       });
+      
       // this.$router.push({
       //   name: "工厂管理"
       // });

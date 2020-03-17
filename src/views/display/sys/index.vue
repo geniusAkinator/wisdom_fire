@@ -34,7 +34,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="systemId" width="80" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="描述" align="center" prop="description" />
       <el-table-column label="操作" align="center" fixed="right" width="280">

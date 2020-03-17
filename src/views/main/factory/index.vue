@@ -40,7 +40,6 @@
           </el-form>
         </template>
         <template slot="end">
-          
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </template>
@@ -54,15 +53,23 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="factoryId" width="80" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="工厂名称" align="center" prop="factoryName" />
       <el-table-column label="工厂地址" align="center" prop="address" />
       <el-table-column label="工厂类型" align="center" prop="factoryType" />
       <el-table-column label="负责人" align="center" prop="leader" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="手机号" align="center" prop="phone">
+        <template slot-scope="scope">
+          <span :title="scope.row.phone">{{hidePhone(scope.row.phone)}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="省市区" align="center" prop="province" />
       <el-table-column label="座机号" align="center" prop="tel" />
-      <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
+      <!-- <el-table-column label="创建时间" align="center" prop="createDateTime" width="180">
         <template slot-scope="scope">
           <span v-if="scope.row.createDateTime">{{ parseTime(scope.row.createDateTime) }}</span>
         </template>
@@ -71,7 +78,7 @@
         <template slot-scope="scope">
           <span v-if="scope.row.updateDateTime">{{ parseTime(scope.row.updateDateTime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" fixed="right" width="250">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">楼宇</el-button>
@@ -155,9 +162,7 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-        
-      },
+      rules: {},
       eid: 0,
       layerId: ""
     };
@@ -289,6 +294,9 @@ export default {
     },
     handleJump(row) {
       this.$router.push({ name: "Building", params: { id: row.factoryId } });
+    },
+    hidePhone(phone) {
+      return mobileEncrypt(phone);
     }
   },
   components: {

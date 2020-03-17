@@ -46,7 +46,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="employeeId" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="所属团队" align="center" prop="departmentId">
         <template slot-scope="scope">
           <span v-for="(item,index) in departmentList" :key="index">
@@ -62,29 +66,40 @@
         </template>
       </el-table-column>
       <el-table-column label="人员姓名" align="center" prop="name" />
-      <el-table-column label="身份证" align="center" prop="idCard" />
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
           <span>{{scope.row.sex == 0 ?'男':'女'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="人员电话" align="center" prop="phone" />
-      <el-table-column label="状态(在职，离职)" align="center" prop="state">
+      <el-table-column label="身份证" align="center" prop="idCard">
         <template slot-scope="scope">
-          <el-tag  effect="dark" :type="scope.row.state == 0 ?'success':'info'">{{scope.row.state == 0 ?'在职':'离职'}}</el-tag>
+          <span :title="scope.row.idCard">{{hideIdcard(scope.row.idCard)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入职时间" align="center" prop="joinTime" width="180">
+      <el-table-column label="手机号" align="center" prop="phone">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.joinTime) }}</span>
+          <span :title="scope.row.phone">{{hidePhone(scope.row.phone)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态(在职，离职)" align="center" prop="state">
+        <template slot-scope="scope">
+          <el-tag
+            effect="dark"
+            :type="scope.row.state == 0 ?'success':'info'"
+          >{{scope.row.state == 0 ?'在职':'离职'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column label="入职时间" align="center" prop="joinTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.joinTime,'{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" fixed="right" width="180">
         <template slot-scope="scope">
           <el-button
@@ -339,6 +354,12 @@ export default {
           this.download(response.msg);
         })
         .catch(function() {});
+    },
+    hideIdcard(idCard) {
+      return idCardEncrypt(idCard);
+    },
+    hidePhone(phone) {
+      return mobileEncrypt(phone);
     }
   },
   mounted() {

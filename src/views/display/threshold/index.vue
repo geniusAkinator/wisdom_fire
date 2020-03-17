@@ -47,7 +47,11 @@
     </div>
     <el-table v-loading="loading" border :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" width="80" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="最小值" align="center" prop="min" />
       <el-table-column label="最大值" align="center" prop="max" />

@@ -39,7 +39,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="uid" width="80" />
+     <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="头像" align="center" prop="headimgurl" width="80">
         <template slot-scope="scope">
           <el-image :src="scope.row.headimgurl"></el-image>

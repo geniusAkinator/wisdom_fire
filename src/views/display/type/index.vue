@@ -33,7 +33,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed align="center" prop="ttId" width="80" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="所属系统" align="center" prop="systemId">
         <template slot-scope="scope">
           <span v-for="(item,index) in sysList" :key="index">
@@ -257,9 +261,9 @@ export default {
 </script>
 
 <style>
-  .thumbnail{
-    width: 60px;
-    height: 60px;
-    border-radius: 4px;
-  }
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+}
 </style>

@@ -31,8 +31,11 @@
       style="width: 100%"
       v-loading="loading"
     >
-      <el-table-column prop="hdId" label="隐患ID" width="80"></el-table-column>
-      <el-table-column prop="transducerId" label="设备编号"></el-table-column>
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="factoryId" label="工厂名称"></el-table-column>
       <el-table-column prop="content" label="隐患内容"></el-table-column>
       <el-table-column prop="type" label="隐患类型"></el-table-column>

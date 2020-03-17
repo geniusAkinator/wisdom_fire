@@ -85,7 +85,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="configId" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" />
       <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" />
       <el-table-column label="参数键值" align="center" prop="configValue" />
@@ -289,7 +293,7 @@ export default {
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {      
+    handleUpdate(row) {
       this.eid = row.configId;
       var index = this.$layer.iframe({
         content: {

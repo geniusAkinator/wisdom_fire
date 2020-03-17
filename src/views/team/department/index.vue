@@ -27,7 +27,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="departmentId" />
+      <el-table-column label="ID" type="index" align="center">
+        <template slot-scope="scope">
+          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="所属工厂" align="center" prop="factoryId">
         <template slot-scope="scope">
           <span v-for="(item,index) in factoryList" :key="index">
@@ -38,11 +42,11 @@
       <el-table-column label="团队名称" align="center" prop="departmentName" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="座机号" align="center" prop="tel" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <!-- <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" fixed="right" width="300">
         <template slot-scope="scope">
           <el-button
