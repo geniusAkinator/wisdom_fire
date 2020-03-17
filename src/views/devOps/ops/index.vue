@@ -53,11 +53,11 @@
           <el-table-column label="操作" fixed="right" width="180px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
-              <el-button
+              <!-- <el-button
                 size="mini"
                 type="primary"
                 @click="handleAppoint(scope.$index, scope.row)"
-              >指派任务</el-button>
+              >指派任务</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -85,7 +85,7 @@
           <el-table-column label="操作" fixed="right" width="160px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
-              <el-button size="mini" type="danger" @click="handleRevoke(scope.$index, scope.row)">撤销</el-button>
+              <!-- <el-button size="mini" type="danger" @click="handleRevoke(scope.$index, scope.row)">撤销</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -185,7 +185,6 @@ export default {
           let _row = _data.sensorFaultList;
           let _factoryName = _data.factoryName;
           let _arr = [];
-          console.log(response.data)
           _row.map((item, i) => {
             let temp = {};
             temp.id = item.id;

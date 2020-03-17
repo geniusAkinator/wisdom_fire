@@ -175,7 +175,7 @@ export default {
     }
   }
   .input-icon {
-    height: 39px;
+    height: 34px;
     width: 14px;
     margin-left: 2px;
   }

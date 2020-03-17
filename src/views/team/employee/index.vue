@@ -47,10 +47,22 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="employeeId" />
-      <el-table-column label="部门外键" align="center" prop="departmentId" />
-      <el-table-column label="职位" align="center" prop="postId" />
-      <el-table-column label="身份证" align="center" prop="idCard" />
+      <el-table-column label="所属团队" align="center" prop="departmentId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in departmentList" :key="index">
+            <template v-if="scope.row.departmentId == item.departmentId">{{item.departmentName}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="职位" align="center" prop="postId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in postList" :key="index">
+            <template v-if="scope.row.postId == item.postId">{{item.postName}}</template>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="人员姓名" align="center" prop="name" />
+      <el-table-column label="身份证" align="center" prop="idCard" />
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
           <span>{{scope.row.sex == 0 ?'男':'女'}}</span>
@@ -59,7 +71,7 @@
       <el-table-column label="人员电话" align="center" prop="phone" />
       <el-table-column label="状态(在职，离职)" align="center" prop="state">
         <template slot-scope="scope">
-          <span>{{scope.row.state == 0 ?'在职':'离职'}}</span>
+          <el-tag  effect="dark" :type="scope.row.state == 0 ?'success':'info'">{{scope.row.state == 0 ?'在职':'离职'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="入职时间" align="center" prop="joinTime" width="180">
@@ -111,6 +123,8 @@ import {
   updateEmployee,
   exportEmployee
 } from "@/api/team/employee";
+import { listDepartment } from "@/api/team/department";
+import { listPost } from "@/api/system/post";
 import MySearchTool from "@/components/SearchTool/index";
 import MyEmployeeAdd from "@/views/team/employee/add";
 import MyEmployeeEdit from "@/views/team/employee/edit";
@@ -155,7 +169,9 @@ export default {
       eid: 0,
       layerId: "",
       layerInitWidth: 0,
-      layerInitHeight: 0
+      layerInitHeight: 0,
+      departmentList: [],
+      postList: []
     };
   },
   watch: {
@@ -168,6 +184,16 @@ export default {
     }
   },
   created() {
+    listDepartment().then(response => {
+      if (response.code == 200) {
+        this.departmentList = response.rows;
+      }
+    });
+    listPost().then(response => {
+      if (response.code == 200) {
+        this.postList = response.rows;
+      }
+    });
     this.getList();
   },
   methods: {

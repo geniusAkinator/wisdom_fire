@@ -26,7 +26,6 @@
         >导出</el-button>
       </el-button-group>
     </div>
-
     <el-table
       v-loading="loading"
       :data="transducertypeList"
@@ -35,12 +34,23 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" fixed align="center" prop="ttId" width="80" />
-      <el-table-column label="传感器类型名称" align="center" prop="name" />
-      <el-table-column label="系统id" align="center" prop="systemId" />
+      <el-table-column label="所属系统" align="center" prop="systemId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in sysList" :key="index">
+            <template v-if="scope.row.systemId == item.systemId">{{item.name}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型名称" align="center" prop="name" />
+      <el-table-column label="缩略图" align="center" prop="picture">
+        <template slot-scope="scope">
+          <el-image class="thumbnail" :src="baseUrl+scope.row.img"></el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="480">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">传感器管理</el-button>
-          <el-button size="mini" icon="el-icon-edit" @click="handleJumpThreshold(scope.row)">阈值管理</el-button>
+          <!-- <el-button size="mini" icon="el-icon-edit" @click="handleJumpThreshold(scope.row)">阈值管理</el-button> -->
           <el-button
             size="mini"
             icon="el-icon-edit"
@@ -75,6 +85,7 @@ import {
   delTransducertype,
   exportTransducertype
 } from "@/api/display/type";
+import { listSystem } from "@/api/display/sys";
 import MyTypeAdd from "@/views/display/type/add";
 import MyTypeEdit from "@/views/display/type/edit";
 
@@ -107,10 +118,17 @@ export default {
       form: {},
       eid: 0,
       layerId: "",
-      pid: this.$route.params.id
+      pid: this.$route.params.id,
+      sysList: [],
+      baseUrl: process.env.VUE_APP_BASE_API
     };
   },
   created() {
+    listSystem().then(response => {
+      if (response.code === 200) {
+        this.sysList = response.rows;
+      }
+    });
     this.getList();
   },
   methods: {
@@ -237,3 +255,11 @@ export default {
   }
 };
 </script>
+
+<style>
+  .thumbnail{
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+  }
+</style>

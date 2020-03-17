@@ -49,7 +49,7 @@
       <el-table-column label="操作" fixed="right" width="200px">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
-          <el-button size="mini" @click="handleNotice(scope.$index, scope.row)">一键通知</el-button>
+          <el-button size="mini" type="primary" @click="handleAppoint(scope.$index, scope.row)">指派任务</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -58,6 +58,7 @@
 
 <script>
 import { listOverview } from "@/api/hazard/overview";
+import MyAppointAdd from "@/views/hazard/overview/add";
 
 export default {
   name: "OverView",
@@ -90,9 +91,10 @@ export default {
       this.loading = true;
       listOverview(this.queryParams).then(response => {
         if (response.code == 200) {
-          this.overviewList = response.rows;
-          console.log(this.overviewList);
-          this.total = response.total;
+          console.log()
+          let _data = response.data.tableDataInfo;
+          this.overviewList = _data.rows;
+          this.total = _data.total;
           this.loading = false;
         }
       });
@@ -118,7 +120,23 @@ export default {
     handleDetail(index, row) {
       this.$router.push({ name: "HazardDetail", params: { id: row.hdId } });
     },
-    handleNotice(index, row) {}
+    handleNotice(index, row) {},
+    handleAppoint(index, row) {
+      var index = this.$layer.iframe({
+        content: {
+          content: MyAppointAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["800px", "600px"],
+        title: "指派任务",
+        target: ".app-main"
+      });
+      this.layerId = index;
+      this.rowFactoryId = row.factoryId;
+      this.eid = row.id;
+    }
   },
   mounted() {
     this.getList();

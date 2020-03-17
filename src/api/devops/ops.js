@@ -10,13 +10,13 @@ export function getSensorFaultList(query) {
 }
 
 // 工厂id查询团队
-export function getTeamList(query) {
-    return request({
-        url: '/system/fault/person',
-        method: 'get',
-        params: query
-    })
-}
+// export function getTeamList(query) {
+//     return request({
+//         url: '/system/fault/person',
+//         method: 'get',
+//         params: query
+//     })
+// }
 
 //运维详情
 export function getAllData(query) {

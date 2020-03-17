@@ -30,7 +30,9 @@
       <el-table-column label="ID" align="center" prop="departmentId" />
       <el-table-column label="所属工厂" align="center" prop="factoryId">
         <template slot-scope="scope">
-          <span>{{ scope.row.factoryId }}</span>
+          <span v-for="(item,index) in factoryList" :key="index">
+            <template v-if="scope.row.factoryId == item.factoryId">{{ item.factoryName }}</template>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="团队名称" align="center" prop="departmentName" />
@@ -137,12 +139,12 @@ export default {
     }
   },
   created() {
-    this.getList();
     listFactory().then(response => {
       if (response.code === 200) {
         this.factoryList = response.rows;
       }
     });
+    this.getList();
   },
   methods: {
     /** 查询团队信息列表 */

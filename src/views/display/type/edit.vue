@@ -14,8 +14,8 @@
       <el-form-item label="类型名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入传感器类型名称" />
       </el-form-item>
-      <el-form-item label="传感器图片" prop="picture" class="readonly">
-        <el-input v-model="form.img" placeholder="请选择传感器图片" readonly />
+      <el-form-item label="缩略图" prop="img" class="readonly">
+        <el-input v-model="form.img" placeholder="请选择缩略图" readonly />
         <my-image-picker :images="form.img" @sendImage="getImage"></my-image-picker>
       </el-form-item>
     </el-form>

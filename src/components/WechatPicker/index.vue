@@ -26,9 +26,7 @@ export default {
   },
   watch: {
     list(nVal, oVal) {
-      if (nVal.length > 0) {
-        this.$emit("sendMember", nVal);
-      }
+      this.$emit("sendWechat", nVal);
     },
     uid(nVal, oVal) {
       if (nVal != null) {

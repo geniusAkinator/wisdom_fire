@@ -1,7 +1,7 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-      <el-form-item label="所属系统" prop="factoryId">
+      <el-form-item label="所属系统" prop="sysId">
         <el-select v-model="form.systemId" placeholder="请选择所属系统" disabled>
           <el-option
             v-for="(item,index) in sysList"
@@ -14,8 +14,8 @@
       <el-form-item label="类型名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入传感器类型名称" />
       </el-form-item>
-      <el-form-item label="传感器图片" prop="picture" class="readonly">
-        <el-input v-model="form.img" placeholder="请选择传感器图片" readonly />
+      <el-form-item label="缩略图" prop="img" class="readonly">
+        <el-input v-model="form.img" placeholder="请选择缩略图" readonly />
         <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
     </el-form>

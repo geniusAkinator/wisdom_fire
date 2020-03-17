@@ -3,7 +3,7 @@
     <el-card class="state-card" shadow="never">
       <el-row :gutter="20">
         <el-col :span="8">
-          <ul class="state_block">
+          <!-- <ul class="state_block">
             <li class="state_item">
               <div class="border-circle">0</div>
             </li>
@@ -13,7 +13,7 @@
             <li class="state_item">
               <div class="border-circle danger">0</div>
             </li>
-          </ul>
+          </ul> -->
         </el-col>
         <el-col :span="8">
           <ul class="info_block">

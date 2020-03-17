@@ -34,9 +34,44 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" fixed width="55" align="center" />
-      <el-table-column label="传感器id" align="center" prop="transducerId" />
-      <el-table-column label="当前位置" align="center" prop="currlocation" />
-      <el-table-column label="操作" fixed="right" align="center" width="190">
+      <el-table-column label="ID" align="center" prop="transducerId" />
+      <el-table-column label="所属工厂" align="center" prop="factoryId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in factoryList" :key="index">
+            <template v-if="scope.row.factoryId  == item.factoryId">{{item.factoryName}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属楼层" align="center" prop="buildingId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in buildingList" :key="index">
+            {{scope.row.buildingId}}
+            <template v-if="scope.row.buildingId  == item.buildingId"></template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属楼层" align="center" prop="floorId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in floorList" :key="index">
+            <template v-if="scope.row.floorId  == item.floorId">{{item.floorName}}</template>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备型号" align="center" prop="ttId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in sensorTypeList" :key="index">
+            <el-tag type="success" effect="dark" v-if="scope.row.ttId  == item.ttId">{{item.name}}</el-tag>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备编号" align="center" prop="deviceNumber"></el-table-column>
+      <el-table-column label="点位描述" align="center" prop="currlocation" />
+      <el-table-column label="到期时间" align="center" prop="expirationDate">
+        <template slot-scope="scope">
+          <span>{{parseTime(scope.row.expirationDate,'{y}-{m}-{d}')}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" align="center" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -51,6 +86,7 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:transducer:remove']"
           >删除</el-button>
+          <el-button size="mini" icon="el-icon-delete" @click="handleConfig(scope.row)">配置分数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,8 +110,15 @@ import {
   updateTransducer,
   exportTransducer
 } from "@/api/display/sensor";
+import { listTransducertype } from "@/api/display/type";
+import { listFactory } from "@/api/main/factory";
+import { listBuilding } from "@/api/main/building";
+import { listFloor } from "@/api/main/floor";
 import MySensorAdd from "@/views/display/sensor/add";
 import MySensorEdit from "@/views/display/sensor/edit";
+import MyPointConfig from "@/views/display/sensor/point";
+import { parseTimeStr, parseTime } from "@/utils/common";
+
 export default {
   data() {
     return {
@@ -111,10 +154,35 @@ export default {
       },
       eid: 0,
       layerId: "",
-      pid: this.$route.params.id
+      pid: this.$route.params.id,
+      sensorTypeList: [],
+      factoryList: [],
+      buildingList: [],
+      floorList: []
     };
   },
   created() {
+    listTransducertype().then(response => {
+      if (response.code == 200) {
+        this.sensorTypeList = response.rows;
+      }
+    });
+    listBuilding().then(response => {
+      if (response.code === 200) {
+        this.buildingList = response.rows;
+        console.log(this.buildingList);
+      }
+    });
+    listFloor().then(response => {
+      if (response.code === 200) {
+        this.floorList = response.rows;
+      }
+    });
+    listFactory().then(response => {
+      if (response.code === 200) {
+        this.factoryList = response.rows;
+      }
+    });
     this.getList();
   },
   methods: {
@@ -123,6 +191,7 @@ export default {
       this.loading = true;
       listTransducer(this.queryParams).then(response => {
         this.transducerList = response.rows;
+        console.log(this.transducerList);
         this.total = response.total;
         this.loading = false;
       });
@@ -279,6 +348,22 @@ export default {
           this.download(response.msg);
         })
         .catch(function() {});
+    },
+    /** 配置分数 **/
+    handleConfig(row) {
+      this.eid = row.transducerId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPointConfig, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "配置分数",
+        target: ".app-main"
+      });
+      this.layerId = index;
     }
   }
 };

@@ -113,7 +113,6 @@ import { addTransducer } from "@/api/display/sensor";
 import { Loading } from "element-ui";
 import MyMapPicker from "@/components/MapPicker";
 import MyPosPicker from "@/components/PosPicker";
-
 export default {
   data() {
     return {
@@ -128,7 +127,7 @@ export default {
         currlocation: "",
         longitude: 0,
         latitude: 0,
-        ttId: this.$parent.pid,
+        ttId: this.$parent.pid * 1,
         xaxis: 0,
         yaxis: 0
       },

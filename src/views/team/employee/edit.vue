@@ -69,7 +69,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="微信号" prop="uid">
-        <wechat-picker :uid="form.uid" @sendMember="getMember"></wechat-picker>
+        <wechat-picker :uid="form.uid" @sendWechat="getWechat"></wechat-picker>
       </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="form.remark" type="textarea"></el-input>
@@ -193,7 +193,8 @@ export default {
         loadingInstance.close();
       }, 300);
     },
-    getMember(e) {
+    getWechat(e) {
+      console.log(e)
       if (e.length > 0) {
         this.form.uid = e[0].uid;
       }

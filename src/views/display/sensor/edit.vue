@@ -96,9 +96,6 @@
           <my-map-picker :region="nowRegion" v-show="isShow" @sendPoint="getPoint"></my-map-picker>
         </el-collapse-transition>
       </el-form-item>
-      <el-form-item label="点位描述" prop="currlocation">
-        <el-input v-model="form.currlocation" placeholder="请输入点位描述" />
-      </el-form-item>
     </el-form>
     <div class="add-footer">
       <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
@@ -132,7 +129,7 @@ export default {
         currlocation: "",
         longitude: 0,
         latitude: 0,
-        ttId: this.$parent.pid
+        ttId: this.$parent.pid * 1
       },
       factoryList: [],
       buildingList: [],

@@ -15,3 +15,22 @@ export function getCalendar(query) {
     params: query
   })
 }
+
+
+export function getTeamList(query) {
+  return request({
+    url: '/system/hiddendanger/person',
+    method: 'get',
+    params: query
+  })
+}
+
+
+//指派
+export function addAppoint(data) {
+  return request({
+    url: '/system/hiddendanger',
+    method: 'put',
+    data: data
+  })
+}
