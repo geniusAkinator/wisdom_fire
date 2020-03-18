@@ -40,8 +40,9 @@
       <el-form-item label="LOGO" prop="picture" class="readonly">
         <el-input v-model="form.picture" placeholder="请输入LOGO" readonly />
         <my-image-picker :images="form.picture" :multiple="false" @sendImage="getImage"></my-image-picker>
+        <span class="help-block">图片格式必须为:png,jpeg,jpg;建议使用png格式图片,以保持效果;建议图片尺寸144px*144px</span>
       </el-form-item>
-      <el-form-item label="省市区" prop="province">
+      <el-form-item label="省/市/区" prop="province">
         <my-city-picker :pcd.sync="form.province" @sendPCD="getPCD"></my-city-picker>
       </el-form-item>
       <el-form-item label="详细地址" prop="address">
@@ -187,7 +188,9 @@ export default {
           { required: true, validator: validateProvince, trigger: "change" }
         ],
         pos: [{ required: true, validator: validatePos, trigger: "change" }],
-        address: [{ required: true, message: "详细地址不能为空", trigger: "blur" }],
+        address: [
+          { required: true, message: "详细地址不能为空", trigger: "blur" }
+        ],
         leader: [
           { required: true, message: "负责人不能为空", trigger: "blur" }
         ],

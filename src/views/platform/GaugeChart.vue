@@ -65,11 +65,11 @@ export default {
         backgroundColor: "#1B215B",
         borderRadius: 20,
         textAlign: "center",
-        padding: [8, 10, 10, 10]
+        padding: [8, 10, 10, 10],
       },
       size: {
         height: 100,
-        padding: [0, 0, 0, 0]
+        padding: [0, 0, 5, 0]
       }
     };
     let option = {

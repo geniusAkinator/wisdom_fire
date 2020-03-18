@@ -58,7 +58,9 @@
         </template>
       </el-table-column>
       <el-table-column label="楼层名称" align="center" prop="floorName" />
-      <el-table-column label="层级" align="center" prop="level" />
+      <el-table-column label="层级" align="center" prop="level">
+        <template slot-scope="scope">{{scope.row.level}}F</template>
+      </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="180">
         <template slot-scope="scope">
           <el-button
@@ -97,10 +99,10 @@ import {
   updateFloor,
   exportFloor
 } from "@/api/main/floor";
-
 import MySearchTool from "@/components/SearchTool/index";
 import MyFloorAdd from "@/views/main/floor/add";
 import MyFloorEdit from "@/views/main/floor/edit";
+import utils from "@/utils/utils";
 
 export default {
   data() {
@@ -134,8 +136,19 @@ export default {
       rules: {},
       eid: 0,
       layerId: "",
-      pid: this.$route.params.id
+      pid: this.$route.params.id,
+      layerInitWidth: 0,
+      layerInitHeight: 0
     };
+  },
+  watch: {
+    layerId: function(newVal, oldVal) {
+      let layer = document.querySelector("#" + newVal);
+      if (layer != null) {
+        this.layerInitWidth = layer.offsetWidth;
+        this.layerInitHeight = layer.offsetHeight;
+      }
+    }
   },
   created() {
     this.getList();
@@ -187,12 +200,11 @@ export default {
           parent: this, //当前的vue对象
           data: {} //props
         },
-        shade: false,
+        shade: true,
         area: ["600px", "600px"],
         title: "新增楼层信息",
         target: ".app-main"
       });
-      this.$layer.full(index);
       this.layerId = index;
     },
     /** 修改按钮操作 */
@@ -204,12 +216,11 @@ export default {
           parent: this, //当前的vue对象
           data: {} //props
         },
-        shade: false,
+        shade: true,
         area: ["600px", "600px"],
         title: "编辑楼层信息",
         target: ".app-main"
       });
-      this.$layer.full(index);
       this.layerId = index;
     },
     /** 提交按钮 */
@@ -250,7 +261,19 @@ export default {
           this.download(response.msg);
         })
         .catch(function() {});
-    },
+    }
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      let _layerId = this.layerId;
+      if (_layerId == "") {
+        return;
+      }
+      let layer = document.querySelector("#" + _layerId);
+      if (layer != null) {
+        utils.resizeLayer(_layerId, this.layerInitWidth, this.layerInitHeight);
+      }
+    });
   },
   components: {
     MySearchTool

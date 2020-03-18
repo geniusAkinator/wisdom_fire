@@ -12,10 +12,10 @@
         <div class="rectangle_left"></div>
         <div class="rectangle_right"></div>
         <div class="square left">
-          <div v-for="i in 15"></div>
+          <div v-for="i in 15" :key="i"></div>
         </div>
         <div class="square right">
-          <div v-for="i in 15"></div>
+          <div v-for="i in 15" :key="i"></div>
         </div>
         <div class="gradient_line"></div>
       </div>
@@ -31,6 +31,7 @@
                 <el-dropdown-item
                   v-for="(item,index) in factoryList"
                   :command="item.id"
+                  :key="index"
                 >{{item.name}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>/
@@ -61,7 +62,7 @@
           <div class="box-item-title">
             <span class="title">健康指数</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <el-row style="width:100%">
@@ -95,7 +96,7 @@
           <div class="box-item-title">
             <span class="title">处理详情</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <div class="detail-box">
@@ -138,7 +139,7 @@
           <div class="box-item-title">
             <span class="title">本日设备正常运行统计</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <my-echart-radar :data="radarData" :key="radarkey" v-if="radarData.indicator.length"></my-echart-radar>
@@ -182,7 +183,7 @@
           <div class="box-item-title">
             <span class="title">事件处理率</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <el-row>
@@ -202,7 +203,7 @@
           <div class="box-item-title">
             <span class="title">监控在线统计</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <my-echart-pie :data="pieData" :key="pieKey"></my-echart-pie>
@@ -215,7 +216,7 @@
           <div class="box-item-title">
             <span class="title">隐患处理情况</span>
             <div class="square_list">
-              <div v-for="i in 5"></div>
+              <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
           <my-echart-line :chartData="yearData" :key="yearKey"></my-echart-line>

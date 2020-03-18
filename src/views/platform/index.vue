@@ -10,10 +10,10 @@
           <span class="date_time">{{nowDate}}</span>
         </div>
         <div class="rectangle left">
-          <div v-for="i in 8"></div>
+          <div v-for="i in 8" :key="i"></div>
         </div>
         <div class="rectangle right">
-          <div v-for="i in 8"></div>
+          <div v-for="i in 8" :key="i"></div>
         </div>
         <div class="gradient_line"></div>
       </div>

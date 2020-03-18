@@ -19,7 +19,9 @@
         <my-image-picker @sendImage="getImage"></my-image-picker>
       </el-form-item>
       <el-form-item label="层级" prop="level">
-        <el-input type="number" v-model="form.level" placeholder="请输入层级" />
+        <el-input type="number" v-model="form.level" placeholder="请输入层级">
+          <template slot="append">F</template>
+        </el-input>
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -95,7 +97,7 @@ export default {
   mounted() {
     this.initForm();
   },
-  components:{
+  components: {
     MyImagePicker
   }
 };

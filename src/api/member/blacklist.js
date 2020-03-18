@@ -8,3 +8,12 @@ export function listBlackList(query) {
         params: query
     })
 }
+
+export function updateBlackList(data) {
+    return request({
+        url: '/system/members',
+        method: 'put',
+        data: data
+    })
+}
+

@@ -59,7 +59,6 @@ export default {
       temp.uid = row.uid;
       temp.nickname = row.nickname;
       temp.headimgurl = row.headimgurl;
-      this.$parent.list = [];
       this.$parent.list.push(temp);
       this.$parent.$layer.close(this.$parent.layerId);
     }

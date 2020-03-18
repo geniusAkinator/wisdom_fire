@@ -39,7 +39,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-     <el-table-column label="ID" type="index" align="center">
+      <el-table-column label="ID" type="index" align="center">
         <template slot-scope="scope">
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
         </template>
@@ -82,7 +82,7 @@
           <span v-else-if="scope.row.state == 2">已拉黑</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="250">
+      <el-table-column label="操作" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { listUnbind, delUnbind } from "@/api/member/unbind";
+import { listUnbind, delUnbind, updateUnbind } from "@/api/member/unbind";
 import MySearchTool from "@/components/SearchTool/index";
 export default {
   data() {
@@ -190,9 +190,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const factoryIds = row.factoryId || this.ids;
+      const uids = row.uid || this.ids;
       this.$confirm(
-        '是否确认删除工厂信息编号为"' + factoryIds + '"的数据项?',
+        '是否确认删除工厂信息编号为"' + uids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -201,7 +201,7 @@ export default {
         }
       )
         .then(function() {
-          return delFactory(factoryIds);
+          return delFactory(uids);
         })
         .then(() => {
           this.getList();
@@ -209,8 +209,25 @@ export default {
         })
         .catch(function() {});
     },
-    //拉黑
-    handleBlock(row) {}
+    handleBlock(row) {
+      let form = {
+        uid: row.uid,
+        state: 2
+      };
+      this.$confirm("是否拉黑", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return updateUnbind(form);
+        })
+        .then(() => {
+          this.msgSuccess("拉黑成功");
+          this.getList();
+        })
+        .catch(function() {});
+    }
   },
   components: {
     MySearchTool

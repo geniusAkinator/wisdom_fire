@@ -9,6 +9,20 @@ import './assets/styles/element-variables.scss'
 
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/common.scss' // common css
+
+
+
+
+import VueSocketIO from 'vue-socket.io'
+import socketio from 'socket.io-client';
+
+console.log(process.env.VUE_APP_SOCKET)
+// Vue.use(new VueSocketIO({
+//     debug: true,
+//     connection: `ws://${process.env.VUE_APP_SOCKET}/websocket/` + 55804,  //
+// }))
+
+
 import App from './App'
 import store from './store'
 import router from './router'

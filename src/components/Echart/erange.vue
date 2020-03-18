@@ -45,7 +45,8 @@ export default {
           trigger: "axis",
           position: function(pt) {
             return [pt[0], "10%"];
-          }
+          },
+          confine: true
         },
         legend: {
           data: _this.chartData.legend

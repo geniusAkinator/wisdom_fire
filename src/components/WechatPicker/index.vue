@@ -26,13 +26,14 @@ export default {
   },
   watch: {
     list(nVal, oVal) {
+      console.log("adfa");
       this.$emit("sendWechat", nVal);
     },
     uid(nVal, oVal) {
-      if (nVal != null) {
-        this.queryParams.uid = nVal;
-        this.list = [];
+      console.log("nVal", nVal);
+      if (nVal != null && this.list.length == 0) {
         listUnbind(this.queryParams).then(response => {
+          //根据id回显
           if (response.code == 200) {
             let _data = response.rows;
             _data.map((item, i) => {

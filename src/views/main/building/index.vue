@@ -173,6 +173,7 @@ export default {
     getList() {
       this.loading = true;
       listBuilding(this.queryParams).then(response => {
+        console.log(response)
         if (response.code == 200) {
           this.buildingList = response.rows;
           this.total = response.total;

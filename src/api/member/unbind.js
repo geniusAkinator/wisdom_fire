@@ -16,3 +16,11 @@ export function delUnbind(uid) {
         method: 'delete'
     })
 }
+
+export function updateUnbind(data) {
+    return request({
+        url: '/system/members',
+        method: 'put',
+        data: data
+    })
+}

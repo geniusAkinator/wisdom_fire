@@ -100,9 +100,10 @@ export default {
         sex: "0",
         state: "0",
         departmentId: "",
-        uid: 0,
+        uid: null,
         leader: "0",
-        employeeId: this.$parent.eid
+        employeeId: this.$parent.eid,
+        bState: "0"
       },
       rules: {
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
@@ -126,6 +127,13 @@ export default {
   watch: {
     departmentList() {
       this.form.departmentId = this.$parent.pid * 1;
+    },
+    "form.uid"(nVal, oVal) {
+      if (nVal == null) {
+        this.form.bState = "0";
+      } else {
+        this.form.bState = "1";
+      }
     }
   },
   methods: {
@@ -194,8 +202,10 @@ export default {
       }, 300);
     },
     getWechat(e) {
-      console.log(e)
-      if (e.length > 0) {
+      console.log(e.length);
+      if (e.length == 0) {
+        this.form.uid = null;
+      } else {
         this.form.uid = e[0].uid;
       }
     }

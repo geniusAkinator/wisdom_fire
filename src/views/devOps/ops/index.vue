@@ -54,7 +54,7 @@
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="180px">
+          <el-table-column label="操作" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
               <!-- <el-button
@@ -86,7 +86,7 @@
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="160px">
+          <el-table-column label="操作" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
               <!-- <el-button size="mini" type="danger" @click="handleRevoke(scope.$index, scope.row)">撤销</el-button> -->

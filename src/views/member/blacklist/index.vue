@@ -21,8 +21,12 @@
         </template>
       </my-search-tool>
     </div>
-
-    <el-table v-loading="loading" :data="blackList" border @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="blackList"
+      border
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" type="index" align="center">
         <template slot-scope="scope">
@@ -67,7 +71,7 @@
           <span v-else-if="scope.row.state == 2">已拉黑</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="250">
+      <el-table-column label="操作" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -89,7 +93,7 @@
 </template>
 
 <script>
-import { listBlackList } from "@/api/member/blacklist";
+import { listBlackList,updateBlackList } from "@/api/member/blacklist";
 import MySearchTool from "@/components/SearchTool/index";
 export default {
   data() {
@@ -168,7 +172,25 @@ export default {
       this.multiple = !selection.length;
     },
     //解绑
-    handleRestore(row) {}
+    handleRestore(row) {
+      let form = {
+        uid: row.uid,
+        state: 0
+      };
+      this.$confirm("是否还原", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return updateBlackList(form);
+        })
+        .then(() => {
+          this.msgSuccess("还原成功");
+          this.getList();
+        })
+        .catch(function() {});
+    }
   },
   components: {
     MySearchTool

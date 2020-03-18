@@ -21,3 +21,7 @@ function isEmpty(str) {
     else
         return false;
 }
+
+function isFullScreen() {
+    return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen
+}

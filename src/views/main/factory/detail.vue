@@ -7,7 +7,7 @@
       <div class="text item">
         <el-row>
           <el-col :span="8">
-            <div class="factory_logo">
+            <div class="fac_logo">
               <el-image class="logo_img" :src="baseUrl+form.picture" fit="contain">
                 <div slot="error" class="logo_img_err">
                   <i class="el-icon-picture-outline"></i>
@@ -57,8 +57,6 @@
         </el-row>
       </div>
     </el-card>
-      
-
   </div>
 </template>
 
@@ -162,7 +160,7 @@ export default {
 .factory_detail {
   background: rgb(48, 65, 86);
   color: #fff;
-  .factory_logo {
+  .fac_logo {
     .logo_img {
       width: 200px;
       height: 200px;
@@ -197,7 +195,6 @@ export default {
     label {
       display: block;
       text-align: right;
-      vertical-align: middle;
       float: left;
       font-size: 14px;
       color: #e0e0e0;
@@ -206,8 +203,6 @@ export default {
       box-sizing: border-box;
       line-height: 36px;
       width: 100px;
-    }
-    span {
     }
   }
 }
