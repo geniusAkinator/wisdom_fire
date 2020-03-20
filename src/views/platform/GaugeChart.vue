@@ -55,13 +55,13 @@ export default {
         fontSize: 35,
         color: "#fff",
         fontWeight: "500",
-        padding: [55, 0, 0, 0]
+        padding: [48, 0, 0, 0]
       },
       bule: {
         fontSize: 35,
         color: "#fff",
         fontWeight: "500",
-        padding: [55, 0, 0, 0]
+        padding: [48, 0, 0, 0]
       },
       size: {
         height: 100,
@@ -78,7 +78,7 @@ export default {
           type: "gauge",
           center: center,
           name: "内层辅助",
-          radius: "47%",
+          radius: "45%",
           startAngle: 359.9999,
           endAngle: 0,
           splitNumber: "100",

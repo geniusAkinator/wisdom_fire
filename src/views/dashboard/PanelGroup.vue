@@ -36,7 +36,7 @@
     </el-col>
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
-        <i class="el-icon-circle-close"></i>
+        <i class="el-icon-warning-outline"></i>
         <router-link class="item" :to="'/hazard/overview'">
           <div>
             隐患总数:
@@ -53,7 +53,7 @@
     </el-col>
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
-        <i class="el-icon-s-order"></i>
+        <i class="el-icon-circle-close"></i>
         <router-link class="item" :to="'/devOps/ops'">
           <div>
             故障总数:
@@ -107,18 +107,7 @@ export default {
   text-decoration: none;
   color: #606266;
 }
-.sta_item i {
-  background-color: #409eff;
-}
-.statistics > div:nth-child(2) i {
-  background-color: #67c23a;
-}
-.statistics > div:nth-child(3) i {
-  background-color: #f56c6c;
-}
-.statistics > div:nth-child(4) i {
-  background-color: #909399;
-}
+
 .sta_item .item:last-child {
   margin-left: auto;
 }

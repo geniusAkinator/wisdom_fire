@@ -1250,8 +1250,8 @@ div[id^="rchart"] {
 .point_btn_group {
   position: absolute;
   z-index: 99;
-  left: 0;
-  top: 5px;
+  right: 10px;
+  top: 8px;
   height: 28px;
 }
 .point_btn_group .el-radio-button--small .el-radio-button__inner {

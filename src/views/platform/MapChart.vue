@@ -1,11 +1,39 @@
 <template>
-  <div style="width:100%;height:calc( 100% - 70px );position: relative;">
-    <div :id="id" class="chart"></div>
+  <div style="width:100%;height:100%;position: relative;">
+    <div class="pla-top">
+      <div class="echart-top-item">
+        <div class="top-item-title">注册单位总数</div>
+        <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+      </div>
+      <div class="echart-top-item">
+        <div class="top-item-title">注册设备数量</div>
+        <count-to :start-val="0" :end-val="13088" :duration="2600" class="card-panel-num" />
+      </div>
+    </div>
+    <div :id="id" style="height:calc( 100% - 120px );width:100%"></div>
+    <!-- <div class="dialog">
+      <div class="dialog-inner">
+        <div class="info_row">
+          <label for>单位名称:</label>
+        </div>
+        <div class="info_row">
+          <label for>单位地址:</label>
+        </div>
+        <div class="info_row">
+          <label for>负责人:</label>
+        </div>
+        <div class="info_row">
+          <label for>状态:</label>
+        </div>
+      </div>
+    </div>-->
   </div>
 </template>
 
 <script>
 import MyPieRange from "@/views/platform/RangeChart";
+import CountTo from "vue-count-to";
+
 import axios from "axios";
 export default {
   data() {
@@ -332,6 +360,9 @@ export default {
         ],
         globalCoord: false // 缺省为 false
       },
+      tooltip: {
+        trigger: "item"
+      },
       legend: {
         orient: "vertical",
         y: "bottom",
@@ -393,42 +424,42 @@ export default {
           },
           emphasis: {
             areaColor: "#389BB7",
-            borderWidth: 0,
-            zlevel:1
+            borderWidth: 0
           }
-        }
+        },
+        zlevel: -1
       },
       series: [
-        {
-          type: "map",
-          map: _this.mapType,
-          geoIndex: 0,
-          aspectScale: 0.75, //长宽比
-          showLegendSymbol: false, // 存在legend时显示
-          label: {
-            normal: {
-              show: false
-            },
-            emphasis: {
-              show: false,
-              textStyle: {
-                color: "#fff"
-              }
-            }
-          },
-          roam: true,
-          itemStyle: {
-            normal: {
-              areaColor: "#031525",
-              borderColor: "#FFFFFF"
-            },
-            emphasis: {
-              areaColor: "#2B91B7"
-            }
-          },
-          animation: false,
-          data: data
-        },
+        // {
+        //   type: "map",
+        //   map: _this.mapType,
+        //   geoIndex: 0,
+        //   aspectScale: 0.75, //长宽比
+        //   showLegendSymbol: false, // 存在legend时显示
+        //   label: {
+        //     normal: {
+        //       show: false
+        //     },
+        //     emphasis: {
+        //       show: false,
+        //       textStyle: {
+        //         color: "#fff"
+        //       }
+        //     }
+        //   },
+        //   roam: true,
+        //   itemStyle: {
+        //     normal: {
+        //       areaColor: "#031525",
+        //       borderColor: "#FFFFFF"
+        //     },
+        //     emphasis: {
+        //       areaColor: "#2B91B7"
+        //     }
+        //   },
+        //   animation: false,
+        //   data: data
+        // },
         {
           name: "隐患",
           type: "scatter",
@@ -441,7 +472,7 @@ export default {
             normal: {
               formatter: "{b}",
               position: "right",
-              show: true,
+              show: false,
               color: "#fff"
             },
             emphasis: {
@@ -456,18 +487,70 @@ export default {
               borderColor: "#fff",
               borderWidth: 2
             }
+          },
+          tooltip: {
+            show: true,
+            trigger: "item",
+            formatter: function(params) {
+              console.log(params);
+              var tipHtml = "";
+              tipHtml =
+                '<div style="width:280px;height:180px;background:rgba(22,80,158,0.8);border:1px solid rgba(7,166,255,0.7)">' +
+                '<div style="width:100%;height:40px;line-height:40px;border-bottom:2px solid rgba(7,166,255,0.7);padding:0 0">' +
+                '<span style="margin-left:10px;color:#fff;font-size:16px;">' +
+                "aaaaa" +
+                "</span>" +
+                "</div>" +
+                '<div style="padding:20px">' +
+                '<p style="color:#fff;font-size:12px;">' +
+                '<i style="display:inline-block;width:10px;height:10px;background:#16d6ff;border-radius:40px;margin:0 8px">' +
+                "</i>" +
+                "单位地址：" +
+                '<span style="color:#11ee7d;margin:0 6px;">' +
+                "ccccc" +
+                "</span></p>" +
+                '<p style="color:#fff;font-size:12px;">' +
+                '<i style="display:inline-block;width:10px;height:10px;background:#16d6ff;border-radius:40px;margin:0 8px">' +
+                "</i>" +
+                "负责人：" +
+                '<span style="color:#11ee7d;margin:0 6px;">' +
+                "ddddd" +
+                "</span></p>" +
+                '<p style="color:#fff;font-size:12px;">' +
+                '<i style="display:inline-block;width:10px;height:10px;background:#16d6ff;border-radius:40px;margin:0 8px">' +
+                "</i>" +
+                "状态：" +
+                '<span style="color:#11ee7d;margin:0 6px;">' +
+                "ddddd" +
+                "</span></p>" +
+                "</div>" +
+                "</div>";
+              // return params.name + ' : ' + params.value[2];
+              return tipHtml;
+            }
           }
         }
       ]
     };
     _this.initChart();
+  },
+  components: {
+    CountTo
   }
 };
 </script>
-
 <style>
-.chart {
-  width: 100%;
-  height: 100%;
+/* .dialog {
+  width: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  background: rgba(27, 46, 91, 0.5);
+  padding: 20px;
+  border-radius: 5px;
 }
+.info_row {
+  height: 40px;
+} */
 </style>

@@ -67,16 +67,6 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <div class="pla-top">
-          <div class="echart-top-item">
-            <div class="top-item-title">注册单位总数</div>
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
-          </div>
-          <div class="echart-top-item">
-            <div class="top-item-title">注册设备数量</div>
-            <count-to :start-val="0" :end-val="13088" :duration="2600" class="card-panel-num" />
-          </div>
-        </div>
         <my-echart-map class="platform-map"></my-echart-map>
       </el-col>
       <el-col :span="6">
@@ -468,27 +458,6 @@ $border-radius: 4px;
     }
     .pla-top {
       z-index: 11;
-      .echart-top-item {
-        height: 50%;
-        font-size: 30px;
-        line-height: 50px;
-        color: #fff;
-        overflow: hidden;
-        .top-item-title {
-          float: left;
-          color: #fff;
-        }
-        .card-panel-num {
-          float: left;
-          color: #fff;
-          font-weight: bold;
-        }
-      }
-      .top-item-title {
-        display: block;
-        margin-left: 100px;
-        margin-right: 20px;
-      }
     }
     .echart-item {
       height: 33.3%;
@@ -519,7 +488,7 @@ $border-radius: 4px;
         width: 90% !important;
         margin: auto;
         margin-top: 25px;
-        &::before{
+        &::before {
           background: initial;
         }
         th {
@@ -714,5 +683,23 @@ $border-radius: 4px;
   background: -o-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
   background: -moz-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
   background: -ms-linear-gradient(left, #132962, #04d4f0, #04d4f0, #132962);
+}
+.echart-top-item {
+  width: 200px;
+  margin-top: 10px;
+  text-align: center;
+  padding: 10px;
+  background: #1b2e5b;
+  border: #0281da 1px solid;
+}
+.echart-top-item .top-item-title {
+  color: #01bbff;
+  font-size: 18px;
+  font-weight: bold;
+}
+.echart-top-item .card-panel-num {
+  color: #01bbff;
+  font-size: 18px;
+  font-weight: bold;
 }
 </style>
