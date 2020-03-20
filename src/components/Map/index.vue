@@ -205,7 +205,6 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(this.list);
   },
   components: {
     BaiduMap,

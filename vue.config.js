@@ -33,7 +33,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://192.168.10.90:80`,
+        target: `http://192.168.10.172:80`,
         ws: false, // proxy websockets
         secure: false,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,
@@ -41,16 +41,16 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      [process.env.VUE_APP_SOCKET]: {
-        target: 'http://139.9.175.236:8081', // target host
-        ws: true,
-        secure: false,  // 如果是https接口，需要配置这个参数
-        changeOrigin: true,//是否跨域
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_SOCKET]: ''
-        },
-        logLevel: 'debug'
-      }
+      // [process.env.VUE_APP_SOCKET]: {
+      //   target: 'http://139.9.175.236:8081', // target host
+      //   ws: true,
+      //   secure: false,  // 如果是https接口，需要配置这个参数
+      //   changeOrigin: true,//是否跨域
+      //   pathRewrite: {
+      //     ['^' + process.env.VUE_APP_SOCKET]: ''
+      //   },
+      //   logLevel: 'debug'
+      // }
     },
     disableHostCheck: true
   },

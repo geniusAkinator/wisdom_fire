@@ -11,22 +11,12 @@
     <ul class="left-menu">
       <li @click="toggleMain">主体概况</li>
       <li @click="doJump('Platform')">数据看板</li>
-      <li @click="doJump('Board')">阿米看板</li>
+      <li @click="doJump('Board')">数据看板</li>
     </ul>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <!-- <div class="right-menu-item hover-effect">
-          <svg-icon class-name="board-icon" icon-class="international" @click="doJump" />
-        </div>
-        <div class="right-menu-item hover-effect">
-          <svg-icon class-name="board-icon" icon-class="board" @click="doJumpBoard" />
-        </div>-->
-        <!-- <search id="header-search" class="right-menu-item" /> -->
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        <!-- <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>-->
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">

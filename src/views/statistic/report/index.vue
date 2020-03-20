@@ -2,7 +2,7 @@
   <div class="container">
     <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
-        <span>1.消防安全评分</span>
+        <span>消防安全评分</span>
         <div class="header_right">
           <el-date-picker
             v-model="datetime"
@@ -19,8 +19,8 @@
       <div class="text item">
         <p
           class="statistics"
-        >您管理的安中云{{nowYear}}年{{nowMonth?nowMonth:12}}月平均消防安全评分40分，请继续加强消防加强消防安全管理。</p>
-        <div id="rate_chart"></div>
+        >您管理的安中云{{nowYear}}年{{nowMonth?nowMonth:12}}月平均消防安全评分{{point}}分，请继续加强消防加强消防安全管理。</p>
+        <!-- <div id="rate_chart"></div> -->
       </div>
     </el-card>
     <!-- <el-card class="box-card" shadow="never">
@@ -54,7 +54,7 @@
     </el-card>-->
     <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
-        <span>2.隐患</span>
+        <span>隐患</span>
       </div>
       <div class="text item">
         <p
@@ -65,7 +65,7 @@
     </el-card>
     <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
-        <span>3.人员统计</span>
+        <span>人员统计</span>
       </div>
       <div class="text item">
         <p
@@ -99,7 +99,7 @@
     </el-card>
     <el-card class="box-card" shadow="never">
       <div slot="header" class="clearfix">
-        <span>4.服务统计</span>
+        <span>服务统计</span>
       </div>
       <div class="text item">
         <p
@@ -113,6 +113,7 @@
 import MySearchTool from "@/components/SearchTool/index";
 import MyEchartBar from "@/views/statistic/report/BarChart";
 import {
+  getScoreCount,
   getStaffCount,
   getHazardCount,
   getServiceCount
@@ -145,7 +146,8 @@ export default {
         disabledDate: time => {
           return time.getTime() > new Date();
         }
-      }
+      },
+      point: 0
     };
   },
   watch: {
@@ -161,6 +163,7 @@ export default {
       this.doStaffCount();
       this.doServiceCount();
       this.doHazardCount();
+      this.doScoreCount();
     }
   },
   methods: {
@@ -173,6 +176,14 @@ export default {
       let nMonth = nowDate.getMonth() + 1;
       this.nowYear = nYear;
       this.nowMonth = nMonth;
+    },
+    doScoreCount() {
+      getScoreCount({ datetime: this.datetime + "-1" }).then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          this.point = Math.ceil(_data.percentage);
+        }
+      });
     },
     doStaffCount() {
       // 人员统计

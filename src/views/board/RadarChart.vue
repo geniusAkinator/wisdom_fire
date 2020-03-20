@@ -70,13 +70,14 @@ export default {
       let option = {
         color: colorArr,
         radar: {
-          center: ["50%", "70%"],
+          center: ["50%", "50%"],
           name: {
             textStyle: {
               color: "#fff",
               fontSize: 16
             }
           },
+          radius:60,
           indicator: indicator,
           splitArea: {
             // 坐标轴在 grid 区域中的分隔区域，默认不显示。
@@ -129,7 +130,7 @@ export default {
 
 <style>
 .chart {
-  width: 100%;
-  height: 100%;
+  height: calc(100% - 40px);
+  margin-top: 40px;
 }
 </style>

@@ -7,12 +7,12 @@
       <el-col :md="16">
         <el-col :md="24">
           <el-card class="box-card no-padding" shadow="never">
-            <div class="text item" style="height:700px">
+            <div class="text item" style="height:800px">
               <my-map :list.sync="geoList"></my-map>
             </div>
           </el-card>
         </el-col>
-        <el-col :md="24" style="margin-top:10px">
+        <!-- <el-col :md="24" style="margin-top:10px">
           <el-card class="box-card no-padding" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-receiving"></i>
@@ -31,7 +31,7 @@
               </el-carousel>
             </div>
           </el-card>
-        </el-col>
+        </el-col> -->
       </el-col>
       <el-col :md="8">
         <el-col :md="24">
@@ -82,7 +82,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :md="24" style="margin-top:10px">
+        <!-- <el-col :md="24" style="margin-top:10px">
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
               <i class="el-icon-edit-outline"></i>
@@ -106,7 +106,7 @@
               </div>
             </div>
           </el-card>
-        </el-col>
+        </el-col> -->
       </el-col>
     </el-row>
     <el-backtop target=".app-main"></el-backtop>
@@ -124,6 +124,7 @@ import { parseTimeStr, parseTime } from "@/utils/common";
 import MyEchartRange from "@/components/Echart/erange";
 import MyEchartLine from "@/components/Echart/eline";
 import { list } from "@/api/monitor/operlog";
+import { reportData } from "@/api/display/sensor";
 export default {
   name: "Index",
   components: {
@@ -227,6 +228,11 @@ export default {
         "星期六"
       ];
       this.weekData.ydata.push(data);
+    },
+    RndNum(n) {
+      var rnd = "";
+      for (var i = 0; i < n; i++) rnd += Math.floor(Math.random() * 10);
+      return rnd;
     }
   },
   mounted() {
@@ -279,7 +285,6 @@ export default {
     }).then(response => {
       if (response.code == 200) {
         this.logList = response.rows;
-        console.log(this.logList);
       }
     });
   }
@@ -379,5 +384,4 @@ export default {
     margin-top: 10px;
   }
 }
-
 </style>

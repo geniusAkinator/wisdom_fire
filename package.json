@@ -52,7 +52,6 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "screenfull": "4.2.0",
-    "socket.io-client": "^2.3.0",
     "vue": "2.6.10",
     "vue-baidu-map": "^0.21.22",
     "vue-clipboard2": "^0.3.1",
@@ -62,7 +61,6 @@
     "vue-layer": "^1.1.7",
     "vue-quill-editor": "3.0.6",
     "vue-router": "3.0.2",
-    "vue-socket.io": "^3.0.7",
     "vue-splitpane": "1.0.4",
     "vuex": "3.1.0",
     "vuex-persistedstate": "^2.7.0"

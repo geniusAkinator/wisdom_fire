@@ -138,7 +138,7 @@ export default {
       });
       this.layerId = index;
       this.rowFactoryId = row.factoryId;
-      this.eid = row.id;
+      this.eid = row.hdId;
     }
   },
   mounted() {

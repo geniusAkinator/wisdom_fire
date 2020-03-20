@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" class="echart"></div>
+  <div :id="id" class="chart"></div>
 </template>
 <script>
 import utils from "@/utils/utils";
@@ -39,7 +39,7 @@ export default {
             name: "访问来源",
             type: "pie",
             radius: "55%",
-            center: ["50%", "60%"],
+            center: ["50%", "50%"],
             data:_this.data,
             emphasis: {
               itemStyle: {
@@ -63,8 +63,8 @@ export default {
 </script>
 
 <style>
-.echart {
-  width: 100%;
-  height: 100%;
+.chart {
+  height: calc(100% - 40px);
+  margin-top: 40px;
 }
 </style>

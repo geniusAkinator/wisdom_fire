@@ -71,8 +71,8 @@ export default {
           textStyle: {
             color: "#ccc"
           },
-          x: "right",
-          y: "5%",
+          x2: "5%",
+          y: "0",
           orient: "vertical"
         },
         color: ["#fff"],
@@ -92,10 +92,10 @@ export default {
           }
         },
         grid: {
-          top: "20%",
-          left: "3%",
-          right: "3%",
-          bottom: "0",
+          top: "5%",
+          left: "5%",
+          right: "5%",
+          bottom: "5%",
           containLabel: true
         },
         yAxis: {
@@ -144,7 +144,7 @@ export default {
 
 <style>
 .chart {
-  width: 100%;
-  height: 100%;
+  height: calc(100% - 40px);
+  margin-top: 40px;
 }
 </style>

@@ -69,3 +69,5 @@ export function getPointDetail(query) {
     params: query
   })
 }
+
+

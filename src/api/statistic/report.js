@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+//消防得分
+export function getScoreCount(query) {
+    return request({
+        url: '/system/stream/fireSafetyScore',
+        method: 'get',
+        params: query
+    })
+}
+
+
 //人员统计
 export function getStaffCount(query) {
     return request({
@@ -26,3 +36,4 @@ export function getServiceCount(query) {
         params: query
     })
 }
+

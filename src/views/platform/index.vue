@@ -6,7 +6,7 @@
       </div>
       <div class="el-col el-col-10" style="position:relative">
         <div class="platform-top-title">
-          <span class="main_title">安中云数据平台</span>
+          <span class="main_title">阿米华晟安中云数据平台</span>
           <span class="date_time">{{nowDate}}</span>
         </div>
         <div class="rectangle left">
@@ -519,10 +519,14 @@ $border-radius: 4px;
         width: 90% !important;
         margin: auto;
         margin-top: 25px;
+        &::before{
+          background: initial;
+        }
         th {
           padding: 0;
           background: initial !important;
           color: #fff !important;
+          border-bottom: initial;
         }
         tr {
           background: initial !important;
@@ -530,6 +534,9 @@ $border-radius: 4px;
         }
         .el-table__row:hover td {
           background-color: rgba(9, 66, 161, 0.8) !important;
+        }
+        td {
+          border-bottom: initial;
         }
       }
       .el-radio-button__inner {

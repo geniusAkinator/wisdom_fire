@@ -103,7 +103,7 @@ export default {
         uid: 0,
         leader: "0",
         nickName: "",
-        bState: "0"
+        bState: 0
       },
       rules: {
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
@@ -130,9 +130,9 @@ export default {
     },
     "form.uid"(nVal, oVal) {
       if (nVal == null) {
-        this.form.bState = "0";
+        this.form.bState = 0;
       } else {
-        this.form.bState = "1";
+        this.form.bState = 1;
       }
     }
   },

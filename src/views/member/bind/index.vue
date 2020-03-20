@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { listBind } from "@/api/member/bind";
+import { listBind, unbindMember } from "@/api/member/bind";
 import MySearchTool from "@/components/SearchTool/index";
 export default {
   data() {
@@ -168,7 +168,21 @@ export default {
       this.multiple = !selection.length;
     },
     //解绑
-    handleUnbind(row) {}
+    handleUnbind(row) {
+      this.$confirm("是否解绑", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return unbindMember({ uid: row.uid });
+        })
+        .then(() => {
+          this.msgSuccess("解绑成功");
+          this.getList();
+        })
+        .catch(function() {});
+    }
   },
   components: {
     MySearchTool

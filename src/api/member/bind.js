@@ -8,3 +8,11 @@ export function listBind(query) {
         params: query
     })
 }
+
+export function unbindMember(data) {
+    return request({
+        url: '/system/members/Unbind',
+        method: 'post',
+        data: data
+    })
+}

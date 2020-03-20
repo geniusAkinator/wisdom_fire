@@ -1,5 +1,8 @@
 <template>
-  <div :id="id" class="echart"></div>
+  <div style="width: 100%;height: calc(100% - 40px);margin-top:40px;position:relative">
+    <div :id="id" class="echart"></div>
+    <span class="gauge_label">{{data.label}}</span>
+  </div>
 </template>
 <script>
 export default {
@@ -28,7 +31,7 @@ export default {
     let scolor = this.color.scolor;
     let bcolor = this.color.bcolor;
     let lcolor = this.color.lcolor;
-    let center = ["50%", "55%"];
+    let center = ["50%", "40%"];
     //08BBB7
     //91D86C
     var dataArr = [
@@ -43,29 +46,22 @@ export default {
         color: scolor // 0% 处的颜色
       }
     ]);
-    var colorSet = [[this.data.value / 100, color], [1, bcolor]];
+    var colorSet = [
+      [this.data.value / 100, color],
+      [1, bcolor]
+    ];
     var rich = {
       white: {
         fontSize: 35,
         color: "#fff",
         fontWeight: "500",
-        padding: [-10, 0, 0, 0]
+        padding: [55, 0, 0, 0]
       },
       bule: {
         fontSize: 35,
         color: "#fff",
         fontWeight: "500",
-        padding: [-10, 0, 0, 0]
-      },
-      radius: {
-        borderWidth: 1,
-        borderColor: "#0092F2",
-        fontSize: 12,
-        color: "#fff",
-        backgroundColor: "#1B215B",
-        borderRadius: 20,
-        textAlign: "center",
-        padding: [8, 10, 10, 10],
+        padding: [55, 0, 0, 0]
       },
       size: {
         height: 100,
@@ -80,7 +76,7 @@ export default {
       series: [
         {
           type: "gauge",
-          center: ["50%", "45%"],
+          center: center,
           name: "内层辅助",
           radius: "47%",
           startAngle: 359.9999,
@@ -117,7 +113,7 @@ export default {
         },
         {
           type: "gauge",
-          center: ["50%", "45%"],
+          center: center,
           radius: "70%",
           startAngle: "90",
           endAngle: "-269.9999",
@@ -127,15 +123,7 @@ export default {
           detail: {
             formatter: function(value) {
               var num = Math.round(value);
-              return (
-                "{bule|" +
-                num +
-                "}{white|%}" +
-                "{size|" +
-                "}\n\n{radius|" +
-                _this.data.label +
-                "}"
-              );
+              return "{bule|" + num + "}{white|%}";
             },
             rich: rich
           },
@@ -175,5 +163,18 @@ export default {
 .echart {
   width: 100%;
   height: 100%;
+}
+.gauge_label {
+  position: absolute;
+  bottom: 8%;
+  padding: 8px 10px;
+  font-size: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1b2e5b;
+  border: #0281da 1px solid;
+  border-radius: 20px;
+  width: 130px;
+  color: #fff;
 }
 </style>

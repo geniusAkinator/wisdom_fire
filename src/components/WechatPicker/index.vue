@@ -1,11 +1,13 @@
 <template>
   <div class="picker_content">
     <ul class="res_list" v-if="list.length>0">
-      <li v-for="(item,index) in list" :key="index">
-        <el-image :src="item.headimgurl"></el-image>
-        <span class="nickname">{{item.nickname}}</span>
-        <span class="remove" @click="handleRemove(item,index)">移除</span>
-      </li>
+      <div v-for="(item,index) in list" :key="index">
+        <li v-if="index == 0">
+          <el-image :src="item.headimgurl"></el-image>
+          <span class="nickname">{{item.nickname}}</span>
+          <span class="remove" @click="handleRemove(item,index)">移除</span>
+        </li>
+      </div>
     </ul>
     <div class="append" @click="handleChoose">请选择微信</div>
   </div>
@@ -19,9 +21,7 @@ export default {
     return {
       list: [],
       layerId: "",
-      queryParams: {
-        state: 0
-      }
+      queryParams: {}
     };
   },
   watch: {
@@ -30,8 +30,8 @@ export default {
       this.$emit("sendWechat", nVal);
     },
     uid(nVal, oVal) {
-      console.log("nVal", nVal);
-      if (nVal != null && this.list.length == 0) {
+      console.log("nVal", nVal, this.list.length);
+      if (nVal != null) {
         listUnbind(this.queryParams).then(response => {
           //根据id回显
           if (response.code == 200) {
@@ -113,7 +113,7 @@ export default {
   padding: 10px;
   width: 100%;
 }
-.res_list > li {
+.res_list li {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
   padding: 10px;
@@ -126,16 +126,16 @@ export default {
   align-items: center;
   transition: all 0.3s ease-in-out;
 }
-.res_list > li:nth-child(3n) {
+.res_list li:nth-child(3n) {
   margin-right: 0;
 }
-.res_list > li .el-image {
+.res_list li .el-image {
   width: 30px;
   height: 30px;
   border-radius: 4px;
   margin-right: 5px;
 }
-.res_list > li .nickname {
+.res_list li .nickname {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -144,20 +144,20 @@ export default {
   font-size: 13px;
   font-weight: bold;
 }
-.res_list > li:hover {
+.res_list li:hover {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 .res_list + .append {
   line-height: 78px;
 }
-.res_list > li .remove {
+.res_list li .remove {
   margin-left: auto;
   font-size: 12px;
   cursor: pointer;
   color: #ff4949;
   opacity: 0;
 }
-.res_list > li:hover .remove {
+.res_list li:hover .remove {
   opacity: 1;
 }
 </style>

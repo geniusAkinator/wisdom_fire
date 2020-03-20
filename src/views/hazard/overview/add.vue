@@ -56,7 +56,7 @@ export default {
     };
     return {
       form: {
-        id: this.$parent.eid,
+        hdId: this.$parent.eid,
         factoryId: this.$parent.rowFactoryId,
         departmentId: "",
         remarks: ""
