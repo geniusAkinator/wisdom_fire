@@ -72,7 +72,7 @@
       <el-table-column label="点位描述" align="center" prop="currlocation" />
       <el-table-column label="到期时间" align="center" prop="expirationDate">
         <template slot-scope="scope">
-          <span>{{parseTime(scope.row.expirationDate,'{y}-{m}-{d}')}}</span>
+          <span>{{scope.row.expirationDate == null ?'' :parseTime(scope.row.expirationDate,'{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="300">
@@ -157,7 +157,7 @@ export default {
         ]
       },
       eid: 0,
-      fid:0,
+      fid: 0,
       layerId: "",
       pid: this.$route.params.id,
       sensorTypeList: [],

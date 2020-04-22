@@ -61,9 +61,34 @@
     <el-table v-loading="loading" border :data="jobList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="jobId" width="100" />
+      <el-table-column label="任务编号" align="center" prop="jobId" />
+      <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
+      <!-- <el-table-column label="任务组名" align="center" prop="jobGroup" :formatter="jobGroupFormat" /> -->
+      <el-table-column
+        label="调用目标字符串"
+        align="center"
+        prop="invokeTarget"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="cron执行表达式"
+        align="center"
+        prop="cronExpression"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="180">
@@ -96,7 +121,7 @@
 </template>
 
 <script>
-import { listJob, getJob, delJob } from "@/api/monitor/job";
+import { listJob, delJob, changeJobStatus } from "@/api/monitor/job";
 import MySearchTool from "@/components/SearchTool/index";
 import MyJobAdd from "@/views/monitor/job/add";
 import MyJobEdit from "@/views/monitor/job/edit";
@@ -151,6 +176,7 @@ export default {
         this.jobList = response.rows;
         this.total = response.total;
         this.loading = false;
+        console.log(this.jobList);
       });
     },
     // 公告状态字典翻译
@@ -235,13 +261,39 @@ export default {
         type: "warning"
       })
         .then(function() {
-          return deljob(jobIds);
+          console.log(jobIds)
+          return delJob(jobIds);
         })
-        .then(() => {
+        .then((response) => {
+          console.log(response)
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function() {
+            console.log("恶心")
+        });
+    },
+    handleStatusChange(row) {
+      let text = row.status === "0" ? "启用" : "停用";
+      this.$confirm(
+        '确认要"' + text + '""' + row.jobName + '"任务吗?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(function() {
+          return changeJobStatus(row.jobId, row.status);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess(text + "成功");
+        })
+        .catch(function() {
+          row.status = row.status === "0" ? "1" : "0";
+        });
     }
   }
 };

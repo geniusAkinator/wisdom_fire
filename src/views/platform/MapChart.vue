@@ -498,7 +498,7 @@ export default {
                 '<div style="width:280px;height:180px;background:rgba(22,80,158,0.8);border:1px solid rgba(7,166,255,0.7)">' +
                 '<div style="width:100%;height:40px;line-height:40px;border-bottom:2px solid rgba(7,166,255,0.7);padding:0 0">' +
                 '<span style="margin-left:10px;color:#fff;font-size:16px;">' +
-                "aaaaa" +
+                "昆山亚辉有限公司" +
                 "</span>" +
                 "</div>" +
                 '<div style="padding:20px">' +
@@ -507,21 +507,24 @@ export default {
                 "</i>" +
                 "单位地址：" +
                 '<span style="color:#11ee7d;margin:0 6px;">' +
-                "ccccc" +
+                "地址地址地址" +
                 "</span></p>" +
                 '<p style="color:#fff;font-size:12px;">' +
                 '<i style="display:inline-block;width:10px;height:10px;background:#16d6ff;border-radius:40px;margin:0 8px">' +
                 "</i>" +
                 "负责人：" +
                 '<span style="color:#11ee7d;margin:0 6px;">' +
-                "ddddd" +
+                "未知" +
                 "</span></p>" +
                 '<p style="color:#fff;font-size:12px;">' +
                 '<i style="display:inline-block;width:10px;height:10px;background:#16d6ff;border-radius:40px;margin:0 8px">' +
                 "</i>" +
                 "状态：" +
-                '<span style="color:#11ee7d;margin:0 6px;">' +
-                "ddddd" +
+                '<span style="margin:0 6px;">' +
+                "故障5" +
+                "</span>" +
+                '<span style="margin:0 6px;">' +
+                "隐患2" +
                 "</span></p>" +
                 "</div>" +
                 "</div>";

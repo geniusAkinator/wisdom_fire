@@ -9,11 +9,10 @@
 
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
     <ul class="left-menu">
-      <li @click="toggleMain">主体概况</li>
-      <li @click="doJump('Platform')">数据看板</li>
-      <li @click="doJump('Board')">数据看板</li>
+      <li @click="toggleMain" v-if="roles[0]=='admin'">主体概况</li>
+      <li @click="doJump('Platform')" v-if="roles[0]=='admin'">总后台数据看板</li>
+      <li @click="doJump('Board')" v-if="roles[0]=='dls'">代理商数据看板</li>
     </ul>
-
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -52,6 +51,11 @@ export default {
     Screenfull,
     SizeSelect,
     Search
+  },
+  data() {
+    return {
+      roles: this.$store.getters.roles
+    };
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),

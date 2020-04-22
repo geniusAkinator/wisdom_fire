@@ -54,7 +54,7 @@ export default {
   white-space: nowrap;
   position: relative;
   z-index: 10001;
-  line-height: 32px;
+  line-height: 30px;
   display: flex;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -78,7 +78,7 @@ export default {
 }
 .query-picker i {
   margin-left: auto;
-  line-height: 32px;
+  line-height: 30px;
 }
 .query-picker.active i {
   transform: rotate(-180deg);

@@ -31,7 +31,7 @@ export default {
     _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
     let option = {
       calculable: true,
-      color: ["#3fb1e3", "#6be6c1", "#626c91", "#a0a7e6", "#c4ebad", "#96dee8"],
+      color: ["#4287F5", "#57DB8F", "#F4F2C6", "#DFB141", "#FDFEFF"],
       series: [
         {
           name: "",

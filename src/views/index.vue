@@ -31,7 +31,7 @@
               </el-carousel>
             </div>
           </el-card>
-        </el-col> -->
+        </el-col>-->
       </el-col>
       <el-col :md="8">
         <el-col :md="24">
@@ -106,7 +106,7 @@
               </div>
             </div>
           </el-card>
-        </el-col> -->
+        </el-col>-->
       </el-col>
     </el-row>
     <el-backtop target=".app-main"></el-backtop>
@@ -123,7 +123,6 @@ import { format } from "path";
 import { parseTimeStr, parseTime } from "@/utils/common";
 import MyEchartRange from "@/components/Echart/erange";
 import MyEchartLine from "@/components/Echart/eline";
-import { list } from "@/api/monitor/operlog";
 import { reportData } from "@/api/display/sensor";
 export default {
   name: "Index",
@@ -277,14 +276,6 @@ export default {
           temp.createDate = parseTimeStr(item.currdate, this.pattern);
           this.calList.push(temp);
         });
-      }
-    });
-    list({
-      pageNum: 1,
-      pageSize: 3
-    }).then(response => {
-      if (response.code == 200) {
-        this.logList = response.rows;
       }
     });
   }

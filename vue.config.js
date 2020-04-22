@@ -32,15 +32,24 @@ module.exports = {
     port: port,
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
+      '/dev-api': {
         target: `http://192.168.10.172:80`,
         ws: false, // proxy websockets
         secure: false,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+          ['^/dev-api']: ''
         }
       },
+      // '/prod-api': {
+      //   target: `http://111.231.111.235:8888`,
+      //   ws: false, // proxy websockets
+      //   secure: false,  // 如果是https接口，需要配置这个参数
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     ['^/prod-api']: ''
+      //   }
+      // }
       // [process.env.VUE_APP_SOCKET]: {
       //   target: 'http://139.9.175.236:8081', // target host
       //   ws: true,

@@ -11,6 +11,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="封面" prop="cover" class="readonly">
+        <el-input v-model="form.cover" placeholder="请选择封面" readonly />
+        <my-image-picker :multiple="false" @sendImage="getImage"></my-image-picker>
+        <span class="help-block">图片格式必须为:png,jpeg,jpg;建议使用png格式图片,以保持效果;</span>
+      </el-form-item>
       <el-form-item label="公告标题" prop="noticeTitle">
         <el-input v-model="form.noticeTitle" placeholder="请输入公告标题"></el-input>
       </el-form-item>
@@ -56,6 +61,7 @@ import { listFactory } from "@/api/main/factory";
 import { Loading } from "element-ui";
 import Editor from "@/components/Editor";
 import MyFileUpload from "@/components/UploadFile";
+import MyImagePicker from "@/components/UploadImage";
 
 export default {
   data() {
@@ -67,7 +73,9 @@ export default {
         noticeType: "",
         noticeContent: "",
         status: "0",
-        file: ""
+        file: "",
+        cover: "",
+        keyword:""
       },
       rules: {
         noticeTitle: [
@@ -128,6 +136,9 @@ export default {
     },
     getFile(e) {
       this.form.file = e;
+    },
+    getImage(e) {
+      this.form.cover = e;
     }
   },
   mounted() {
@@ -135,7 +146,8 @@ export default {
   },
   components: {
     Editor,
-    MyFileUpload
+    MyFileUpload,
+    MyImagePicker
   }
 };
 </script>

@@ -144,21 +144,21 @@
               <span class="help-block">请填写阿里云短信App code 申请</span>
             </el-form-item>
             <el-form-item label="签名">
-              <el-input v-model="smsForm.sign" placeholder="请输入AppKey"></el-input>
+              <el-input v-model="smsForm.sign" placeholder="请输入签名"></el-input>
               <span class="help-block">必须与阿里云短信申请的签名保持一致</span>
             </el-form-item>
           </template>
           <template v-if="smsForm.smsType=='2'">
             <el-form-item label="Access Key ID">
-              <el-input v-model="smsForm.accessKeyId" placeholder="请输入AppKey"></el-input>
+              <el-input v-model="smsForm.accessKeyId" placeholder="请输入AppKeyID"></el-input>
               <span class="help-block">请填写阿里云通信Access Key ID 申请</span>
             </el-form-item>
             <el-form-item label="Access Key Secret">
-              <el-input v-model="smsForm.accessKeySecret" placeholder="请输入AppKey"></el-input>
+              <el-input v-model="smsForm.accessKeySecret" placeholder="请输入Access Key Secret"></el-input>
               <span class="help-block">请填写阿里云通信Access Key Secret 申请</span>
             </el-form-item>
             <el-form-item label="签名">
-              <el-input v-model="smsForm.sign" placeholder="请输入AppKey"></el-input>
+              <el-input v-model="smsForm.sign" placeholder="请输入sign"></el-input>
               <span class="help-block">必须与阿里云通信申请的签名保持一致</span>
             </el-form-item>
           </template>

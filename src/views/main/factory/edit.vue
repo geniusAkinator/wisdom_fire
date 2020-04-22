@@ -2,7 +2,12 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-form-item label="所属代理商" prop="dept">
-        <el-select v-model="deptId" placeholder="请选择所属代理商" @change="handleSelect">
+        <el-select
+          v-model="deptId"
+          placeholder="请选择所属代理商"
+          @change="handleSelect"
+          :disabled="!isAdmin"
+        >
           <el-option
             v-for="(item,index) in dlist"
             :key="index"
@@ -105,7 +110,7 @@
 
 <script>
 import { updateFactory, getFactory } from "@/api/main/factory";
-import { listDept } from "@/api/system/dept";
+import { listDept, listDepts } from "@/api/system/dept";
 import { Loading } from "element-ui";
 import MyImagePicker from "@/components/UploadImage";
 import MyMapPicker from "@/components/MapPicker";
@@ -203,7 +208,9 @@ export default {
       deptId: "",
       typeOptions: [],
       isShow: true,
-      nowRegion: "江苏"
+      nowRegion: "江苏",
+      isAdmin: true,
+      roles: this.$store.getters.roles
     };
   },
   watch: {
@@ -260,11 +267,24 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-      listDept().then(response => {
-        if (response.code === 200) {
-          this.dlist = response.data[0].children;
-        }
-      });
+      if (this.roles[0] == "dls") {
+        listDepts().then(response => {
+          if (response.code === 200) {
+            this.dlist = response.data;
+            console.log(response.data);
+            this.deptId = this.$store.getters.dept.deptId;
+            this.isAdmin = false;
+          }
+        });
+      } else if (this.roles[0] == "admin") {
+        listDept().then(response => {
+          console.log(response.data);
+          console.log(this.roles[0]);
+          if (response.code === 200) {
+            this.dlist = response.data[0].children;
+          }
+        });
+      }
       this.getDicts("main_factory_type").then(response => {
         this.typeOptions = response.data;
       });

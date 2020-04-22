@@ -29,7 +29,7 @@ import global from '@/utils/global'
 // import vueJsonp from 'vue-jsonp'
 import VueClipboard from 'vue-clipboard2'
 import JsonExcel from 'vue-json-excel'
-
+import 'babel-polyfill'
 
 // 全局方法挂载
 Vue.prototype.$layer = layer(Vue)

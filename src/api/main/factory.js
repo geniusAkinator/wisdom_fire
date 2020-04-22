@@ -51,3 +51,12 @@ export function exportFactory(query) {
     params: query
   })
 }
+
+//
+export function listSensorByFactoryId(query) {
+  return request({
+    url: '/system/transducer/factoryIds',
+    method: 'get',
+    params: query
+  })
+}

@@ -2,7 +2,12 @@
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-form-item label="所属代理商" prop="dept">
-        <el-select v-model="deptId" placeholder="请选择所属代理商" @change="handleSelect">
+        <el-select
+          v-model="deptId"
+          placeholder="请选择所属代理商"
+          @change="handleSelect"
+          :disabled="!isAdmin"
+        >
           <el-option
             v-for="(item,index) in dlist"
             :key="index"
@@ -104,7 +109,7 @@
 
 <script>
 import { addFactory } from "@/api/main/factory";
-import { listDept } from "@/api/system/dept";
+import { listDept, listDepts } from "@/api/system/dept";
 import { Loading } from "element-ui";
 import MyImagePicker from "@/components/UploadImage";
 import MyMapPicker from "@/components/MapPicker";
@@ -157,7 +162,7 @@ export default {
       if (this.deptId === "") {
         callback(new Error("请选择所属代理商"));
       } else {
-         callback();
+        callback();
       }
     };
     return {
@@ -186,11 +191,15 @@ export default {
           { required: true, validator: validateProvince, trigger: "change" }
         ],
         pos: [{ required: true, validator: validatePos, trigger: "change" }],
-        address: [{ required: true, message: "详细地址不能为空", trigger: "blur" }],
+        address: [
+          { required: true, message: "详细地址不能为空", trigger: "blur" }
+        ],
         leader: [
           { required: true, message: "负责人不能为空", trigger: "blur" }
         ],
-        phone: [{ required: true, validator: validatePhone, trigger: "change" }],
+        phone: [
+          { required: true, validator: validatePhone, trigger: "change" }
+        ],
         tel: [{ required: true, validator: validateTel, trigger: "change" }],
         dept: [{ required: true, validator: validateDept, trigger: "change" }]
       },
@@ -200,7 +209,8 @@ export default {
       typeOptions: [],
       isShow: false,
       nowRegion: "江苏",
-      roles: this.$store.getters.roles
+      roles: this.$store.getters.roles,
+      isAdmin: true
     };
   },
   watch: {
@@ -250,17 +260,25 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-      listDept().then(response => {
-        console.log(response.data);
-        console.log(this.roles[0]);
-        if (response.code === 200) {
-          if (this.roles[0] == "dls") {
+      if (this.roles[0] == "dls") {
+        listDepts().then(response => {
+          if (response.code === 200) {
             this.dlist = response.data;
-          } else {
+            console.log(response.data);
+            this.deptId = this.$store.getters.dept.deptId;
+            this.isAdmin = false;
+          }
+        });
+      } else if (this.roles[0] == "admin") {
+        listDept().then(response => {
+          console.log(response.data);
+          console.log(this.roles[0]);
+          if (response.code === 200) {
             this.dlist = response.data[0].children;
           }
-        }
-      });
+        });
+      }
+
       this.getDicts("main_factory_type").then(response => {
         this.typeOptions = response.data;
       });

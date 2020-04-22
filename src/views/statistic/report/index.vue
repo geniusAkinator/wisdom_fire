@@ -181,6 +181,7 @@ export default {
       getScoreCount({ datetime: this.datetime + "-1" }).then(response => {
         if (response.code == 200) {
           let _data = response.data;
+          console.log( response.data)
           this.point = Math.ceil(_data.percentage);
         }
       });
