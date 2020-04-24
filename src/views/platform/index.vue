@@ -524,13 +524,13 @@ $border-radius: 4px;
 .platform-top-left {
   width: 100%;
   height: 20px;
-  background: linear-gradient(to right, #071748, #132962);
+  background: linear-gradient(to right, #071748, #0c3463);
   border-right: 0;
 }
 .platform-top-right {
   width: 100%;
   height: 20px;
-  background: linear-gradient(to right, #132962, #071748);
+  background: linear-gradient(to right, #0c3463, #071748);
   border-left: 0;
 }
 .platform-top {

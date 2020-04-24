@@ -1,6 +1,6 @@
 <template>
   <div class="container form">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="90px">
       <el-form-item label="所属工厂" prop="factoryId">
         <el-select v-model="form.factoryId" placeholder="请选择所属工厂">
           <el-option
@@ -35,13 +35,13 @@
       <el-form-item label="公告内容">
         <Editor v-model="form.noticeContent" />
       </el-form-item>
-      <el-form-item label="附件" class="readonly">
+      <!-- <el-form-item label="附件" class="readonly">
         <el-input v-model="form.file" placeholder="请上传附件" :readonly="true">
           <template slot="append">
             <my-file-upload @sendFile="getFile"></my-file-upload>
           </template>
         </el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="查询关键字" prop="keyword">
         <el-input v-model="form.keyword" placeholder="请输入查询关键字"></el-input>
         <span class="help-block">用|分隔符隔开</span>

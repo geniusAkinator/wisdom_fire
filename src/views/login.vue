@@ -1,15 +1,37 @@
 <template>
   <div class="login">
     <el-row :gutter="10" style="height:100%">
-      <el-col :span="14" style="height:100%">ddd</el-col>
-      <el-col class="bg-white" :span="10" style="height:100%">
+      <el-col
+        class="flex flex-direction align-center justify-center"
+        :span="14"
+        style="height:100%"
+      >
+        <div class="cf margin-bottom" style="margin-right:65px;">
+          <div class="fl bg-white padding-xs radius text-xxl text-bold text-blue bg" >预</div>
+          <div class="fl text-white padding-xs text-xxl text-bold" >知</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">则</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">无</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">优</div>
+        </div>
+        <div class="cf" style="margin-left:65px">
+          <div class="fl bg-white padding-xs radius text-xxl text-bold text-blue">防</div>
+          <div class="fl text-white padding-xs text-xxl text-bold bg-">患</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">于</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">未</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">然</div>
+        </div>
+        <div class="login_img1"></div>
+      </el-col>
+      <el-col
+        class="bg-white flex flex-direction align-center justify-center"
+        :span="10"
+        style="height:100%;position:relative"
+      >
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-          <img src="" alt="">
+          <div class="login_logo"></div>
           <h3 class="title">安中云智慧消防监控系统</h3>
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-              <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
-            </el-input>
+            <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号"></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <el-input
@@ -18,9 +40,7 @@
               auto-complete="off"
               placeholder="密码"
               @keyup.enter.native="handleLogin"
-            >
-              <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
-            </el-input>
+            ></el-input>
           </el-form-item>
           <el-form-item prop="code">
             <el-input
@@ -29,9 +49,7 @@
               placeholder="验证码"
               style="width: 63%"
               @keyup.enter.native="handleLogin"
-            >
-              <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
-            </el-input>
+            ></el-input>
             <div class="login-code">
               <img :src="codeUrl" @click="getCode" />
             </div>
@@ -44,6 +62,7 @@
               type="primary"
               style="width:100%;"
               @click.native.prevent="handleLogin"
+              round
             >
               <span v-if="!loading">登 录</span>
               <span v-else>登 录 中...</span>
@@ -156,22 +175,27 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .login {
+  min-width: 980px;
   height: 100%;
-  background: linear-gradient(top, #3401b0, #1c7eee);
-  background: -ms-linear-gradient(top, #3401b0, #1c7eee);
-  background: -webkit-linear-gradient(top, #3401b0, #1c7eee);
-  background: -moz-linear-gradient(top, #3401b0, #1c7eee);
+  background: linear-gradient(top, #5236fa, #0d77ff);
+  background: -ms-linear-gradient(top, #5236fa, #0d77ff);
+  background: -webkit-linear-gradient(top, #5236fa, #0d77ff);
+  background: -moz-linear-gradient(top, #5236fa, #0d77ff);
 }
 .title {
-  margin: 0px auto 30px auto;
+  margin: 20px auto 80px auto;
   text-align: center;
   color: #707070;
+  font-size: 24px;
+  font-family: "Source Han Sans SC";
+  font-weight: 500;
+  color: rgba(59, 59, 59, 1);
 }
 
 .login-form {
   width: 400px;
   border-radius: 6px;
-  padding: 25px 25px 5px 25px;
+  padding: 0 25px;
   .el-input {
     height: 38px;
     input {
@@ -204,12 +228,31 @@ export default {
   position: absolute;
   bottom: 0;
   text-align: center;
-  color: #fff;
+  color: #666666;
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
 }
 .bg-white {
   background: #ffffff;
+}
+.login_img1 {
+  width: 800px;
+  height: 500px;
+  background: url("../assets/image/img1.png") no-repeat center;
+  background-size: contain;
+}
+.login_logo {
+  width: 120px;
+  height: 100px;
+  background: url("../assets/image/logo.png") no-repeat center;
+  background-size: contain;
+  display: block;
+  margin: auto;
+}
+.login .el-input__inner{
+  border: 0;
+  border-bottom: 1px solid #999999;
+  border-radius: 0;
 }
 </style>

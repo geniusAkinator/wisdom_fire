@@ -6,13 +6,13 @@
         <router-link class="item" :to="'/main/factory'">
           <div>
             工厂总数:
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="4" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
         <router-link class="item" :to="'/team/department'">
           <div>
             人员总数:
-            <span>55</span>
+            <count-to :start-val="0" :end-val="6" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
       </div>
@@ -20,16 +20,16 @@
     <el-col :sm="6" :xs="12">
       <div class="sta_item">
         <i class="el-icon-link"></i>
-        <router-link class="item" :to="'sensor'">
+        <router-link class="item" :to="''">
           <div>
             在线设备:
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
-        <router-link class="item" :to="'sensor'">
+        <router-link class="item" :to="''">
           <div>
             离线设备:
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
       </div>
@@ -40,13 +40,13 @@
         <router-link class="item" :to="'/hazard/overview'">
           <div>
             隐患总数:
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
         <router-link class="item" :to="'/hazard/overview'">
           <div>
             处理总数:
-            <count-to :start-val="0" :end-val="20" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
           </div>
         </router-link>
       </div>
