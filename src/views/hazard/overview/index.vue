@@ -36,9 +36,15 @@
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="factoryId" label="工厂名称"></el-table-column>
-      <el-table-column prop="content" label="隐患内容"></el-table-column>
+      <el-table-column label="所属工厂" align="center" prop="factoryId">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in factoryList" :key="index">
+            <template v-if="scope.row.factoryId == item.factoryId">{{item.factoryName}}</template>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="type" label="隐患类型"></el-table-column>
+      <el-table-column prop="content" label="隐患内容"></el-table-column>
       <el-table-column label="首次上报时间" align="center" prop="currdate">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.currdate) }}</span>
@@ -62,6 +68,7 @@
 <script>
 import { listOverview } from "@/api/hazard/overview";
 import MyAppointAdd from "@/views/hazard/overview/add";
+import { listFactory } from "@/api/main/factory";
 
 export default {
   name: "OverView",
@@ -77,6 +84,7 @@ export default {
         visible: ""
       },
       overviewList: [],
+      factoryList:[],
       // 表单参数
       form: {},
       rowId: 0,
@@ -86,6 +94,11 @@ export default {
     };
   },
   created() {
+    listFactory().then(response => {
+      if (response.code == 200) {
+        this.factoryList = response.rows;
+      }
+    });
     this.getList();
   },
   methods: {

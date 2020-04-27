@@ -1,6 +1,10 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="系统图标" prop="imageUrl" class="readonly">
+        <el-input v-model="form.imageUrl" placeholder="请选择图标" readonly />
+        <my-image-picker :images="form.imageUrl" :multiple="false" @sendImage="getImage"></my-image-picker>
+      </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入名称" />
       </el-form-item>
@@ -18,6 +22,7 @@
 <script>
 import { updateSystem, getSystem } from "@/api/display/sys";
 import { Loading } from "element-ui";
+import MyImagePicker from "@/components/UploadImage";
 
 export default {
   data() {
@@ -25,11 +30,17 @@ export default {
       form: {
         description: "",
         name: "",
-        systemId: this.$parent.eid
+        systemId: this.$parent.eid,
+        imageUrl: ""
       },
       factoryList: [],
       rules: {
-        name: [{ required: true, message: "系统名称不能为空", trigger: "blur" }]
+        name: [
+          { required: true, message: "系统名称不能为空", trigger: "blur" }
+        ],
+        imageUrl: [
+          { required: true, message: "系统图标不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -70,10 +81,16 @@ export default {
       setTimeout(() => {
         loadingInstance.close();
       }, 300);
+    },
+    getImage(e) {
+      this.form.imageUrl = e;
     }
   },
   mounted() {
     this.initForm();
+  },
+  components: {
+    MyImagePicker
   }
 };
 </script>

@@ -49,7 +49,7 @@ export default {
           { required: true, message: "轮播名称不能为空", trigger: "blur" }
         ],
         bannerUrl: [
-          { required: true, message: "轮播图片不能为空", trigger: "blur" }
+          { required: true, message: "轮播图片不能为空", trigger: "change" }
         ]
       },
       factoryList: []

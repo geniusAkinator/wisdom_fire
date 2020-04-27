@@ -193,6 +193,7 @@ export default {
   position: relative;
 }
 .img-preview .el-image {
+  width: 100%;
   height: 100%;
 }
 .img-preview .cover {

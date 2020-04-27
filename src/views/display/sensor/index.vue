@@ -46,7 +46,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="所属楼层" align="center" prop="buildingId">
+      <el-table-column label="所属楼宇" align="center" prop="buildingId">
         <template slot-scope="scope">
           <span v-for="(item,index) in buildingList" :key="index">
             {{scope.row.buildingId}}

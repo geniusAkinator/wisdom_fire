@@ -41,7 +41,7 @@
             <div class="item-title">
               <span>高频异常设备排名</span>
             </div>
-            <my-echart-rose :data="errData"></my-echart-rose>
+            <my-echart-rose :data="rateData"></my-echart-rose>
           </div>
         </div>
         <div class="echart-item" id="tableContent">
@@ -134,8 +134,7 @@ import CountTo from "vue-count-to";
 export default {
   data() {
     return {
-      labelHazard: 1,
-      errData: [],
+      labelHazard: 3,
       rankData: [],
       color1: {
         scolor: "#e5790d",
@@ -149,17 +148,54 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 0
+        value: 90
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 0
+        value: 85
       },
-      errData: [
+      rateData: [
         { value: 10, name: "二氧化碳" },
         { value: 5, name: "烟感" },
         { value: 15, name: "电气" },
         { value: 25, name: "水深" }
+      ],
+      errData: [
+        {
+          currdate: "2020-04-09",
+          currlocation: "楼宇A-一楼",
+          type: "数据无效"
+        },
+        {
+          currdate: "2020-04-06",
+          currlocation: "楼宇A-一楼",
+          type: "水位不够"
+        },
+        {
+          currdate: "2020-03-05",
+          currlocation: "楼宇A-一楼",
+          type: "电量不够"
+        },
+        {
+          currdate: "2020-03-05",
+          currlocation: "楼宇A-一楼",
+          type: "离线"
+        },
+        {
+          currdate: "2020-03-02",
+          currlocation: "楼宇A-一楼",
+          type: "离线"
+        },
+        {
+          currdate: "2020-03-02",
+          currlocation: "楼宇A-一楼",
+          type: "离线"
+        },
+        {
+          currdate: "2020-03-02",
+          currlocation: "楼宇A-一楼",
+          type: "离线"
+        }
       ],
       typeRankData: [],
       weekData: {
@@ -302,9 +338,12 @@ export default {
           _data.map((item, i) => {
             let temp = {};
             temp.id = i + 1;
-            temp.factoryName = item.factoryName;
-            temp.count = item.count;
-            _list.push(temp);
+            if (item.factoryName != null) {
+              temp.factoryName = item.factoryName;
+              temp.count = item.count;
+              _list.push(temp);
+            }
+            console.log(item);
           });
           this.rankData = _list;
         }
@@ -322,27 +361,29 @@ export default {
             _list.push(temp);
           });
           this.typeRankData = _list;
+          console.log(_list);
           ++this.rankKey;
         }
       });
     },
     getErrRankList() {
-      getErrRank().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          this.errData = _data;
-        }
-      });
+      // getErrRank().then(response => {
+      //   if (response.code == 200) {
+      //     let _data = response.data;
+      //     console.log(_data, "Dsafsad");
+      //     this.errData = _data;
+      //   }
+      // });
     },
     getOnlinePercentage() {
-      getOnlineRate().then(response => {
-        if (response.code == 200) {
-          this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
-          this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
-          ++this.gaugeKey1;
-          ++this.gaugeKey2;
-        }
-      });
+      // getOnlineRate().then(response => {
+      //   if (response.code == 200) {
+      //     this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
+      //     this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
+      //     ++this.gaugeKey1;
+      //     ++this.gaugeKey2;
+      //   }
+      // });
     },
     initDateTime() {
       let date = new Date();
@@ -385,7 +426,7 @@ export default {
       this.nowDate = `${year}-${_month}-${_day} ${_hour}:${_min}:${_sec}  ${w}`;
     },
     getNumFormat(num) {
-      return num > 10 ? num : "0" + num;
+      return num >= 10 ? num : "0" + num;
     }
   },
   mounted() {

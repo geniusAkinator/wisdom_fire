@@ -41,14 +41,14 @@
             <my-file-upload @sendFile="getFile"></my-file-upload>
           </template>
         </el-input>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="查询关键字" prop="keyword">
         <el-input v-model="form.keyword" placeholder="请输入查询关键字"></el-input>
         <span class="help-block">用|分隔符隔开</span>
       </el-form-item>
     </el-form>
     <div class="add-footer">
-      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit">提交</el-button>
+      <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
       <el-button size="small" icon="el-icon-back" @click="handleBack">返回</el-button>
     </div>
   </div>
@@ -75,15 +75,21 @@ export default {
         noticeContent: "",
         status: "0",
         file: "",
-        cover:"",
-        keyword:""
+        cover: "",
+        keyword: ""
       },
       rules: {
+        factoryId: [
+          { required: true, message: "请选择所属工厂", trigger: "change" }
+        ],
         noticeTitle: [
           { required: true, message: "公告标题不能为空", trigger: "blur" }
         ],
         noticeType: [
           { required: true, message: "公告类型不能为空", trigger: "blur" }
+        ],
+        cover: [
+          { required: true, message: "封面图片不能为空", trigger: "change" }
         ]
       },
       factoryList: [],
@@ -92,14 +98,18 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      updateNotice(this.form).then(response => {
-        if (response.code === 200) {
-          this.msgSuccess("更新成功");
-          this.$parent.getList();
-          this.closeDialog();
-        } else {
-          this.msgError(response.msg);
+    handleSubmit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          updateNotice(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("更新成功");
+              this.$parent.getList();
+              this.closeDialog();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
