@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button size="small" icon="el-icon-plus" plain @click="handleAddSys">添加传感器系统</el-button>
           <el-button
@@ -39,8 +39,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="sysTotal>0"
+          :total="sysTotal"
+          :page.sync="sysQueryParams.pageNum"
+          :limit.sync="sysQueryParams.pageSize"
+          @pagination="getSysList"
+        />
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button
             size="small"
@@ -83,8 +90,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="typeTotal>0"
+          :total="typeTotal"
+          :page.sync="typeQueryParams.pageNum"
+          :limit.sync="typeQueryParams.pageSize"
+          @pagination="getTypeList"
+        />
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button
             size="small"
@@ -131,6 +145,13 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="sensorTotal>0"
+          :total="sensorTotal"
+          :page.sync="sensorQueryParams.pageNum"
+          :limit.sync="sensorQueryParams.pageSize"
+          @pagination="getSensorList"
+        />
       </el-col>
     </el-row>
   </div>
@@ -166,20 +187,29 @@ export default {
       add1: true,
       add2: true,
       sysQueryParams: {
+        pageNum:1,
+        pageSize:20,
         description: "",
         name: ""
       },
       typeQueryParams: {
+        pageNum:1,
+        pageSize:20,
         systemId: 0
       },
       sensorQueryParams: {
+        pageNum:1,
+        pageSize:20,
         ttId: 0
       },
       systemList: [],
       transducertypeList: [],
       transducerList: [],
       nowSysId: "",
-      nowTypeId: ""
+      nowTypeId: "",
+      sysTotal:0,
+      typeTotal:0,
+      sensorTotal:0
     };
   },
   created() {
@@ -190,17 +220,20 @@ export default {
       this.loading = true;
       listSystem(this.sysQueryParams).then(response => {
         this.systemList = response.rows;
+        this.sysTotal = response.total;
         this.loading = false;
       });
     },
     getTypeList() {
       listTransducertype(this.typeQueryParams).then(response => {
         this.transducertypeList = response.rows;
+        this.typeTotal = response.total;
       });
     },
     getSensorList() {
       listTransducer(this.sensorQueryParams).then(response => {
         this.transducerList = response.rows;
+        this.sensorTotal = response.total;
       });
     },
     handleSysSelectionChange(selection) {

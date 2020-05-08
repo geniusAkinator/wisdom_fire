@@ -2,7 +2,7 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button size="small" icon="el-icon-plus" plain @click="handleAddFactory">添加工厂</el-button>
           <el-button
@@ -38,8 +38,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="factoryTotal>0"
+          :total="factoryTotal"
+          :page.sync="factoryQueryParams.pageNum"
+          :limit.sync="factoryQueryParams.pageSize"
+          @pagination="getFactoryList"
+        />
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button
             size="small"
@@ -82,14 +89,14 @@
           </el-table-column>
         </el-table>
         <pagination
-          v-show="factoryTotal>0"
-          :total="factoryTotal"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
+          v-show="buildingTotal>0"
+          :total="buildingTotal"
+          :page.sync="buildingQueryParams.pageNum"
+          :limit.sync="buildingQueryParams.pageSize"
+          @pagination="getBuildingList"
         />
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="overflow:hidden">
         <div class="folder">
           <el-button
             size="small"
@@ -129,6 +136,13 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="floorTotal>0"
+          :total="floorTotal"
+          :page.sync="floorQueryParams.pageNum"
+          :limit.sync="floorQueryParams.pageSize"
+          @pagination="getFloorList"
+        />
       </el-col>
     </el-row>
   </div>
@@ -165,6 +179,8 @@ export default {
       factoryList: [],
       typeOptions: [],
       factoryQueryParams: {
+        pageNum: 1,
+        pageSize: 20,
         factoryName: "",
         address: "",
         createDateTime: "",
@@ -180,9 +196,13 @@ export default {
         updateDateTime: ""
       },
       buildingQueryParams: {
+        pageNum: 1,
+        pageSize: 20,
         factoryId: 0
       },
       floorQueryParams: {
+        pageNum: 1,
+        pageSize: 20,
         floorName: "",
         buildingId: 0
       },
@@ -190,7 +210,9 @@ export default {
       floorList: [],
       nowFactoryId: null,
       nowBuildingId: null,
-      factoryTotal:0
+      factoryTotal: 0,
+      buildingTotal: 0,
+      floorTotal: 0
     };
   },
   created() {
@@ -208,6 +230,7 @@ export default {
       listFactory(this.factoryQueryParams).then(response => {
         if (response.code == 200) {
           this.factoryList = response.rows;
+          this.factoryTotal = response.total;
           this.loading = false;
         }
       });
@@ -217,12 +240,14 @@ export default {
         console.log(response);
         if (response.code == 200) {
           this.buildingList = response.rows;
+          this.buildingTotal = response.total;
         }
       });
     },
     getFloorList() {
       listFloor(this.floorQueryParams).then(response => {
         this.floorList = response.rows;
+        this.floorTotal = response.total;
       });
     },
     handleFactorySelectionChange(selection) {
@@ -404,6 +429,7 @@ export default {
       this.nowBuildingId = null;
       this.add1 = false;
       this.add2 = true;
+      this.floorTotal = 0;
       this.getBuildingList();
       this.floorList = [];
     },

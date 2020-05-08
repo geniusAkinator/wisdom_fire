@@ -101,7 +101,7 @@
           <img :src="baseUrl+info.pictur" style="width: 100%;" />
           <img
             ref="marker"
-            :style="{left:info.left,top:info.top,position:'absolute'}"
+            :style="{left:info.xaxis+'%',top:info.yaxis+'%',position:'absolute'}"
             class="floor_img_marker"
             :src="icon"
           />
@@ -111,27 +111,37 @@
       <el-col :span="12">
         <span class="subtitle">进度预览</span>
         <el-timeline>
-          <el-timeline-item timestamp="2018/4/12" placement="top">
+          <!-- <el-timeline-item timestamp="2020/5/3" placement="top">
             <el-card shadow="never">
-              <h5>已完成</h5>
-              <h4>填写内容</h4>
-              <p>王小虎 提交于 2018/4/12 20:46</p>
+              <h5>
+                <el-tag type="success" effect="dark">已处理</el-tag>
+              </h5>
+              <h4>传感器正常工作</h4>
+              <p>王小虎 提交于 2020/5/3 13:20</p>
             </el-card>
           </el-timeline-item>
-          <el-timeline-item timestamp="2018/4/3" placement="top">
+          <el-timeline-item timestamp="2020/5/3" placement="top">
             <el-card shadow="never">
-              <h5>处理中</h5>
-              <h4>填写内容</h4>
-              <p>王小虎 提交于 2018/4/3 20:46</p>
+              <h5>
+                <el-tag type="warning" effect="dark">处理中</el-tag>
+              </h5>
+              <h4>1.检测0℃时的敏感阻值;</h4>
+              <h4>2.修前传感器化学除油、清除传感器表面氧化腐蚀层;</h4>
+              <h4>3.进行修复;</h4>
+              <h4>4.压缩空气吹干后,立即放入干燥箱内,60min后取出;</h4>
+              <h4>5.自然冷却至常温后,测试温度传感器性能指标</h4>
+              <p>王小虎 提交于 2020/5/3 10:12</p>
             </el-card>
           </el-timeline-item>
-          <el-timeline-item timestamp="2018/4/2" placement="top">
+          <el-timeline-item timestamp="2020/5/2" placement="top">
             <el-card shadow="never">
-              <h5>待处理</h5>
-              <h4>填写内容</h4>
-              <p>王小虎 提交于 2018/4/2 20:46</p>
+              <h5>
+                <el-tag type="danger" effect="dark">待处理</el-tag>
+              </h5>
+              <h4>传感器温度过高</h4>
+              <p>系统 上报 2020/5/2 14:46</p>
             </el-card>
-          </el-timeline-item>
+          </el-timeline-item> -->
         </el-timeline>
       </el-col>
     </el-row>
@@ -165,8 +175,8 @@ export default {
         uptime: "",
         ttId: null,
         pictur: "",
-        left: 0,
-        top: 0
+        xaxis: 0,
+        yaxis: 0
       },
       baseUrl: process.env.VUE_APP_BASE_API,
       icon: require("@/assets/image/map-marker.png"),

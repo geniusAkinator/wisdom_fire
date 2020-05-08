@@ -6,20 +6,25 @@
           <ul class="state_block">
             <li class="state_item">
               <span>待处理统计</span>
-              <div class="border-circle warning">0</div>
+              <div class="border-circle warning">{{count1}}</div>
             </li>
             <li class="state_item">
               <span>累计处理统计</span>
-              <div class="border-circle danger">0</div>
+              <div class="border-circle danger">{{count2}}</div>
             </li>
           </ul>
         </el-col>
         <el-col :span="12">
-          <!-- <ul class="info_block">
+          <ul class="info_block">
             <li class="info_item">
-              <span class="info_name">最常见隐患类型</span>
+              <span class="info_name">
+                最常见隐患类型为：
+                <span v-for="(item,index) in typeOptions" :key="index">
+                  <template v-if="hazardType == item.dictValue">{{item.dictLabel}}</template>
+                </span>
+              </span>
             </li>
-          </ul>-->
+          </ul>
         </el-col>
       </el-row>
     </el-card>
@@ -36,11 +41,26 @@
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属工厂" align="center" prop="factoryId">
+      <!-- <el-table-column label="所属工厂" align="center" prop="factoryId">
         <template slot-scope="scope">
           <span v-for="(item,index) in factoryList" :key="index">
             <template v-if="scope.row.factoryId == item.factoryId">{{item.factoryName}}</template>
           </span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="楼宇" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="楼层" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.floorName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="点位描述" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.currlocation }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="隐患类型">
@@ -58,7 +78,15 @@
       </el-table-column>
       <el-table-column label="最新上报时间" align="center" prop="updateTime">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
+          <span>{{ parseTime(scope.row.upTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="updateTime">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.state == 0" type="danger" effect="dark">待处理</el-tag>
+          <el-tag v-else-if="scope.row.state == 1" type="warning" effect="dark">处理中</el-tag>
+          <el-tag v-else-if="scope.row.state == 2" type="success" effect="dark">已处理</el-tag>
+          <el-tag v-else-if="scope.row.state == 3" type="info" effect="dark">不显示</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200px">
@@ -97,7 +125,10 @@ export default {
       layerId: "",
       eid: 0,
       total: 0,
-      typeOptions:[]
+      typeOptions: [],
+      count1: 0,
+      count2: 0,
+      hazardType: ""
     };
   },
   created() {
@@ -120,9 +151,14 @@ export default {
       listOverview(this.queryParams).then(response => {
         if (response.code == 200) {
           console.log();
-          let _data = response.data.tableDataInfo;
-          this.overviewList = _data.rows;
-          this.total = _data.total;
+          let _data = response.data;
+          let _table = _data.tableDataInfo;
+          this.overviewList = _table.rows;
+          this.total = _table.total;
+          this.count1 = _data.sum;
+          this.count2 = _data.handleCount;
+          this.hazardType = _data.type;
+          console.log(_data.sum);
           this.loading = false;
         }
       });
@@ -205,5 +241,8 @@ export default {
   display: block;
   font-weight: bold;
   margin-bottom: 10px;
+}
+.info_block{
+  list-style: none;
 }
 </style>

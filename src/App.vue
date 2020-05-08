@@ -824,9 +824,15 @@ export default {
   transition: all 0.3s linear;
   opacity: 0;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
 }
 .chain-table tr:hover .chain-icon {
   opacity: 1;
+}
+.chain-table .el-icon-edit:hover {
+  color: #409eff;
+}
+.chain-table .el-icon-delete:hover {
+  color: #f56c6c;
 }
 </style>
