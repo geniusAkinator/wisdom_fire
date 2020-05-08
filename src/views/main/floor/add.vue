@@ -54,7 +54,8 @@ export default {
   },
   watch: {
     buildingList() {
-      this.form.buildingId = this.$parent.pid * 1;
+      // this.form.buildingId = this.$parent.pid * 1;
+      this.form.buildingId = this.$parent.nowBuildingId * 1;
     }
   },
   methods: {
@@ -62,7 +63,8 @@ export default {
       addFloor(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("新增成功");
-          this.$parent.getList();
+          // this.$parent.getList();
+          this.$parent.getFloorList();
           this.closeDialog();
         } else {
           this.msgError(response.msg);

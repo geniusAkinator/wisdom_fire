@@ -15,11 +15,11 @@
           </ul>
         </el-col>
         <el-col :span="12">
-          <ul class="info_block">
+          <!-- <ul class="info_block">
             <li class="info_item">
               <span class="info_name">最常见隐患类型</span>
             </li>
-          </ul>
+          </ul>-->
         </el-col>
       </el-row>
     </el-card>
@@ -43,7 +43,13 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="隐患类型"></el-table-column>
+      <el-table-column prop="type" label="隐患类型">
+        <template slot-scope="scope">
+          <span v-for="(item,index) in typeOptions" :key="index">
+            <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="content" label="隐患内容"></el-table-column>
       <el-table-column label="首次上报时间" align="center" prop="currdate">
         <template slot-scope="scope">
@@ -84,16 +90,22 @@ export default {
         visible: ""
       },
       overviewList: [],
-      factoryList:[],
+      factoryList: [],
       // 表单参数
       form: {},
       rowId: 0,
       layerId: "",
       eid: 0,
-      total: 0
+      total: 0,
+      typeOptions:[]
     };
   },
   created() {
+    this.getDicts("sys_type_hidden").then(response => {
+      if (response.code == 200) {
+        this.typeOptions = response.data;
+      }
+    });
     listFactory().then(response => {
       if (response.code == 200) {
         this.factoryList = response.rows;
@@ -107,7 +119,7 @@ export default {
       this.loading = true;
       listOverview(this.queryParams).then(response => {
         if (response.code == 200) {
-          console.log()
+          console.log();
           let _data = response.data.tableDataInfo;
           this.overviewList = _data.rows;
           this.total = _data.total;
@@ -134,7 +146,11 @@ export default {
       this.handleQuery();
     },
     handleDetail(index, row) {
-      this.$router.push({ name: "HazardDetail", params: { id: row.hdId } });
+      console.log(row);
+      this.$router.push({
+        name: "HazardDetail",
+        params: { transducerId: row.transducerId, hdId: row.hdId }
+      });
     },
     handleNotice(index, row) {},
     handleAppoint(index, row) {

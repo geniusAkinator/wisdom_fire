@@ -68,11 +68,6 @@ export default {
       factoryList: []
     };
   },
-  watch: {
-    factoryList() {
-      this.form.factoryId = this.$parent.pid * 1;
-    }
-  },
   methods: {
     handleSubmit(form) {
       this.$refs[form].validate(valid => {
@@ -80,7 +75,8 @@ export default {
           updateBuilding(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getBuildingList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

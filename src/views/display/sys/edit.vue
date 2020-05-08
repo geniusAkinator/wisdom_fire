@@ -51,7 +51,8 @@ export default {
           updateSystem(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getSysList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

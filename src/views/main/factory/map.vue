@@ -42,6 +42,11 @@ export default {
       deep: true
     }
   },
+  watch:{
+    data(nVal,oVal){
+      console.log(nVal)
+    }
+  },
   methods: {
     handler({ BMap, map }) {
       this.BMap = BMap;

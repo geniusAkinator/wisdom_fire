@@ -38,7 +38,7 @@
         <el-input v-model="form.currlocation" type="textarea" placeholder="请输入点位描述" />
       </el-form-item>
       <el-form-item label="设备型号" prop="ttId">
-        <el-select v-model="form.ttId" placeholder="请选择所属楼层" disabled>
+        <el-select v-model="form.ttId" placeholder="请选择设备型号" disabled>
           <el-option
             v-for="(item,index) in typeList"
             :key="index"
@@ -129,7 +129,7 @@ export default {
         currlocation: "",
         longitude: 0,
         latitude: 0,
-        ttId: this.$parent.pid * 1
+        ttId: 0
       },
       factoryList: [],
       buildingList: [],
@@ -174,6 +174,9 @@ export default {
     };
   },
   watch: {
+    typeList() {
+      this.form.ttId = this.$parent.nowTypeId;
+    },
     "form.factoryId": function(nVal, oVal) {
       this.bform.factoryId = nVal;
       this.getBuildingList();
@@ -200,7 +203,8 @@ export default {
           updateTransducer(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getSensorList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

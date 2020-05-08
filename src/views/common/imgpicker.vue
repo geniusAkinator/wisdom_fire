@@ -195,6 +195,7 @@ export default {
 .img-preview .el-image {
   width: 100%;
   height: 100%;
+  background: #999;
 }
 .img-preview .cover {
   position: absolute;

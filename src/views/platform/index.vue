@@ -29,10 +29,10 @@
               <span>在线统计</span>
             </div>
             <div style="height:100%;width:50%;float:left">
-              <my-echart-gauge :color="color1" :data="gauge1" :key="gaugeKey1"></my-echart-gauge>
+              <my-echart-gauge :color="color1" :chartData="gauge1"></my-echart-gauge>
             </div>
             <div style="height:100%;width:50%;float:left">
-              <my-echart-gauge :color="color2" :data="gauge2" :key="gaugeKey2"></my-echart-gauge>
+              <my-echart-gauge :color="color2" :chartData="gauge2"></my-echart-gauge>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="item-title">
               <span>高频异常设备排名</span>
             </div>
-            <my-echart-rose :data="rateData"></my-echart-rose>
+            <my-echart-rose :chartData="rateData"></my-echart-rose>
           </div>
         </div>
         <div class="echart-item" id="tableContent">
@@ -55,13 +55,14 @@
               :max-height="tableHeight"
               style="width: 100%"
             >
-              <el-table-column prop="currdate" label="时间" align="center" width="100">
+              <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
+              <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
+              <el-table-column prop="type" label="状态" align="center"></el-table-column>
+              <el-table-column prop="currdate" label="时间" align="center">
                 <template slot-scope="scope">
                   <span v-if="scope.row.currdate">{{ parseTime(scope.row.currdate,"{y}-{m}-{d}") }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="currlocation" label="传感器位置" align="center"></el-table-column>
-              <el-table-column prop="type" label="状态" align="center"></el-table-column>
             </el-table>
           </div>
         </div>
@@ -75,7 +76,7 @@
             <div class="item-title">
               <span>高频隐患类型排名</span>
             </div>
-            <my-echart-rose :data="typeRankData" :key="rankKey"></my-echart-rose>
+            <my-echart-rose :chartData="typeRankData"></my-echart-rose>
           </div>
         </div>
         <div class="echart-item">
@@ -104,9 +105,9 @@
               <el-radio-button :label="2">月</el-radio-button>
               <el-radio-button :label="3">年</el-radio-button>
             </el-radio-group>
-            <my-echart-line :chartData="weekData" :key="weekDataKey" v-if="labelHazard == 1"></my-echart-line>
-            <my-echart-range :chartData="monthData" :key="monthDataKey" v-if="labelHazard == 2"></my-echart-range>
-            <my-echart-line :chartData="yearData" :key="yearDataKey" v-if="labelHazard == 3"></my-echart-line>
+            <my-echart-line :chartData="weekData" v-if="labelHazard == 1"></my-echart-line>
+            <my-echart-range :chartData="monthData" v-if="labelHazard == 2"></my-echart-range>
+            <my-echart-line :chartData="yearData" v-if="labelHazard == 3"></my-echart-line>
           </div>
         </div>
       </el-col>
@@ -148,56 +149,21 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 90
+        value: 0
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 85
+        value: 0
       },
       rateData: [
-        { value: 10, name: "二氧化碳" },
+        { value: 5, name: "二氧化碳" },
         { value: 5, name: "烟感" },
         { value: 15, name: "电气" },
-        { value: 25, name: "水深" }
+        { value: 4, name: "水深" }
       ],
-      errData: [
-        {
-          currdate: "2020-04-09",
-          currlocation: "楼宇A-一楼",
-          type: "数据无效"
-        },
-        {
-          currdate: "2020-04-06",
-          currlocation: "楼宇A-一楼",
-          type: "水位不够"
-        },
-        {
-          currdate: "2020-03-05",
-          currlocation: "楼宇A-一楼",
-          type: "电量不够"
-        },
-        {
-          currdate: "2020-03-05",
-          currlocation: "楼宇A-一楼",
-          type: "离线"
-        },
-        {
-          currdate: "2020-03-02",
-          currlocation: "楼宇A-一楼",
-          type: "离线"
-        },
-        {
-          currdate: "2020-03-02",
-          currlocation: "楼宇A-一楼",
-          type: "离线"
-        },
-        {
-          currdate: "2020-03-02",
-          currlocation: "楼宇A-一楼",
-          type: "离线"
-        }
-      ],
+      errData: [],
       typeRankData: [],
+      typeList: [],
       weekData: {
         legend: ["隐患总数", "已解决数"],
         xdata: [], //横坐标的值
@@ -213,23 +179,21 @@ export default {
         xdata: [], //横坐标的值
         ydata: [] //纵坐标的值
       },
-      weekDataKey: 1,
-      monthDataKey: 10,
-      yearDataKey: 20,
-      rankKey: 30,
-      gaugeKey1: 11,
-      gaugeKey2: 22,
       monthList: {},
       tableHeight: "250",
       nowDate: ""
     };
+  },
+  watch: {
+    typeList: function() {
+      this.getTypesRankList();
+    }
   },
   methods: {
     resizeTable() {
       let _table = document.querySelector("#tableContent");
       let _height = _table.offsetHeight - 40;
       this.tableHeight = _height;
-      console.log(_table.offsetHeight);
     },
     getWeeklyList() {
       getWeekly().then(response => {
@@ -251,7 +215,6 @@ export default {
           this.weekData.xdata = _xdata;
           this.weekData.ydata.push(_allList);
           this.weekData.ydata.push(_doneList);
-          ++this.weekDataKey;
         }
       });
     },
@@ -287,7 +250,6 @@ export default {
           this.monthData.xdata = _xdata;
           this.monthData.ydata.push(_allList);
           this.monthData.ydata.push(_doneList);
-          ++this.monthDataKey;
         }
       });
     },
@@ -325,7 +287,6 @@ export default {
           this.yearData.xdata = _xdata;
           this.yearData.ydata.push(_allList);
           this.yearData.ydata.push(_doneList);
-          ++this.yearDataKey;
         }
       });
     },
@@ -343,7 +304,6 @@ export default {
               temp.count = item.count;
               _list.push(temp);
             }
-            console.log(item);
           });
           this.rankData = _list;
         }
@@ -354,36 +314,36 @@ export default {
         if (response.code == 200) {
           let _data = response.data;
           let _list = [];
+          let _tlist = this.typeList;
           _data.map((item, i) => {
             let temp = {};
-            temp.name = item.type;
             temp.value = item.count;
+            _tlist.map((tItem, j) => {
+              if (item.type == tItem.dictValue) {
+                temp.name = tItem.dictLabel;
+              }
+            });
             _list.push(temp);
           });
           this.typeRankData = _list;
-          console.log(_list);
-          ++this.rankKey;
         }
       });
     },
     getErrRankList() {
-      // getErrRank().then(response => {
-      //   if (response.code == 200) {
-      //     let _data = response.data;
-      //     console.log(_data, "Dsafsad");
-      //     this.errData = _data;
-      //   }
-      // });
+      getErrRank().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          this.errData = _data;
+        }
+      });
     },
     getOnlinePercentage() {
-      // getOnlineRate().then(response => {
-      //   if (response.code == 200) {
-      //     this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
-      //     this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
-      //     ++this.gaugeKey1;
-      //     ++this.gaugeKey2;
-      //   }
-      // });
+      getOnlineRate().then(response => {
+        if (response.code == 200) {
+          this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
+          this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
+        }
+      });
     },
     initDateTime() {
       let date = new Date();
@@ -430,16 +390,25 @@ export default {
     }
   },
   mounted() {
+    this.getDicts("sys_type_hidden").then(response => {
+      if (response.code == 200) {
+        let _data = response.data;
+        let _list = [];
+        _data.map((item, i) => {
+          let temp = {};
+          temp.dictLabel = item.dictLabel;
+          temp.dictValue = item.dictValue;
+          _list.push(temp);
+        });
+        this.typeList = _list;
+      }
+    });
     this.getWeeklyList();
     this.getMonthlyList();
     this.getYearlyList();
     this.getUnitsRankList();
-    this.getTypesRankList();
     this.getErrRankList();
     this.getOnlinePercentage();
-    // setInterval(() => {
-    //   this.labelHazard >= 3 ? (this.labelHazard = 0) : ++this.labelHazard;
-    // }, 1000);
     this.resizeTable();
     window.addEventListener("resize", this.resizeTable);
     this.initDateTime();

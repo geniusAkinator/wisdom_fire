@@ -1,177 +1,215 @@
 <template>
   <div class="app-container">
-    <div class="table-tool">
-      <el-button-group>
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['display:sys:remove']"
-        >删除</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['display:sys:add']"
-        >新增</el-button>
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['display:sys:export']"
-        >导出</el-button>
-      </el-button-group>
-    </div>
-
-    <el-table
-      v-loading="loading"
-      border
-      :data="systemList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" type="index" align="center">
-        <template slot-scope="scope">
-          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="描述" align="center" prop="description" />
-      <el-table-column label="操作" align="center" fixed="right" width="280">
-        <template slot-scope="scope">
-          <el-button size="mini" icon="el-icon-edit" @click="handleJump(scope.row)">类型管理</el-button>
+    <el-row>
+      <el-col :span="8">
+        <div class="folder">
+          <el-button size="small" icon="el-icon-plus" plain @click="handleAddSys">添加传感器系统</el-button>
           <el-button
-            size="mini"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['display:sys:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="danger"
+            size="small"
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['display:sys:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+            :disabled="multiple1"
+            @click="handleDeleteSys"
+            plain
+          >批量删除</el-button>
+        </div>
+        <el-table
+          v-loading="loading"
+          :data="systemList"
+          class="chain-table"
+          @selection-change="handleSysSelectionChange"
+          @row-click="handleSysRowClick"
+          highlight-current-row
+        >
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="传感器系统列表" align="center" prop="name" />
+          <el-table-column align="center">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-edit chain-icon"
+                @click="handleUpdateSys(scope.row)"
+                v-hasPermi="['display:sys:edit']"
+                title="编辑"
+              ></i>
+              <i
+                class="el-icon-delete chain-icon"
+                @click="handleDeleteSys(scope.row)"
+                v-hasPermi="['main:floor:remove']"
+                title="删除"
+              ></i>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="8">
+        <div class="folder">
+          <el-button
+            size="small"
+            icon="el-icon-plus"
+            plain
+            :disabled="add1"
+            @click="handleAddType"
+          >添加传感器类型</el-button>
+          <el-button
+            size="small"
+            icon="el-icon-delete"
+            :disabled="multiple2"
+            @click="handleDeleteType"
+            plain
+          >批量删除</el-button>
+        </div>
+        <el-table
+          :data="transducertypeList"
+          class="chain-table"
+          @selection-change="handleTypeSelectionChange"
+          @row-click="handleTypeRowClick"
+          highlight-current-row
+        >
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="传感器类型列表" align="center" prop="name" />
+          <el-table-column align="center">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-edit chain-icon"
+                @click="handleUpdateType(scope.row)"
+                v-hasPermi="['display:transducertype:edit']"
+                title="编辑"
+              ></i>
+              <i
+                class="el-icon-delete chain-icon"
+                @click="handleDeleteType(scope.row)"
+                v-hasPermi="['main:transducertype:remove']"
+                title="删除"
+              ></i>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="8">
+        <div class="folder">
+          <el-button
+            size="small"
+            icon="el-icon-plus"
+            plain
+            :disabled="add2"
+            @click="handleAddSensor"
+          >添加传感器</el-button>
+          <el-button
+            size="small"
+            icon="el-icon-delete"
+            :disabled="multiple2"
+            @click="handleDeleteSensor"
+            plain
+          >批量删除</el-button>
+        </div>
+        <el-table
+          class="chain-table"
+          :data="transducerList"
+          @selection-change=" handleSysSelectionChange"
+        >
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="传感器列表" align="center" prop="deviceNumber"></el-table-column>
+          <el-table-column align="center" width="300">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-edit chain-icon"
+                @click="handleUpdateSensor(scope.row)"
+                v-hasPermi="['display:transducer:edit']"
+                title="编辑"
+              ></i>
+              <i
+                class="el-icon-delete chain-icon"
+                @click="handleDeleteSensor(scope.row)"
+                v-hasPermi="['main:transducer:remove']"
+                title="删除"
+              ></i>
+              <i
+                class="el-icon-s-claim chain-icon"
+                @click="handleConfigPoint(scope.row)"
+                title="配置分数"
+              ></i>
+              <i class="el-icon-setting chain-icon" @click="handleConfig(scope.row)" title="配置阈值"></i>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
   </div>
 </template>
-
 <script>
+import { listSystem, getSystem, delSystem } from "@/api/display/sys";
 import {
-  listSystem,
-  getSystem,
-  delSystem,
-  exportSystem
-} from "@/api/display/sys";
-import MySearchTool from "@/components/SearchTool/index";
+  listTransducertype,
+  getTransducertype,
+  delTransducertype
+} from "@/api/display/type";
+import {
+  listTransducer,
+  getTransducer,
+  delTransducer
+} from "@/api/display/sensor";
 import MySysAdd from "@/views/display/sys/add";
 import MySysEdit from "@/views/display/sys/edit";
-import utils from "@/utils/utils";
+import MyTypeAdd from "@/views/display/type/add";
+import MyTypeEdit from "@/views/display/type/edit";
+import MySensorAdd from "@/views/display/sensor/add";
+import MySensorEdit from "@/views/display/sensor/edit";
+import MyPointConfigPoint from "@/views/display/sensor/point";
+import MyPointConfig from "@/views/display/sensor/tadd";
+
 export default {
   data() {
     return {
-      // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 总条数
-      total: 0,
-      // 传感器数据系统表格数据
-      systemList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 20,
+      multiple1: true,
+      multiple2: true,
+      multiple3: true,
+      add1: true,
+      add2: true,
+      sysQueryParams: {
         description: "",
         name: ""
       },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {},
-      eid: 0,
-      layerId: "",
-      layerInitWidth: 0,
-      layerInitHeight: 0
+      typeQueryParams: {
+        systemId: 0
+      },
+      sensorQueryParams: {
+        ttId: 0
+      },
+      systemList: [],
+      transducertypeList: [],
+      transducerList: [],
+      nowSysId: "",
+      nowTypeId: ""
     };
   },
-  watch: {
-    layerId: function(newVal, oldVal) {
-      let layer = document.querySelector("#" + newVal);
-      if (layer != null) {
-        this.layerInitWidth = layer.offsetWidth;
-        this.layerInitHeight = layer.offsetHeight;
-      }
-    }
-  },
   created() {
-    this.getList();
+    this.getSysList();
   },
   methods: {
-    /** 查询传感器数据系统列表 */
-    getList() {
+    getSysList() {
       this.loading = true;
-      listSystem(this.queryParams).then(response => {
+      listSystem(this.sysQueryParams).then(response => {
         this.systemList = response.rows;
-        this.total = response.total;
         this.loading = false;
       });
     },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
+    getTypeList() {
+      listTransducertype(this.typeQueryParams).then(response => {
+        this.transducertypeList = response.rows;
+      });
     },
-    // 表单重置
-    reset() {
-      this.form = {
-        systemId: "",
-        description: "",
-        name: ""
-      };
-      this.resetForm("form");
+    getSensorList() {
+      listTransducer(this.sensorQueryParams).then(response => {
+        this.transducerList = response.rows;
+      });
     },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
+    handleSysSelectionChange(selection) {
       this.ids = selection.map(item => item.systemId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAddSys() {
       var index = this.$layer.iframe({
         content: {
           content: MySysAdd, //传递的组件对象
@@ -186,7 +224,7 @@ export default {
       this.layerId = index;
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleUpdateSys(row) {
       this.eid = row.systemId;
       var index = this.$layer.iframe({
         content: {
@@ -202,7 +240,7 @@ export default {
       this.layerId = index;
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
+    handleDeleteSys(row) {
       const systemIds = row.systemId || this.ids;
       this.$confirm(
         '是否确认删除传感器数据系统编号为"' + systemIds + '"的数据项?',
@@ -217,54 +255,169 @@ export default {
           return delSystem(systemIds);
         })
         .then(() => {
-          this.getList();
+          this.getSysList();
           this.msgSuccess("删除成功");
         })
         .catch(function() {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有传感器数据系统数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+    handleSysSelectionChange(selection) {
+      this.ids = selection.map(item => item.ttId);
+      this.multiple1 = !selection.length;
+    },
+    /** 新增按钮操作 */
+    handleAddType() {
+      var index = this.$layer.iframe({
+        content: {
+          content: MyTypeAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "新增传感器类型",
+        target: ".app-main"
+      });
+      this.layerId = index;
+    },
+    /** 修改按钮操作 */
+    handleUpdateType(row) {
+      this.eid = row.ttId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyTypeEdit, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "新增传感器类型",
+        target: ".app-main"
+      });
+      this.layerId = index;
+    },
+    /** 删除按钮操作 */
+    handleDeleteType(row) {
+      const ttIds = row.ttId || this.ids;
+      this.$confirm(
+        '是否确认删除传感器类型编号为"' + ttIds + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
         .then(function() {
-          return exportSystem(queryParams);
+          return delTransducertype(ttIds);
         })
-        .then(response => {
-          this.download(response.msg);
+        .then(() => {
+          this.getTypeList();
+          this.msgSuccess("删除成功");
         })
         .catch(function() {});
     },
-    handleJump(row) {
-      console.log(row.systemId);
-      // this.$router.push({
-      //   path: "/display/type",
-      //   query: { id: row.systemId }
-      // });
-
-      this.$router.push({
-        name: "Type",
-        params: { id: row.systemId }
+    handleAddSensor() {
+      var index = this.$layer.iframe({
+        content: {
+          content: MySensorAdd, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "新增传感器",
+        target: ".app-main"
       });
+      this.$layer.full(index);
+      this.layerId = index;
+    },
+    /** 修改按钮操作 */
+    handleUpdateSensor(row) {
+      this.eid = row.transducerId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MySensorEdit, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "编辑传感器",
+        target: ".app-main"
+      });
+      this.$layer.full(index);
+      this.layerId = index;
+    },
+    handleConfigPoint(row) {
+      this.fid = row.factoryId;
+      this.eid = row.transducerId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPointConfigPoint, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "配置分数",
+        target: ".app-main"
+      });
+      this.layerId = index;
+    },
+    handleDeleteSensor(row) {
+      const transducerIds = row.transducerId || this.ids;
+      this.$confirm(
+        '是否确认删除传感器数据编号为"' + transducerIds + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(function() {
+          return delTransducer(transducerIds);
+        })
+        .then(() => {
+          this.getSensorList();
+          this.msgSuccess("删除成功");
+        })
+        .catch(function() {});
+    },
+    handleTypeSelectionChange(selection) {
+      this.ids = selection.map(item => item.ttId);
+      this.multiple2 = !selection.length;
+    },
+    handleSysRowClick(row) {
+      this.typeQueryParams.systemId = row.systemId;
+      this.nowSysId = row.systemId;
+      this.nowTypeId = null;
+      this.add1 = false;
+      this.add2 = true;
+      this.getTypeList();
+      this.transducerList = [];
+    },
+    handleTypeRowClick(row) {
+      this.sensorQueryParams.ttId = row.ttId;
+      this.nowTypeId = row.ttId;
+      this.add2 = false;
+      this.getSensorList();
+    },
+    handleConfig(row) {
+      this.eid = row.transducerId;
+      var index = this.$layer.iframe({
+        content: {
+          content: MyPointConfig, //传递的组件对象
+          parent: this, //当前的vue对象
+          data: {} //props
+        },
+        shade: true,
+        area: ["600px", "600px"],
+        title: "配置阈值",
+        target: ".app-main"
+      });
+      this.layerId = index;
     }
-  },
-  mounted() {
-    window.addEventListener("resize", () => {
-      let _layerId = this.layerId;
-      if (_layerId == "") {
-        return;
-      }
-      let layer = document.querySelector("#" + _layerId);
-      if (layer != null) {
-        utils.resizeLayer(_layerId, this.layerInitWidth, this.layerInitHeight);
-      }
-    });
-  },
-  components: {
-    MySearchTool
   }
 };
 </script>

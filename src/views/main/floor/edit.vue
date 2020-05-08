@@ -53,17 +53,13 @@ export default {
       buildingList: []
     };
   },
-  watch: {
-    buildingList() {
-      this.form.buildingId = this.$parent.pid * 1;
-    }
-  },
   methods: {
     handleSubmit() {
       updateFloor(this.form).then(response => {
         if (response.code === 200) {
           this.msgSuccess("更新成功");
-          this.$parent.getList();
+          // this.$parent.getList();
+          this.$parent.getFloorList();
           this.closeDialog();
         } else {
           this.msgError(response.msg);

@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       form: {
-        systemId: this.$parent.pid,
+        systemId: 0,
         description: "",
         name: ""
       },
@@ -48,6 +48,11 @@ export default {
       }
     };
   },
+  watch: {
+    sysList() {
+      this.form.systemId = this.$parent.nowSysId;
+    }
+  },
   methods: {
     handleSubmit(form) {
       this.$refs[form].validate(valid => {
@@ -55,7 +60,8 @@ export default {
           addTransducertype(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getTypeList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

@@ -16,6 +16,20 @@ export default {
       option: {}
     };
   },
+  watch: {
+    chartData: {
+      handler() {
+        this.initChart();
+      },
+      deep: true
+    }
+  },
+  props: {
+    chartData: {
+      type: Object,
+      deep: true
+    }
+  },
   methods: {
     resizeChart() {
       this.myCharts.resize();
@@ -25,7 +39,6 @@ export default {
       _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
       let colorList = ["rgba(3, 187, 180", "rgba(4,126,216"];
       let _series = [];
-      // console.log(_this.chartData.ydata[0]);
       for (let i = 0; i < _this.chartData.ydata.length; i++) {
         _series.push({
           name: _this.chartData.legend[i],
@@ -113,12 +126,7 @@ export default {
       utils.loopChart(_this.myCharts, _this.option);
     }
   },
-  props: {
-    chartData: {
-      type: Object,
-      deep: true
-    }
-  },
+
   mounted() {
     this.initChart();
   },

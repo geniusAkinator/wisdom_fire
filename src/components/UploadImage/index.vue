@@ -122,6 +122,7 @@ export default {
   width: 110px;
   height: 110px;
   border: 1px solid #dcdfe6;
+  background: #999;
 }
 .myUpload {
   overflow: hidden;

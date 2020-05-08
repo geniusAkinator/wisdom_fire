@@ -548,7 +548,6 @@ export default {
       let _this = this;
       let _len = 0;
       let _glen = _this.option.graphic.length;
-      console.log(_glen);
       let temp = _this.option.graphic;
       temp.splice(2, 3);
       _this.option.graphic = temp;
@@ -664,7 +663,6 @@ export default {
     myMap.set("云南", "yunnan");
     myMap.set("浙江", "zhejiang");
     _this.provinceData = myMap;
-    // console.log(this.provinceData);
     var data = [
       {
         name: "苏州市",
@@ -881,7 +879,6 @@ export default {
             show: true,
             trigger: "item",
             formatter: function(params) {
-              console.log(params);
               var tipHtml = "";
               tipHtml =
                 '<div style="width:280px;height:180px;background:rgba(22,80,158,0.8);border:1px solid rgba(7,166,255,0.7)">' +

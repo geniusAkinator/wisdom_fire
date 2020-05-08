@@ -76,13 +76,14 @@ export default {
           this.data = res.result;
         }
       });
-    }
+    },
   },
   props: {
     region: {
       type: String,
       default: "江苏"
-    }
+    },
+    pos: {}
   },
   methods: {
     handler({ BMap, map }) {

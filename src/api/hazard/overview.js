@@ -34,3 +34,12 @@ export function addAppoint(data) {
     data: data
   })
 }
+
+//获取隐患详情
+export function getHazardDetail(query) {
+  return request({
+    url: '/system/hiddendanger/AllData',
+    method: 'get',
+    params: query
+  })
+}

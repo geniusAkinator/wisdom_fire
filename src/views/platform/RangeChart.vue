@@ -16,6 +16,14 @@ export default {
       option: {}
     };
   },
+  watch: {
+    chartData: {
+      handler() {
+        this.initChart();
+      },
+      deep: true
+    }
+  },
   props: {
     chartData: {
       type: Object,
@@ -23,10 +31,10 @@ export default {
     }
   },
   methods: {
-    resizeRangeChart() {
+    resizeChart() {
       this.myCharts.resize();
     },
-    initRangeChart() {
+    initChart() {
       let _this = this;
       this.myCharts = echarts.init(document.getElementById(_this.id));
       let _series = [];
@@ -146,12 +154,12 @@ export default {
         series: _series
       };
       _this.myCharts.setOption(_this.option);
-      window.addEventListener("resize", _this.resizeRangeChart);
+      window.addEventListener("resize", _this.resizeChart);
       utils.loopChart(_this.myCharts, _this.option);
     }
   },
   mounted() {
-    this.initRangeChart();
+    this.initChart();
   },
   destroyed() {
     this.myCharts.clear();

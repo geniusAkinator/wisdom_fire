@@ -67,7 +67,7 @@
           </div>
           <el-row style="width:100%">
             <el-col :span="11" style="height:100%">
-              <my-echart-meter :data="meterData" :key="meterKey"></my-echart-meter>
+              <my-echart-meter :chartData="meterData"></my-echart-meter>
             </el-col>
             <el-col :span="13" style="height:100%;position:relative">
               <el-radio-group v-model="labelPoint" class="point_btn_group" size="small">
@@ -75,9 +75,9 @@
                 <el-radio-button :label="2">月</el-radio-button>
                 <el-radio-button :label="3">年</el-radio-button>
               </el-radio-group>
-              <my-echart-line :chartData="weeklyPointData" :key="wkey" v-if="labelPoint == 1"></my-echart-line>
-              <my-echart-line :chartData="monthlyPointData" :key="mkey" v-if="labelPoint == 2"></my-echart-line>
-              <my-echart-line :chartData="yearlyPointData" :key="ykey" v-if="labelPoint == 3"></my-echart-line>
+              <my-echart-line :chartData="weeklyPointData" v-if="labelPoint == 1"></my-echart-line>
+              <my-echart-line :chartData="monthlyPointData" v-if="labelPoint == 2"></my-echart-line>
+              <my-echart-line :chartData="yearlyPointData" v-if="labelPoint == 3"></my-echart-line>
             </el-col>
           </el-row>
         </el-col>
@@ -135,7 +135,7 @@
               <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
-          <my-echart-radar :data="radarData" :key="radarKey" v-if="radarData.indicator.length"></my-echart-radar>
+          <my-echart-radar :chartData="radarData" v-if="radarData.indicator.length"></my-echart-radar>
         </el-col>
       </el-col>
       <el-col :span="12">
@@ -161,7 +161,8 @@
                 >{{ parseTime(scope.row.createDateTime,"{y}-{m}-{d}") }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="factoryName" label="传感器位置"></el-table-column>
+            <el-table-column prop="factoryName" label="单位名称"></el-table-column>
+            <el-table-column prop="currLocation" label="点位描述"></el-table-column>
             <el-table-column prop="name" label="类型"></el-table-column>
             <el-table-column prop="deviceStatus" label="状态">
               <template slot-scope="scope">
@@ -188,10 +189,10 @@
               :span="24"
               style="height:100%;display:flex;justify-content:center;align-items: center;"
             >
-              <my-echart-gauge :color="color1" :data="gauge1" :key="gaugeKey1"></my-echart-gauge>
+              <my-echart-gauge :color="color1" :chartData="gauge1"></my-echart-gauge>
             </el-col>
             <!-- <el-col :span="12" style="height:100%">
-              <my-echart-gauge :color="color2" :data="gauge2" :key="gaugeKey2"></my-echart-gauge>
+              <my-echart-gauge :color="color2" :data="gauge2" ></my-echart-gauge>
             </el-col>-->
           </el-row>
         </el-col>
@@ -206,7 +207,7 @@
               <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
-          <my-echart-pie :data="pieData" :key="pieKey"></my-echart-pie>
+          <my-echart-pie :chartData="pieData"></my-echart-pie>
         </el-col>
         <el-col :span="24" class="box-item">
           <div class="hightlight_line top_left"></div>
@@ -219,7 +220,7 @@
               <div v-for="i in 5" :key="i"></div>
             </div>
           </div>
-          <my-echart-line :chartData="yearData" :key="yearKey"></my-echart-line>
+          <my-echart-line :chartData="yearData"></my-echart-line>
         </el-col>
       </el-col>
     </el-row>
@@ -227,8 +228,8 @@
 </template>
 
 <script>
-import MyEchartGauge from "@/views/board/GaugeChart";
-import MyEchartLine from "@/views/board/LineChart";
+import MyEchartGauge from "@/views/platform/GaugeChart";
+import MyEchartLine from "@/views/platform/LineChart";
 import MyEchartPie from "@/views/board/PieChart";
 import MyEchartMeter from "@/views/board/MeterChart";
 import MyEchartRadar from "@/views/board/RadarChart";
@@ -272,7 +273,7 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 0
+        value: 1
       },
       gauge2: {
         label: "本周故障及时处理率",
@@ -307,18 +308,9 @@ export default {
       pieData: [],
       radarData: {
         indicator: [],
-        value: [0, 10, 10]
+        value: []
       },
       meterData: 0,
-      meterKey: 0,
-      yearKey: 1,
-      gaugeKey1: 2,
-      gaugeKey2: 3,
-      pieKey: 4,
-      radarKey: 5,
-      wkey: 7,
-      mkey: 8,
-      ykey: 9,
       totalHazard: 0,
       waitHazard: 0,
       processingHazard: 0,
@@ -341,6 +333,12 @@ export default {
     },
     factoryId(nVal, oVal) {
       let _this = this;
+      let _list = _this.factoryList;
+      _list.map((item, i) => {
+        if (item.id == nVal) {
+          _this.factoryName = item.name;
+        }
+      });
       _this.getBuilding();
       _this.getHealthPointList();
     }
@@ -433,7 +431,6 @@ export default {
           _this.yearData.xdata = _xdata;
           _this.yearData.ydata[0] = _doneList;
           _this.yearData.ydata[1] = _allList;
-          console.log(_this.yearData);
           _this.yearKey++;
         }
       });
@@ -445,8 +442,6 @@ export default {
           let _data = response.data;
           _this.gauge1.value = _data.dangerPercentage.dangerPercentage * 1;
           _this.gauge2.value = _data.faultPercentage.faultPercentage * 1;
-          ++this.gaugeKey1;
-          ++this.gaugeKey2;
         }
       });
     },
@@ -476,7 +471,6 @@ export default {
             _arr.push(temp);
           });
           _this.pieData = _arr;
-          ++_this.pieKey;
         }
       });
     },
@@ -496,7 +490,6 @@ export default {
           });
           _this.radarData.value = _arr2;
           _this.radarData.indicator = _arr1;
-          ++_this.radarKey;
         }
       });
     },
@@ -545,7 +538,6 @@ export default {
     },
     getHealthPointList() {
       let _this = this;
-      console.log(_this.factoryId);
       getHealthPoint({ factoryId: _this.factoryId }).then(response => {
         if (response.code == 200) {
           let _data = response.data;
@@ -589,7 +581,7 @@ export default {
           let _mlist = _data.monthsPointList;
           let _ylist = _data.yearlyPointList;
           let _point = _data.percentage;
-          _this.meterData = _point; //健康指数赋值
+          _this.meterData = _point ? _point : 0; //健康指数赋值
 
           _xdata1.map((xitem, i) => {
             //周
@@ -617,25 +609,16 @@ export default {
               }
             });
           });
-          console.log(_ydataList1);
-          // _this.weekData.xdata = _weeklyAllList
           _this.weeklyPointData.xdata = _xdata1;
           _this.weeklyPointData.ydata[0] = _ydataList1;
           _this.monthlyPointData.xdata = _xdata2;
           _this.monthlyPointData.ydata[0] = _ydataList2;
           _this.yearlyPointData.xdata = _xdata3;
           _this.yearlyPointData.ydata[0] = _ydataList3;
-          console.log("aaa", _this.yearlyPointData);
-          ++_this.meterKey;
-          ++_this.wkey;
-          ++_this.mkey;
-          ++_this.ykey;
-          console.log(response);
         }
       });
     },
     logout() {
-      console.log("dafas");
       this.$confirm("确定注销并退出系统吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

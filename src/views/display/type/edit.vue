@@ -57,7 +57,8 @@ export default {
           updateTransducertype(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getTypeList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

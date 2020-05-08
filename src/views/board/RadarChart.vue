@@ -14,6 +14,9 @@ export default {
       myCharts: {}
     };
   },
+  props: {
+    chartData: {}
+  },
   methods: {
     resizeChart() {
       this.myCharts.resize();
@@ -21,10 +24,10 @@ export default {
     initChart() {
       let _this = this;
       _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
-      var indicator = _this.data.indicator;
+      var indicator = _this.chartData.indicator;
       var dataArr = [
         {
-          value: _this.data.value,
+          value: _this.chartData.value,
           itemStyle: {
             normal: {
               lineStyle: {
@@ -77,7 +80,7 @@ export default {
               fontSize: 16
             }
           },
-          radius:60,
+          radius: 60,
           indicator: indicator,
           splitArea: {
             // 坐标轴在 grid 区域中的分隔区域，默认不显示。
@@ -113,12 +116,7 @@ export default {
       window.addEventListener("resize", _this.resizeChart);
     }
   },
-  props: {
-    data: {
-      type: Object,
-      deep: true
-    }
-  },
+
   mounted() {
     this.initChart();
   },

@@ -79,7 +79,8 @@ export default {
   },
   watch: {
     factoryList() {
-      this.form.factoryId = this.$parent.pid * 1;
+      // this.form.factoryId = this.$parent.pid * 1;
+      this.form.factoryId = this.$parent.nowFactoryId * 1;
     }
   },
   methods: {
@@ -89,7 +90,8 @@ export default {
           addBuilding(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getBuildingList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

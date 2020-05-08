@@ -17,18 +17,18 @@
 import { getSetup } from "@/api/system/setting";
 export default {
   name: "SidebarLogo",
-  props: {
-    collapse: {
-      type: Boolean,
-      required: true
-    }
-  },
   data() {
     return {
       title: "安中云后台管理系统",
       logo: "",
       baseUrl: process.env.VUE_APP_BASE_API
     };
+  },
+  props: {
+    collapse: {
+      type: Boolean,
+      required: true
+    }
   },
   methods: {},
   mounted() {

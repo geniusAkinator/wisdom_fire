@@ -1,14 +1,23 @@
 <template>
   <div class="container form">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="分数A" prop="pointB">
-        <el-input v-model="form.pointA" placeholder="请输入分数A" />
+      <el-form-item label="A最小值">
+        <el-input v-model="form.mina" placeholder="请输入A最小值" />
       </el-form-item>
-      <el-form-item label="分数B" prop="pointB">
-        <el-input v-model="form.pointB" placeholder="请输入分数B" />
+      <el-form-item label="A最大值">
+        <el-input v-model="form.maxa" placeholder="请输入A最大值" />
       </el-form-item>
-      <el-form-item label="分数C" prop="pointC">
-        <el-input v-model="form.pointC" placeholder="请输入分数C" />
+      <el-form-item label="B最小值">
+        <el-input v-model="form.minb" placeholder="请输入B最小值" />
+      </el-form-item>
+      <el-form-item label="B最大值">
+        <el-input v-model="form.maxb" placeholder="请输入B最大值" />
+      </el-form-item>
+      <el-form-item label="C最小值">
+        <el-input v-model="form.minc" placeholder="请输入C最小值" />
+      </el-form-item>
+      <el-form-item label="C最大值">
+        <el-input v-model="form.maxc" placeholder="请输入C最大值" />
       </el-form-item>
     </el-form>
     <div class="add-footer">
@@ -18,27 +27,28 @@
   </div>
 </template>
 <script>
-import { updatePoint, getPointDetail } from "@/api/display/sensor";
+import { updateThreshold, getThreshold } from "@/api/display/threshold";
 import { Loading } from "element-ui";
 export default {
   data() {
     return {
       form: {
         transducerId: this.$parent.eid,
-        factoryId: this.$parent.fid,
-        pointA: 0,
-        pointB: 0,
-        pointC: 0
+        maxa: 0,
+        maxb: 0,
+        maxc: 0,
+        mina: 0,
+        minb: 0,
+        minc: 0
       },
       rules: {}
     };
   },
   methods: {
     handleSubmit(form) {
-      console.log(this.form);
       this.$refs[form].validate(valid => {
         if (valid) {
-          updatePoint(this.form).then(response => {
+          updateThreshold(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
               // this.$parent.getList();
@@ -63,12 +73,17 @@ export default {
         text: "加载中"
       };
       let loadingInstance = Loading.service(options);
-      getPointDetail(this.form).then(response => {
+      getThreshold({ transducerId: this.form.transducerId }).then(response => {
         if (response.code == 200) {
-          let _data = response.rows[0];
-          this.form.pointA = _data.pointA;
-          this.form.pointB = _data.pointB;
-          this.form.pointC = _data.pointC;
+          let _data = response.data;
+          if (_data != undefined) {
+            this.form.maxa = _data.maxa;
+            this.form.maxb = _data.maxb;
+            this.form.maxc = _data.maxc;
+            this.form.mina = _data.mina;
+            this.form.minb = _data.minb;
+            this.form.minc = _data.minc;
+          }
         }
       });
       setTimeout(() => {

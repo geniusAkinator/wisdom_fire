@@ -85,7 +85,12 @@
           </el-col>
         </el-row>
         <el-collapse-transition>
-          <my-map-picker :region="nowRegion" v-show="isShow" @sendPoint="getPoint"></my-map-picker>
+          <my-map-picker
+            :pos="{lat:form.latitude,lng:form.longitude}"
+            :region="nowRegion"
+            v-show="isShow"
+            @sendPoint="getPoint"
+          ></my-map-picker>
         </el-collapse-transition>
       </el-form-item>
       <el-form-item label="负责人" prop="leader">
@@ -172,9 +177,9 @@ export default {
         address: "",
         description: "",
         factoryType: "",
-        latitude: "",
+        latitude: 0,
         leader: "",
-        longitude: "",
+        longitude: 0,
         phone: "",
         picture: "",
         province: "",
@@ -236,7 +241,8 @@ export default {
           updateFactory(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("更新成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getBuildingList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

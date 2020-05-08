@@ -15,11 +15,16 @@ export default {
       option: {}
     };
   },
-  props: {
-    data: {
-       type: Array,
-       required: true
+  watch: {
+    chartData: {
+      handler() {
+        this.initChart();
+      },
+      deep: true
     }
+  },
+  props: {
+    chartData: {}
   },
   methods: {
     resizeChart() {
@@ -40,7 +45,7 @@ export default {
             type: "pie",
             radius: "55%",
             center: ["50%", "50%"],
-            data:_this.data,
+            data: _this.chartData,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

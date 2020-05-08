@@ -1,138 +1,205 @@
+
 <template>
   <div class="container">
     <el-card class="state-card" shadow="never">
       <el-row :gutter="20">
         <el-col :span="8">
-          <!-- <ul class="state_block">
-            <li class="state_item">
-              <div class="border-circle">0</div>
-            </li>
-            <li class="state_item">
-              <div class="border-circle warning">0</div>
-            </li>
-            <li class="state_item">
-              <div class="border-circle danger">0</div>
-            </li>
-          </ul> -->
-        </el-col>
-        <el-col :span="8">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_item_name">上报时间</span>
-              <span class="info_item_value"></span>
+              <span class="info_item_name">所属工厂:</span>
+              <span class="info_item_value">{{info.factoryName}}</span>
             </li>
             <li class="info_item">
-              <span class="info_item_name">更新时间</span>
-              <span class="info_item_value"></span>
+              <span class="info_item_name">所属楼宇:</span>
+              <span class="info_item_value">{{info.buildingName}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">所属楼层:</span>
+              <span class="info_item_value">{{info.floorName}}</span>
             </li>
           </ul>
         </el-col>
         <el-col :span="8">
           <ul class="info_block">
             <li class="info_item">
-              <span class="info_item_name">处理人</span>
-              <span class="info_item_value"></span>
+              <span class="info_item_name">设备编号:</span>
+              <span class="info_item_value">
+                <template
+                  v-if="info.deviceNumber!=null&&info.deviceNumber!=''"
+                >{{info.deviceNumber}}</template>
+                <template v-else>N/A</template>
+              </span>
             </li>
             <li class="info_item">
-              <span class="info_item_name">处理时间</span>
-              <span class="info_item_value"></span>
+              <span class="info_item_name">设备型号:</span>
+              <span class="info_item_value">
+                <template v-if="info.ttId!=null&&info.ttId!=''">{{info.type}}</template>
+                <template v-else>N/A</template>
+              </span>
             </li>
             <li class="info_item">
-              <span class="info_item_name">处理结果</span>
-              <span class="info_item_value"></span>
+              <span class="info_item_name">点位描述:</span>
+              <span class="info_item_value">
+                <template
+                  v-if="info.currLocation!=null&&info.currLocation!=''"
+                >{{info.currLocation}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+          </ul>
+        </el-col>
+        <el-col :span="8">
+          <ul class="info_block">
+            <li class="info_item">
+              <span class="info_item_name">故障类型:</span>
+              <span class="info_item_value">
+                <template v-for="(item,i) in typeOptions">
+                  <span :key="i" v-if="item.dictValue == info.type">{{item.dictLabel}}</span>
+                </template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">故障状态:</span>
+              <span class="info_item_value">
+                <template v-if="info.state == 0">待处理</template>
+                <template v-else-if="info.state == 1">处理中</template>
+                <template v-else-if="info.state == 2">已处理</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">故障描述:</span>
+              <span class="info_item_value">{{info.content}}</span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">上报时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.currDate!=null&&info.currDate!=''">{{parseTime(info.currDate)}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">更新时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.uptime!=null&&info.uptime!=''">{{parseTime(info.uptime)}}</template>
+                <template v-else>N/A</template>
+              </span>
+            </li>
+            <li class="info_item">
+              <span class="info_item_name">完成时间:</span>
+              <span class="info_item_value">
+                <template v-if="info.repair!=null&&info.repair!=''">{{parseTime(info.repair)}}</template>
+                <template v-else>N/A</template>
+              </span>
             </li>
           </ul>
         </el-col>
       </el-row>
     </el-card>
-    <div class="state_record">
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <div class="grid-content">
-            <el-table class="state_table" :data="tableData" border stripe style="width: 100%">
-              <el-table-column prop="id" label="id"></el-table-column>
-              <el-table-column prop="number" label="点位号"></el-table-column>
-              <el-table-column prop="type" label="设备类型"></el-table-column>
-              <el-table-column prop="des" label="位置描述"></el-table-column>
-              <el-table-column prop="date" label="首次上报时间"></el-table-column>
-              <el-table-column prop="date" label="最后上报时间"></el-table-column>
-              <el-table-column prop="count" label="上报次数"></el-table-column>
-            </el-table>
-            <el-pagination class="state_paging" background layout="prev, pager, next" :total="200"></el-pagination>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <!-- <div ref="floorImg" class="detail_img_content" v-if="sensor.floor.picture!=''">
-            <img class="floor_img" :src="imgUrl+sensor.floor.picture" />
-            <img
-              ref="marker"
-              :style="{left:`${sensor.xaxis}%`,top:`${sensor.yaxis}%`}"
-              class="floor_img_marker"
-              :src="icon"
-              alt
-            />
-          </div>-->
-          <div class="detail_img_content">
-            <div class="not_found">暂无楼层图，请先到工厂管理中添加</div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <el-row :gutter="20" style="margin-top:20px">
+      <el-col :span="12">
+        <div class="detail_img_content">
+          <img :src="baseUrl+info.pictur" style="width: 100%;" />
+          <img
+            ref="marker"
+            :style="{left:info.left,top:info.top,position:'absolute'}"
+            class="floor_img_marker"
+            :src="icon"
+          />
+          <div class="not_found" v-if="info.pictur==''">暂无楼层图，请先到工厂管理中添加</div>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <span class="subtitle">进度预览</span>
+        <el-timeline>
+          <el-timeline-item timestamp="2018/4/12" placement="top">
+            <el-card shadow="never">
+              <h5>已完成</h5>
+              <h4>填写内容</h4>
+              <p>王小虎 提交于 2018/4/12 20:46</p>
+            </el-card>
+          </el-timeline-item>
+          <el-timeline-item timestamp="2018/4/3" placement="top">
+            <el-card shadow="never">
+              <h5>处理中</h5>
+              <h4>填写内容</h4>
+              <p>王小虎 提交于 2018/4/3 20:46</p>
+            </el-card>
+          </el-timeline-item>
+          <el-timeline-item timestamp="2018/4/2" placement="top">
+            <el-card shadow="never">
+              <h5>待处理</h5>
+              <h4>填写内容</h4>
+              <p>王小虎 提交于 2018/4/2 20:46</p>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import { Loading } from "element-ui";
+import { getHazardDetail } from "@/api/hazard/overview";
+import MyAppointAdd from "@/views/devOps/ops/add";
+import { parseTimeStr, parseTime } from "@/utils/common";
+
 export default {
   data() {
     return {
-      tableData: [],
-      imgUrl: "",
-      icon: require("@/assets/image/map-marker.png")
+      dform: {
+        hdId: this.$route.params.hdId,
+        transducerId: this.$route.params.transducerId
+      },
+      info: {
+        buildingName: "",
+        repair: null,
+        currLocation: "",
+        factoryName: "",
+        floorName: "",
+        state: 0,
+        type: "",
+        currDate: "",
+        deviceNumber: "11",
+        deviceId: null,
+        content: "",
+        uptime: "",
+        ttId: null,
+        pictur: "",
+        left: 0,
+        top: 0
+      },
+      baseUrl: process.env.VUE_APP_BASE_API,
+      icon: require("@/assets/image/map-marker.png"),
+      typeOptions: []
     };
   },
-  watch: {},
   methods: {
-    init() {}
+    getAllInfoData() {
+      let _this = this;
+      getHazardDetail(_this.dform).then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          console.log(response);
+          for (let key in _data) {
+            this.info[key] = _data[key];
+          }
+          console.log(response.data);
+        }
+      });
+    }
   },
-  created() {
-    this.init();
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$destroy();
-    next();
+  mounted() {
+    this.getDicts("sys_type_hidden").then(response => {
+      if (response.code == 200) {
+        this.typeOptions = response.data;
+      }
+    });
+    this.getAllInfoData();
   }
 };
 </script>
 
 <style>
-.detail_img_content {
-  min-height: 100px;
-  width: 100%;
-  border: 1px solid #dcdfe6;
-  overflow: hidden;
-  cursor: crosshair;
-  position: relative;
-  line-height: 0;
-}
-.state_block {
-  list-style-type: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-.state_item {
-  display: block;
-  flex: 1;
-}
-.state_name {
-  display: block;
-  font-weight: bold;
-  font-size: 22px;
-}
-.state_value {
-  font-size: 22px;
-}
 .info_block {
   list-style-type: none;
   margin: 0;
@@ -140,16 +207,6 @@ export default {
   position: relative;
   padding: 0 20px;
 }
-/* .info_block::before {
-  position: absolute;
-  left: 0;
-  top: 5px;
-  bottom: 5px;
-  width: 1px;
-  background: #000;
-  display: block;
-  content: "";
-} */
 .info_item {
   display: flex;
   justify-content: space-between;
@@ -158,12 +215,14 @@ export default {
 .info_item:last-child {
   margin-bottom: 0;
 }
-.state_record {
-  margin-top: 20px;
-}
-.floor_img {
+.detail_img_content {
+  min-height: 100px;
   width: 100%;
-  border: 1px solid #ebeef5;
+  border: 1px solid #dcdfe6;
+  overflow: hidden;
+  cursor: crosshair;
+  position: relative;
+  line-height: 0;
 }
 .not_found {
   width: 100%;
@@ -174,84 +233,34 @@ export default {
   height: 100%;
   line-height: 102px;
 }
-.state_paging {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-.state_table .cell {
-  text-align: center;
-}
-.floor_img_marker {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.action-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  height: 600px;
-  padding: 10px;
-  overflow: hidden;
-  overflow-y: scroll;
-}
-.group-name {
-  font-size: 22px;
-  font-weight: bold;
-  margin: 16px 0;
+.subtitle {
+  margin: 20px;
   display: block;
+  font-weight: bold;
 }
-.action-detail-list {
-  list-style-type: none;
-  background: #ebeef5;
-  padding: 20px;
-  border-radius: 5px;
+.info_item_name {
+  font-weight: bold;
+  display: block;
+  width: 70px;
 }
-.action-detail-list li {
-  margin-bottom: 10px;
-}
-.resolution {
-  background: #ebeef5;
-  border-radius: 5px;
-  padding: 20px;
-  font-size: 14px;
-  margin-top: 20px;
-}
-.res {
-  width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.res button {
-  margin-right: 10px;
-}
-
-.info-panel {
-  margin-bottom: 20px;
-  background: #ebeef5;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.border-circle {
-  width: 100px;
-  height: 100px;
-  border: 2px solid #409eff;
-  text-align: center;
-  line-height: 100px;
-  border-radius: 50%;
-}
-.border-circle.danger {
-  border: 2px solid #f56c6c;
-  background: #fff;
-}
-.border-circle.warning {
-  border: 2px solid #e6a23c;
-  background: #fff;
+.info_item_value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  text-align: right;
 }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+

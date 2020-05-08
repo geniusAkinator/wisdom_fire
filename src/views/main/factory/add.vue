@@ -229,7 +229,8 @@ export default {
           addFactory(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getBuildingList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

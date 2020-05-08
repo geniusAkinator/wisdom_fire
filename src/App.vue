@@ -810,5 +810,23 @@ export default {
   text-align: center;
 }
 
-
+.folder {
+  padding: 20px;
+  background: #f6f6f6;
+  border: 1px solid #efefef;
+}
+.chain-table {
+  border: 1px solid #efefef;
+  border-top: 0;
+  border-bottom: 0;
+}
+.chain-icon {
+  transition: all 0.3s linear;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 18px;
+}
+.chain-table tr:hover .chain-icon {
+  opacity: 1;
+}
 </style>

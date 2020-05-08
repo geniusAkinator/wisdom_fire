@@ -49,7 +49,8 @@ export default {
           addSystem(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("新增成功");
-              this.$parent.getList();
+              // this.$parent.getList();
+              this.$parent.getSysList();
               this.closeDialog();
             } else {
               this.msgError(response.msg);

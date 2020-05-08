@@ -33,7 +33,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       '/dev-api': {
-        target: `http://192.168.10.170:80`,
+        target: `http://192.168.10.172:80`,
         ws: false, // proxy websockets
         secure: false,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,
