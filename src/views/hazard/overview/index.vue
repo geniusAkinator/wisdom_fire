@@ -63,14 +63,14 @@
           <span>{{ scope.row.currlocation }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="隐患类型">
+      <el-table-column prop="type" align="center" label="隐患类型">
         <template slot-scope="scope">
           <span v-for="(item,index) in typeOptions" :key="index">
             <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="隐患内容"></el-table-column>
+      <el-table-column prop="content" align="center" label="隐患内容"></el-table-column>
       <el-table-column label="首次上报时间" align="center" prop="currdate">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.currdate) }}</span>
@@ -89,13 +89,20 @@
           <el-tag v-else-if="scope.row.state == 3" type="info" effect="dark">不显示</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="200px">
+      <el-table-column label="操作" align="center" fixed="right" width="200px">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
           <el-button size="mini" type="primary" @click="handleAppoint(scope.$index, scope.row)">指派任务</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
   </div>
 </template>
 
@@ -113,7 +120,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         menuName: "",
         visible: ""
       },
@@ -150,7 +157,6 @@ export default {
       this.loading = true;
       listOverview(this.queryParams).then(response => {
         if (response.code == 200) {
-          console.log();
           let _data = response.data;
           let _table = _data.tableDataInfo;
           this.overviewList = _table.rows;
@@ -242,7 +248,7 @@ export default {
   font-weight: bold;
   margin-bottom: 10px;
 }
-.info_block{
+.info_block {
   list-style: none;
 }
 </style>

@@ -39,22 +39,28 @@
               <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="factoryName" label="单位"></el-table-column>
-          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
-          <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="content" label="故障内容"></el-table-column>
-          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
-          <el-table-column prop="currdate" label="首次上报时间" width="160px">
+          <el-table-column prop="factoryName" align="center" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" align="center" label="设备类型"></el-table-column>
+          <el-table-column prop="type" align="center" label="故障类型">
+            <template slot-scope="scope">
+              <span v-for="(item,index) in typeOptions" :key="index">
+                <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="content"  align="center" label="故障内容"></el-table-column>
+          <el-table-column prop="currlocation" align="center" label="点位描述"></el-table-column>
+          <el-table-column prop="currdate" align="center" label="首次上报时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.currdate) }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="uptime" label="更新时间" width="160px">
+          <el-table-column prop="uptime" align="center" label="更新时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="80px">
+          <el-table-column label="操作" align="center" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
               <!-- <el-button
@@ -65,6 +71,13 @@
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
       </el-tab-pane>
       <el-tab-pane label="处理中" name="second">
         <el-table
@@ -76,23 +89,36 @@
           v-loading="loading2"
         >
           <el-table-column prop="id" label="ID" width="80"></el-table-column>
-          <el-table-column prop="factoryName" label="单位"></el-table-column>
-          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
-          <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="content" label="故障内容"></el-table-column>
-          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
-          <el-table-column prop="uptime" label="更新时间" width="160px">
+          <el-table-column prop="factoryName" align="center" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" align="center" label="设备类型"></el-table-column>
+          <el-table-column prop="type" align="center" label="故障类型">
+            <template slot-scope="scope">
+              <span v-for="(item,index) in typeOptions" :key="index">
+                <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="content" align="center" label="故障内容"></el-table-column>
+          <el-table-column prop="currlocation" align="center" label="点位描述"></el-table-column>
+          <el-table-column prop="uptime" align="center" label="更新时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="80px">
+          <el-table-column label="操作" align="center" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
               <!-- <el-button size="mini" type="danger" @click="handleRevoke(scope.$index, scope.row)">撤销</el-button> -->
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
       </el-tab-pane>
       <el-tab-pane label="已处理" name="third">
         <el-table
@@ -104,21 +130,34 @@
           v-loading="loading3"
         >
           <el-table-column prop="id" label="ID" width="80"></el-table-column>
-          <el-table-column prop="factoryName" label="单位"></el-table-column>
-          <el-table-column prop="sensorName" label="设备类型"></el-table-column>
-          <el-table-column prop="type" label="故障类型"></el-table-column>
-          <el-table-column prop="currlocation" label="点位描述"></el-table-column>
-          <el-table-column prop="repair" label="解决时间" width="160px">
+          <el-table-column prop="factoryName" align="center" label="单位"></el-table-column>
+          <el-table-column prop="sensorName" align="center" label="设备类型"></el-table-column>
+          <el-table-column label="故障类型" align="center">
+            <template slot-scope="scope">
+              <span v-for="(item,index) in typeOptions" :key="index">
+                <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="currlocation" align="center" label="点位描述"></el-table-column>
+          <el-table-column prop="repair" align="center" label="解决时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.repair) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="80px">
+          <el-table-column label="操作" align="center" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -141,7 +180,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
       waitingList: [],
       processingList: [],
@@ -149,7 +188,7 @@ export default {
       // 表单参数
       form: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         state: 0
       },
       rowId: 0,
@@ -159,7 +198,9 @@ export default {
       realTimeCount: 0,
       allCount: 0,
       mostFactory: "",
-      eid: 0
+      eid: 0,
+      total: 0,
+      typeOptions: []
     };
   },
   watch: {
@@ -175,6 +216,14 @@ export default {
       _this.getList();
     }
   },
+  created() {
+    this.getDicts("sys_type_fault").then(response => {
+      if (response.code == 200) {
+        this.typeOptions = response.data;
+      }
+    });
+    this.getList();
+  },
   methods: {
     handleClick() {},
     /** 查询菜单列表 */
@@ -186,7 +235,8 @@ export default {
           _this.realTimeCount = _data.realTimeCount;
           _this.allCount = _data.sum;
           _this.mostFactory = _data.factoryName;
-          let _row = _data.sensorFaultList;
+          let _row = _data.tableDataInfo.rows;
+          let _total = _data.tableDataInfo.total;
           let _factoryName = _data.factoryName;
           let _arr = [];
           _row.map((item, i) => {
@@ -215,6 +265,7 @@ export default {
             _this.loading3 = false;
             _this.handledList = _arr;
           }
+          _this.total = _total
         }
       });
     },
@@ -249,9 +300,6 @@ export default {
         }
       });
     }
-  },
-  created() {
-    this.getList();
   }
 };
 </script>

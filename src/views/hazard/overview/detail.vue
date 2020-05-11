@@ -141,7 +141,7 @@
               <h4>传感器温度过高</h4>
               <p>系统 上报 2020/5/2 14:46</p>
             </el-card>
-          </el-timeline-item> -->
+          </el-timeline-item>-->
         </el-timeline>
       </el-col>
     </el-row>
@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { getHazardDetail } from "@/api/hazard/overview";
+import { getHazardDetail, getProgressList } from "@/api/hazard/overview";
 import MyAppointAdd from "@/views/devOps/ops/add";
 import { parseTimeStr, parseTime } from "@/utils/common";
 
@@ -194,6 +194,12 @@ export default {
             this.info[key] = _data[key];
           }
           console.log(response.data);
+        }
+      });
+      getProgressList({ hdId: _this.dform.hdId }).then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          console.log("aaa",response);
         }
       });
     }

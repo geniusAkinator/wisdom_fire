@@ -11,7 +11,7 @@
           <div class="fl text-white padding-xs text-xxl text-bold" >知</div>
           <div class="fl text-white padding-xs text-xxl text-bold">则</div>
           <div class="fl text-white padding-xs text-xxl text-bold">无</div>
-          <div class="fl text-white padding-xs text-xxl text-bold">优</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">忧</div>
         </div>
         <div class="cf" style="margin-left:65px">
           <div class="fl bg-white padding-xs radius text-xxl text-bold text-blue">防</div>

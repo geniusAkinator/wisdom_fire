@@ -43,3 +43,12 @@ export function getHazardDetail(query) {
     params: query
   })
 }
+
+//获取进度列表
+export function getProgressList(query) {
+  return request({
+    url: '/system/progress/list',
+    method: 'get',
+    params: query
+  })
+}

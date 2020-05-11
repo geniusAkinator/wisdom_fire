@@ -110,7 +110,7 @@
           <el-button
             size="small"
             icon="el-icon-delete"
-            :disabled="multiple2"
+            :disabled="multiple3"
             @click="handleDeleteSensor"
             plain
           >批量删除</el-button>
@@ -118,11 +118,18 @@
         <el-table
           class="chain-table"
           :data="transducerList"
-          @selection-change=" handleSysSelectionChange"
+          @selection-change=" handleSensorSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="传感器列表" align="center" prop="deviceNumber"></el-table-column>
-          <el-table-column align="center" width="300">
+          <el-table-column label="传感器列表" align="center">
+            <template slot-scope="scope">
+              <template v-for="(item,i) in buildingList">
+                <div v-if="item.factoryId == scope.row.factoryId" :key="i">{{item.name}}</div>
+              </template>
+              传感器编号：{{scope.row.deviceNumber}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center">
             <template slot-scope="scope">
               <i
                 class="el-icon-edit chain-icon"
@@ -168,6 +175,7 @@ import {
   getTransducer,
   delTransducer
 } from "@/api/display/sensor";
+import { listBuilding } from "@/api/main/building";
 import MySysAdd from "@/views/display/sys/add";
 import MySysEdit from "@/views/display/sys/edit";
 import MyTypeAdd from "@/views/display/type/add";
@@ -187,32 +195,39 @@ export default {
       add1: true,
       add2: true,
       sysQueryParams: {
-        pageNum:1,
-        pageSize:20,
+        pageNum: 1,
+        pageSize: 20,
         description: "",
         name: ""
       },
       typeQueryParams: {
-        pageNum:1,
-        pageSize:20,
+        pageNum: 1,
+        pageSize: 20,
         systemId: 0
       },
       sensorQueryParams: {
-        pageNum:1,
-        pageSize:20,
+        pageNum: 1,
+        pageSize: 20,
         ttId: 0
       },
       systemList: [],
       transducertypeList: [],
       transducerList: [],
+      buildingList: [],
       nowSysId: "",
       nowTypeId: "",
-      sysTotal:0,
-      typeTotal:0,
-      sensorTotal:0
+      sysTotal: 0,
+      typeTotal: 0,
+      sensorTotal: 0
     };
   },
   created() {
+    listBuilding().then(response => {
+      if (response.code === 200) {
+        this.buildingList = response.rows;
+        console.log(this.buildingList);
+      }
+    });
     this.getSysList();
   },
   methods: {
@@ -420,6 +435,10 @@ export default {
     handleTypeSelectionChange(selection) {
       this.ids = selection.map(item => item.ttId);
       this.multiple2 = !selection.length;
+    },
+    handleSensorSelectionChange(selection){
+      this.ids = selection.map(item => item.transducerId);
+      this.multiple3 = !selection.length;
     },
     handleSysRowClick(row) {
       this.typeQueryParams.systemId = row.systemId;

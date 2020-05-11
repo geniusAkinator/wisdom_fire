@@ -6,6 +6,10 @@ const baseURL = process.env.VUE_APP_BASE_API
 
 // 日期格式化
 export function parseTime(time, pattern) {
+	if(time == null || time == '' || time ==null){
+		return ''
+	}
+
 	if (arguments.length === 0) {
 		return null
 	}
