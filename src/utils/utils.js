@@ -163,7 +163,6 @@ const Utils = {
             .split(",")[0]
             .split(":")[1]
             .split(";")[0];
-        console.log(mimeString);
         var ia = new Uint8Array(byteString.length);
         for (var i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
@@ -196,16 +195,11 @@ const Utils = {
         for (let j = 0; j < _slen; j++) {
             let i = 0;
             let _len = option.series[i].data.length;
-            setInterval(function () {
-                // chart.dispatchAction({
-                //     type: "hideTip",
-                //     seriesIndex: j,
-                //     dataIndex: _len - 1
-                // });
+            var t = setInterval(function () {
                 chart.dispatchAction({
                     type: 'downplay',
                     seriesIndex: j,
-                    dataIndex: _len-1
+                    dataIndex: _len - 1
                 });
                 chart.dispatchAction({
                     type: "highlight",
@@ -220,7 +214,7 @@ const Utils = {
                 chart.dispatchAction({
                     type: 'downplay',
                     seriesIndex: j,
-                    dataIndex: i-1
+                    dataIndex: i - 1
                 });
                 i++;
                 if (i == _len) {
