@@ -3,11 +3,11 @@
     <div class="pla-top">
       <div class="echart-top-item">
         <div class="top-item-title">注册单位总数</div>
-        <count-to :start-val="0" :end-val="3" :duration="2600" class="card-panel-num" />
+        <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
       </div>
       <div class="echart-top-item">
         <div class="top-item-title">注册设备数量</div>
-        <count-to :start-val="0" :end-val="223" :duration="2600" class="card-panel-num" />
+        <count-to :start-val="0" :end-val="0" :duration="2600" class="card-panel-num" />
       </div>
     </div>
     <div :id="id" style="height:calc( 100% - 120px );width:100%"></div>

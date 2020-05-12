@@ -107,7 +107,7 @@ export default {
           }
         },
         grid: {
-          top: "20",
+          top: "40",
           left: "20",
           right: "20",
           bottom: "0",
@@ -131,7 +131,6 @@ export default {
       };
       _this.myCharts.setOption(_this.option);
       window.addEventListener("resize", _this.resizeChart);
-      utils.loopChart(_this.myCharts, _this.option);
     }
   },
   mounted() {

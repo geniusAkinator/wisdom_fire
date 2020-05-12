@@ -54,3 +54,10 @@ export function getOnlineRate() {
     })
 }
 
+//高频异常设备排名
+export function getErrEquipmentRank() {
+    return request({
+        url: '/system/bulletin/abnormalEquipment',
+        method: 'get'
+    })
+}

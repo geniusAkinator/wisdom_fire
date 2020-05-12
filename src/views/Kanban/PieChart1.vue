@@ -1,7 +1,12 @@
 <template>
-  <div>
+  <div class="flex justify-between padding-xs">
+    <div class="rate-item flex flex-direction justify-center align-center">
+      <div class="rate-title">{{chartData.label}}</div>
+      <div class="rate-data">
+        <span class="rate-num">{{chartData.value}}</span>%&nbsp;&nbsp;&nbsp;&nbsp;+0%
+      </div>
+    </div>
     <div :id="id" class="chart" style="width:125px;height:125px;margin:auto"></div>
-    <span class="pie_title">{{title}}</span>
   </div>
 </template>
 
@@ -29,12 +34,8 @@ export default {
   },
   props: {
     chartData: {
-      type: Number,
-      default: 0
-    },
-    title: {
-      type: String,
-      default: ""
+      type: Object,
+      deep: true
     },
     color: {
       type: String,
@@ -49,7 +50,7 @@ export default {
       let _this = this;
       _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
       var value = Math.floor(Math.random() * 100);
-      var value = (_this.chartData * 360) / 100;
+      var value = (_this.chartData.value * 360) / 100;
       var values = 360 - value;
       _this.option = {
         title: {

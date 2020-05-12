@@ -5,7 +5,32 @@
         <el-image class="kanban_logo" :src="require('../../assets/image/logo_white.png')"></el-image>
         <h1 class="kanban_title">阿米华晟安中云数据平台</h1>
       </div>
-      <div class="kanban-top-right"></div>
+      <div class="kanban-top-right">
+        <div class="kanban-dropdown">
+          <el-dropdown @command="switchFactory" v-if="factoryName!=''">
+            <span class="el-dropdown-link">
+              {{factoryName}}
+              <i class="el-icon-caret-bottom el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                v-for="(item,index) in factoryList"
+                :command="item.id"
+                :key="index"
+              >{{item.name}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>/
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+              {{userName}}
+              <i class="el-icon-caret-bottom el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
     </div>
     <el-row :gutter="10" class="kanban-box">
       <el-col :span="6" class="flex flex-direction">
@@ -18,16 +43,16 @@
               <my-echart-meter :chartData="meterData"></my-echart-meter>
             </div>
             <div class="flex-sub">
-              <my-echart-line :chartData="pointData"></my-echart-line>
+              <my-echart-line :chartData="yearlyPointData"></my-echart-line>
             </div>
           </div>
         </div>
         <div class="kanban-item bgBlack margin-bottom-xs">
           <div class="item-title vertical purple">
-            <span>高频异常设备排名</span>
+            <span>处理详情</span>
           </div>
           <div style="width:100%;height:100%">
-            <div>今日隐患：个</div>
+            <div>今日隐患：{{totalHazard}}个</div>
             <my-horizontal-bar :chartData="rankData1"></my-horizontal-bar>
           </div>
         </div>
@@ -35,7 +60,7 @@
           <div class="item-title vertical purple">
             <span>设备故障事件中心</span>
           </div>
-          <my-echart-radar :chartData="errData"></my-echart-radar>
+          <my-echart-radar :chartData="radarData"></my-echart-radar>
         </div>
       </el-col>
       <el-col :span="18" class="flex flex-direction">
@@ -46,35 +71,14 @@
               <div class="item-title vertical purple">
                 <span>隐患处理情况</span>
               </div>
-              <my-echart-line :chartData="resData"></my-echart-line>
+              <my-echart-line :chartData="yearData"></my-echart-line>
             </div>
             <div class="kanban-item margin-bottom-xs">
               <div class="item-title vertical purple">
                 <span>事件处理率</span>
               </div>
               <div class="flex flex-direction justify-center align-center flex-sub">
-                <div
-                  class="flex justify-between padding-xs"
-                  style="border-bottom:1px dashed #a5a5a7"
-                >
-                  <div class="rate-item flex flex-direction justify-center align-center">
-                    <div class="rate-title">本周隐患及时处理率</div>
-                    <div class="rate-data">
-                      <span class="rate-num">96</span>
-                      %&nbsp;&nbsp;&nbsp;&nbsp;+16%
-                    </div>
-                  </div>
-                  <my-echart-pie-doughnut :chartData="96" :color="'#48C3FB'" style="flex:1"></my-echart-pie-doughnut>
-                </div>
-                <div class="flex justify-between padding-xs">
-                  <div class="rate-item flex flex-direction justify-center align-center">
-                    <div class="rate-title">本周隐患及时处理率</div>
-                    <div class="rate-data">
-                      <span class="rate-num">96</span>%&nbsp;&nbsp;&nbsp;&nbsp;+16%
-                    </div>
-                  </div>
-                  <my-echart-pie-doughnut :chartData="96" :color="'#48C3FB'" style="flex:1"></my-echart-pie-doughnut>
-                </div>
+                <my-echart-pie-doughnut :chartData="gauge1" :color="'#48C3FB'" style="flex:1"></my-echart-pie-doughnut>
               </div>
             </div>
           </div>
@@ -85,11 +89,14 @@
               <span>监控在线统计</span>
             </div>
             <el-table :data="onlineData" class="kanban-table">
-              <el-table-column prop="equipmentName" label="时间" align="center" width="100"></el-table-column>
-              <el-table-column prop="content" label="工厂名称" align="center"></el-table-column>
-              <el-table-column prop="content" label="传感器位置" align="center"></el-table-column>
-              <el-table-column prop="content" label="类型" align="center"></el-table-column>
-              <el-table-column prop="duration" label="状态" align="center"></el-table-column>
+              <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
+              <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
+              <el-table-column prop="type" label="状态" align="center"></el-table-column>
+              <el-table-column prop="currdate" label="时间" align="center">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.currdate">{{ parseTime(scope.row.currdate,"{y}-{m}-{d}") }}</span>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
           <div class="kanban-item bgBlack flex-sub">
@@ -110,78 +117,276 @@ import MyEchartPieDoughnut from "@/views/kanban/PieChart1";
 import MyEchartPie from "@/views/kanban/PieChart2";
 import MyEchartRadar from "@/views/kanban/RadarChart";
 import MyEchartMeter from "@/views/kanban/MeterChart";
+import {
+  getHazardResult,
+  getEventDoneRate,
+  getSensorData,
+  getNormalEquipment,
+  getHandleDetail,
+  getBuildingDetail,
+  getHealthPoint,
+  getOnlineRate
+} from "@/api/platform/board";
+import { listFactory } from "@/api/main/factory";
 export default {
   data() {
     return {
+      factoryName: "",
+      totalHazard: 0,
+      userName: this.$store.getters.name,
+      factoryList: [],
       onlineData: [],
-      pointData: {
-        legend: ["安全评分"],
-        xdata: [
-          "1月",
-          "2月",
-          "3月",
-          "4月",
-          "5月",
-          "6月",
-          "7月",
-          "8月",
-          "9月",
-          "10月",
-          "11月",
-          "12月"
-        ], //横坐标的值
-        ydata: [
-          [0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
-        ] //纵坐标的值
-      },
-      resData: {
-        legend: ["隐患总数", "已解决数"],
-        xdata: [
-          "1月",
-          "2月",
-          "3月",
-          "4月",
-          "5月",
-          "6月",
-          "7月",
-          "8月",
-          "9月",
-          "10月",
-          "11月",
-          "12月"
-        ], //横坐标的值
-        ydata: [
-          [0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
-          [10, 100, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-        ] //纵坐标的值
+      yearData: {
+        legend: [],
+        xdata: [], //横坐标的值
+        ydata: [] //纵坐标的值
       },
       rankData1: {
-        xdata: ["待处理", "处理中", "已完成"],
-        ydata: [
-          [10, 10, 10],
-          [30, 30, 30]
-        ]
+        xdata: [],
+        ydata: [[], []]
       },
-      errData: {},
-      meterData: 86,
-      pieData:[
-          {
-              name:"在线",
-              value:60
-          },
-          {
-              name:"离线",
-              value:60
-          },
-      ]
+      meterData: 0,
+      pieData: [],
+      radarData: {
+        indicator: [],
+        value: []
+      },
+      gauge1: {
+        label: "本周隐患及时处理率",
+        value: 0
+      },
+      factoryId: 0,
+      yearlyPointData: {
+        legend: ["安全评分"],
+        xdata: [],
+        ydata: []
+      }
     };
   },
-  methods: {},
-  mounted() {},
+  watch: {
+    factoryList(nVal, oVal) {
+      let _this = this;
+      if (nVal.length) {
+        _this.factoryName = nVal[0].name;
+        _this.factoryId = nVal[0].id;
+      }
+    },
+    factoryId(nVal, oVal) {
+      let _this = this;
+      let _list = _this.factoryList;
+      _list.map((item, i) => {
+        if (item.id == nVal) {
+          _this.factoryName = item.name;
+        }
+      });
+      _this.getHealthPointList();
+    }
+  },
+  methods: {
+    getHealthPointList() {
+      let _this = this;
+      getHealthPoint({ factoryId: _this.factoryId }).then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _xdata3 = [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+          ];
+          let _ydataList3 = [...Array(_xdata3.length)].map(_ => 0);
+          let _ylist = _data.yearlyPointList;
+          let _point = _data.percentage;
+          _this.meterData = _point ? _point : 0; //健康指数赋值
+          _xdata3.map((xitem, i) => {
+            //年
+            _ylist.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month) {
+                _ydataList3[i] = item.percentage;
+              }
+            });
+          });
+          _this.yearlyPointData.xdata = _xdata3;
+          _this.yearlyPointData.ydata[0] = _ydataList3;
+        }
+      });
+    },
+    getNormalEquipmentList() {
+      //设备故障事件中心
+      let _this = this;
+      getNormalEquipment().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _arr1 = [];
+          let _arr2 = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.text = item.name;
+            temp.max = item.countSum;
+            _arr1.push(temp);
+            _arr2.push(item.count);
+          });
+          _this.radarData.value.push(_arr2);
+          _this.radarData.indicator = _arr1;
+        }
+      });
+    },
+    getOnlinePercentage() {
+      //本周隐患及时处理率
+      //本周故障及时处理率
+      getEventDoneRate().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          // this.gauge1.value = _datadangerPercentage * 1;
+        }
+      });
+    },
+    getOnlineRateList() {
+      //监控在线统计
+      let _this = this;
+      getOnlineRate().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _arr = [];
+          _data.map((item, i) => {
+            let temp = {};
+            if (item.deviceStatus == 0) {
+              temp.name = "离线";
+            } else if (item.deviceStatus == 1) {
+              temp.name = "在线";
+            }
+            temp.value = item.count;
+            _arr.push(temp);
+          });
+          _this.pieData = _arr;
+        }
+      });
+    },
+    getErrRankList() {
+      //监控在线统计
+      getErrRank().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          this.onlineData = _data;
+        }
+      });
+    },
+    logout() {
+      this.$confirm("确定注销并退出系统吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$store.dispatch("LogOut").then(() => {
+          location.reload();
+        });
+      });
+    },
+    handleCommand(command) {
+      if (command == "logout") {
+        this.logout();
+      }
+    },
+    switchFactory(command) {
+      let _this = this;
+      _this.factoryId = command;
+    },
+    getFactoryList() {
+      let _this = this;
+      listFactory().then(response => {
+        if (response.code == 200) {
+          let _data = response.rows;
+          let _arr = [];
+          _data.map((item, i) => {
+            let temp = {};
+            temp.id = item.factoryId;
+            temp.name = item.factoryName;
+            _arr.push(temp);
+          });
+          _this.factoryList = _arr;
+        }
+      });
+    },
+    getHandleDetailList() {
+      //处理详情
+      let _this = this;
+      getHandleDetail().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          console.log(_data);
+          _data.map((item, i) => {
+            
+            console.log(item.state);
+            this.totalHazard = this.totalHazard + item.count;
+          });
+        }
+      });
+    },
+    getHazardResultList() {
+      let _this = this;
+      getHazardResult().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          let _xdata = [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+          ];
+          let _allList = [...Array(_xdata.length)].map(_ => 0);
+          let _doneList = [...Array(_xdata.length)].map(_ => 0);
+          _xdata.map((xitem, i) => {
+            _data.hiddenDangerSum.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month) {
+                _allList[i] = item.count;
+              }
+            });
+            _data.hiddenDangerOverSum.map((item, j) => {
+              let _month = item.yearly.split("-")[1] * 1;
+              if (i == _month) {
+                _doneList[i] = item.count;
+              }
+            });
+          });
+          _this.yearData.xdata = _xdata;
+          _this.yearData.ydata[0] = _doneList;
+          _this.yearData.ydata[1] = _allList;
+          _this.yearKey++;
+        }
+      });
+    }
+  },
+  mounted() {
+    this.getNormalEquipmentList();
+    this.getOnlinePercentage();
+    this.getOnlineRateList();
+    this.getFactoryList();
+    this.getHandleDetailList();
+    this.getHazardResultList();
+  },
   components: {
     MyHorizontalBar,
     MyEchartLine,
-    MyEchartPieDoughnut,MyEchartPie,
+    MyEchartPieDoughnut,
+    MyEchartPie,
     MyEchartRadar,
     MyEchartMeter
   }
@@ -189,4 +394,8 @@ export default {
 </script>
 
 <style>
+.kanban-dropdown .el-dropdown {
+  color: #fff;
+  cursor: pointer;
+}
 </style>

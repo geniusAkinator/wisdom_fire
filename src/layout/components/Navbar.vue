@@ -10,8 +10,8 @@
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
     <ul class="left-menu">
       <li @click="toggleMain" v-if="roles[0]=='admin'">主体概况</li>
-      <li @click="doJump('Platform')" v-if="roles[0]=='admin'">总后台数据看板</li>
-      <li @click="doJump('Board')" v-if="roles[0]=='dls'">代理商数据看板</li>
+      <li @click="doJump('Kanban')" v-if="roles[0]=='admin'">看板1</li>
+      <li @click="doJump('Kanban1')" v-if="roles[0]=='admin'">看板2</li>
     </ul>
     <div class="right-menu">
       <template v-if="device!=='mobile'">

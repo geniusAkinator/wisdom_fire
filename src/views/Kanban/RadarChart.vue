@@ -50,7 +50,6 @@ export default {
           show: true,
           trigger: "item"
         },
-        
         radar: {
           center: ["50%", "50%"],
           radius: "70%",
@@ -81,60 +80,7 @@ export default {
               color: "grey" //
             }
           },
-          indicator: [
-            {
-              name: "道路结冰",
-              max: 88
-            },
-            {
-              name: "暴雪",
-              max: 88
-            },
-            {
-              name: "暴雨",
-              max: 88
-            },
-            {
-              name: "冰雹",
-              max: 88
-            },
-            {
-              name: "大风",
-              max: 88
-            },
-            {
-              name: "大雾",
-              max: 88
-            },
-            {
-              name: "高温",
-              max: 88
-            },
-            {
-              name: "干旱",
-              max: 88
-            },
-            {
-              name: "寒潮",
-              max: 88
-            },
-            {
-              name: "雷电",
-              max: 88
-            },
-            {
-              name: "霾",
-              max: 88
-            },
-            {
-              name: "沙尘暴",
-              max: 88
-            },
-            {
-              name: "霜冻",
-              max: 88
-            }
-          ]
+          indicator: _this.chartData.indicator
         },
         series: [
           {
@@ -158,7 +104,7 @@ export default {
                 width: 2
               }
             },
-            data: [[80, 50, 55, 80, 50, 80, 48, 43, 60, 78, 60, 40, 42, 44, 65]]
+            data: _this.chartData.value
           }
         ]
       };

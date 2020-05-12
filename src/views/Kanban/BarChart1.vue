@@ -35,7 +35,6 @@ export default {
     },
     initChart() {
       let _this = this;
-      
       _this.myCharts = echarts.init(document.getElementById(`${_this.id}`));
       var color = ["rgba(255,8,13", "rgba(250,100,5", "rgba(66,202,130", "rgba(66,202,130"];
       let line1 = [];
@@ -137,7 +136,7 @@ export default {
               normal: {
                 color: "#fff",
                 show: true,
-                position: [0, "-34px"],
+                position: [0, "-20px"],
                 textStyle: {
                   fontSize: 20
                 },
@@ -158,7 +157,7 @@ export default {
             label: {
               normal: {
                 color: "#51ecee",
-                show: true,
+                show: false,
                 position: 'right',
                 textStyle: {
                   fontSize: 18
