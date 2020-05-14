@@ -970,7 +970,7 @@ $color6: #db5b12;
   background: initial !important;
   width: 100% !important;
   margin: auto;
-  margin-top: 25px;
+  margin-top: 0;
   &::before {
     background: initial;
   }

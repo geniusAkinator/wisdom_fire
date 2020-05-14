@@ -52,7 +52,7 @@
             <span>处理详情</span>
           </div>
           <div style="width:100%;height:100%">
-            <div>今日隐患：{{totalHazard}}个</div>
+            <div class="hazard_total">今日隐患：{{totalHazard}}个</div>
             <my-horizontal-bar :chartData="rankData1"></my-horizontal-bar>
           </div>
         </div>
@@ -85,9 +85,6 @@
         </div>
         <div class="flex flex-sub">
           <div class="kanban-item bgBlack margin-right-xs flex-twice">
-            <div class="item-title vertical purple">
-              <span>监控在线统计</span>
-            </div>
             <el-table :data="onlineData" class="kanban-table">
               <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
               <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
@@ -142,8 +139,11 @@ export default {
         ydata: [] //纵坐标的值
       },
       rankData1: {
-        xdata: [],
-        ydata: [[], []]
+        xdata: ["待处理", "处理中", "已完成"],
+        ydata: [
+          [0, 0, 0],
+          [0, 0, 0]
+        ]
       },
       meterData: 0,
       pieData: [],
@@ -324,8 +324,7 @@ export default {
           let _data = response.data;
           console.log(_data);
           _data.map((item, i) => {
-            
-            console.log(item.state);
+            this.rankData1.ydata[0][item.state] = item.count;
             this.totalHazard = this.totalHazard + item.count;
           });
         }
@@ -397,5 +396,9 @@ export default {
 .kanban-dropdown .el-dropdown {
   color: #fff;
   cursor: pointer;
+}
+.hazard_total {
+  padding: 20px;
+  text-align: center;
 }
 </style>

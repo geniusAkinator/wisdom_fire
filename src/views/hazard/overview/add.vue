@@ -24,8 +24,8 @@
       <el-form-item label="选择成员" prop="staff">
         <el-transfer v-model="staffList" :titles="['待选成员列表', '选定成员列表']" :data="slist">
           <div slot-scope="{ option }">
-            <del v-if="option.disabled">{{ option.name }}({{option.duty}})</del>
-            <span v-else>{{ option.name }}({{option.duty}})</span>
+            <del v-if="option.disabled">{{ option.name }}</del>
+            <span v-else>{{ option.name }}</span>
           </div>
         </el-transfer>
       </el-form-item>

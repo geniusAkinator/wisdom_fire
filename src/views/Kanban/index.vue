@@ -52,7 +52,7 @@
       </el-col>
       <el-col :span="18" class="flex flex-direction">
         <div class="flex flex-twice margin-tb-xs">
-          <my-echart-map></my-echart-map>
+          <my-echart-map :chartData="mapData"></my-echart-map>
         </div>
         <div class="flex flex-sub">
           <div class="kanban-item bgBlack margin-right-xs">
@@ -94,7 +94,8 @@ import {
   getHazardTypesRank,
   getErrRank,
   getOnlineRate,
-  getErrEquipmentRank
+  getErrEquipmentRank,
+  getMapData
 } from "@/api/platform/platform";
 export default {
   data() {
@@ -127,7 +128,12 @@ export default {
         value: 0
       },
       hazardTypeList: [], //隐患类型列表
-      errTypeList: []
+      errTypeList: [],
+      mapData: {
+        factoryCount: 0,
+        chinaList: [],
+        transducerCount: 0
+      }
     };
   },
   watch: {
@@ -259,6 +265,15 @@ export default {
       _data.xdata = _xdata;
       _data.ydata = _ydata;
       return _data;
+    },
+    getMapList() {
+      getMapData().then(response => {
+        if (response.code == 200) {
+          let _data = response.data;
+          this.mapData = _data;
+          console.log(response.data);
+        }
+      });
     }
   },
   mounted() {
@@ -292,6 +307,7 @@ export default {
     this.getErrRankList();
     this.getYearlyList();
     this.getOnlinePercentage();
+    this.getMapList();
   },
   components: {
     MyHorizontalBar,

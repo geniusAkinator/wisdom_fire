@@ -61,3 +61,12 @@ export function getErrEquipmentRank() {
         method: 'get'
     })
 }
+
+export function getMapData() {
+    return request({
+        url: '/system/bulletin/chinaList',
+        method: 'get'
+    })
+}
+
+

@@ -60,3 +60,11 @@ export function listSensorByFactoryId(query) {
     params: query
   })
 }
+
+export function getGrandTotal(query) {
+  return request({
+    url: '/system/factory/cumulative',
+    method: 'get',
+    params: query
+  })
+}
