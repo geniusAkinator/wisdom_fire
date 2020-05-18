@@ -457,6 +457,7 @@ export default {
     },
     handleConfig(row) {
       this.eid = row.transducerId;
+      this.nowTypeId = row.ttId;
       var index = this.$layer.iframe({
         content: {
           content: MyPointConfig, //传递的组件对象

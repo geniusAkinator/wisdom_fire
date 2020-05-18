@@ -1,5 +1,6 @@
 <template>
   <div class="container kanban">
+    <my-loading v-if="loading"></my-loading>
     <div class="kanban-top">
       <div class="kanban-top-left">
         <el-image class="kanban_logo" :src="require('../../assets/image/logo_white.png')"></el-image>
@@ -86,6 +87,7 @@ import MyHorizontalBar from "@/views/kanban/BarChart1";
 import MyEchartLine from "@/views/kanban/LineChart1";
 import MyEchartPieDoughnut from "@/views/kanban/PieChart1";
 import MyEchartMap from "@/views/kanban/MapChart";
+import MyLoading from "@/components/Loading/index";
 import {
   getWeekly,
   getMonthly,
@@ -133,7 +135,8 @@ export default {
         factoryCount: 0,
         chinaList: [],
         transducerCount: 0
-      }
+      },
+      loading: true
     };
   },
   watch: {
@@ -146,24 +149,19 @@ export default {
     }
   },
   methods: {
-    getUnitsRankList() {
+    getUnitsRankList(data) {
       //重大隐患单位排名
-      getHazardUnitsRank().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          let _list = [];
-          _data.map((item, i) => {
-            let temp = {};
-            temp.id = i + 1;
-            if (item.factoryName != null) {
-              temp.factoryName = item.factoryName;
-              temp.count = item.count;
-              _list.push(temp);
-            }
-          });
-          this.rankData = _list;
+      let _list = [];
+      data.map((item, i) => {
+        let temp = {};
+        temp.id = i + 1;
+        if (item.factoryName != null) {
+          temp.factoryName = item.factoryName;
+          temp.count = item.count;
+          _list.push(temp);
         }
       });
+      this.rankData = _list;
     },
     getTypesRankList() {
       //高频隐患类型排名
@@ -185,63 +183,49 @@ export default {
         }
       });
     },
-    getErrRankList() {
+    getErrRankList(data) {
       //设备故障事件中心
-      getErrRank().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          this.errData = _data;
-        }
-      });
+      this.errData = data;
     },
-    getOnlinePercentage() {
+    getOnlinePercentage(data) {
       //本周隐患及时处理率
       //本周故障及时处理率
-      getOnlineRate().then(response => {
-        if (response.code == 200) {
-          this.gauge1.value = response.data.dangerPercentage.split("%")[0] * 1;
-          this.gauge2.value = response.data.faultPercentage.split("%")[0] * 1;
-        }
-      });
+      this.gauge1.value = data.dangerPercentage.split("%")[0] * 1;
+      this.gauge2.value = data.faultPercentage.split("%")[0] * 1;
     },
-    getYearlyList() {
+    getYearlyList(data) {
       //隐患处理情况
       //年
-      getYearly().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          let _xdata = [
-            "一月",
-            "二月",
-            "三月",
-            "四月",
-            "五月",
-            "六月",
-            "七月",
-            "八月",
-            "九月",
-            "十月",
-            "十一月",
-            "十二月"
-          ];
-          let _allList = [...Array(_xdata.length)].map(_ => 0);
-          let _doneList = [...Array(_xdata.length)].map(_ => 0);
-          _xdata.map((xitem, i) => {
-            _data.map((item, j) => {
-              let _month = item.yearly.split("-")[1] * 1;
-              if (i == _month && item.state == "2") {
-                _doneList[i] = item.count;
-              }
-              if (i == _month) {
-                _allList[i] = _allList[i] + item.count;
-              }
-            });
-          });
-          this.yearData.xdata = _xdata;
-          this.yearData.ydata.push(_allList);
-          this.yearData.ydata.push(_doneList);
-        }
+      let _xdata = [
+        "一月",
+        "二月",
+        "三月",
+        "四月",
+        "五月",
+        "六月",
+        "七月",
+        "八月",
+        "九月",
+        "十月",
+        "十一月",
+        "十二月"
+      ];
+      let _allList = [...Array(_xdata.length)].map(_ => 0);
+      let _doneList = [...Array(_xdata.length)].map(_ => 0);
+      _xdata.map((xitem, i) => {
+        data.map((item, j) => {
+          let _month = item.yearly.split("-")[1] * 1;
+          if (i == _month && item.state == "2") {
+            _doneList[i] = item.count;
+          }
+          if (i == _month) {
+            _allList[i] = _allList[i] + item.count;
+          }
+        });
       });
+      this.yearData.xdata = _xdata;
+      this.yearData.ydata.push(_allList);
+      this.yearData.ydata.push(_doneList);
     },
     fliterBarList(data, typeList) {
       let _data = {
@@ -266,14 +250,8 @@ export default {
       _data.ydata = _ydata;
       return _data;
     },
-    getMapList() {
-      getMapData().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          this.mapData = _data;
-          console.log(response.data);
-        }
-      });
+    getMapList(data) {
+      this.mapData = data;
     }
   },
   mounted() {
@@ -303,17 +281,41 @@ export default {
         this.errTypeList = _list;
       }
     });
-    this.getUnitsRankList();
-    this.getErrRankList();
-    this.getYearlyList();
-    this.getOnlinePercentage();
-    this.getMapList();
+    Promise.all([
+      getHazardUnitsRank(),
+      getErrRank(),
+      getYearly(),
+      getOnlineRate(),
+      getMapData()
+    ])
+      .then(result => {
+        if (result[0].code == 200) {
+          this.getUnitsRankList(result[0].data);
+        }
+        if (result[1].code == 200) {
+          this.getErrRankList(result[1].data);
+        }
+        if (result[2].code == 200) {
+          this.getYearlyList(result[2].data);
+        }
+        if (result[3].code == 200) {
+          this.getOnlinePercentage(result[3].data);
+        }
+        if (result[4].code == 200) {
+          this.getMapList(result[4].data);
+        }
+        this.loading = false;
+      })
+      .catch(error => {
+        this.loading = false;
+      });
   },
   components: {
     MyHorizontalBar,
     MyEchartLine,
     MyEchartPieDoughnut,
-    MyEchartMap
+    MyEchartMap,
+    MyLoading
   }
 };
 </script>

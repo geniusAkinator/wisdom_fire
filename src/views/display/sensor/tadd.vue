@@ -1,13 +1,17 @@
 <template>
-  <div class="container form">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="A最小值">
-        <el-input v-model="form.mina" placeholder="请输入A最小值" />
+  <div class="container form" >
+    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form-item :label="thresholdName+'最小值'">
+        <el-input v-model="form.mina" placeholder="请输入A最小值">
+          <template slot="append">{{unit}}</template>
+        </el-input>
       </el-form-item>
-      <el-form-item label="A最大值">
-        <el-input v-model="form.maxa" placeholder="请输入A最大值" />
+      <el-form-item :label="thresholdName+'最大值'">
+        <el-input v-model="form.maxa" placeholder="请输入A最大值">
+          <template slot="append">{{unit}}</template>
+        </el-input>
       </el-form-item>
-      <el-form-item label="B最小值">
+      <!-- <el-form-item label="B最小值">
         <el-input v-model="form.minb" placeholder="请输入B最小值" />
       </el-form-item>
       <el-form-item label="B最大值">
@@ -18,7 +22,7 @@
       </el-form-item>
       <el-form-item label="C最大值">
         <el-input v-model="form.maxc" placeholder="请输入C最大值" />
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
     <div class="add-footer">
       <el-button size="small" type="primary" icon="el-icon-check" @click="handleSubmit('form')">提交</el-button>
@@ -28,6 +32,7 @@
 </template>
 <script>
 import { updateThreshold, getThreshold } from "@/api/display/threshold";
+import { getTransducertype } from "@/api/display/type";
 import { Loading } from "element-ui";
 export default {
   data() {
@@ -41,8 +46,52 @@ export default {
         minb: 0,
         minc: 0
       },
-      rules: {}
+      rules: {},
+      thresholdType: "",
+      thresholdName: "",
+      unit: "",
+      threshold: [
+        {
+          name: "温度",
+          unit: "℃"
+        },
+        {
+          name: "湿度",
+          unit: "%rh"
+        },
+        {
+          name: "烟雾",
+          unit: "ppm"
+        },
+        {
+          name: "电压",
+          unit: "V"
+        },
+        {
+          name: "漏电流",
+          unit: "mA"
+        },
+        {
+          name: "功率",
+          unit: "W"
+        },
+        {
+          name: "浓度",
+          unit: "%LEL"
+        }
+      ]
     };
+  },
+  watch: {
+    thresholdType(nVal, oVal) {
+      console.log(nVal);
+      this.threshold.map((item, i) => {
+        if (nVal.indexOf(item.name) != -1) {
+          this.thresholdName = item.name;
+          this.unit = item.unit;
+        }
+      });
+    }
   },
   methods: {
     handleSubmit(form) {
@@ -92,6 +141,12 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$parent.nowTypeId);
+    getTransducertype(this.$parent.nowTypeId).then(response => {
+      if (response.code == 200) {
+        this.thresholdType = response.data.name;
+      }
+    });
     this.initForm();
   }
 };

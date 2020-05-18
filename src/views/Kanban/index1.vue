@@ -1,5 +1,6 @@
 <template>
   <div class="container kanban">
+    <my-loading v-if="loading"></my-loading>
     <div class="kanban-top">
       <div class="kanban-top-left">
         <el-image class="kanban_logo" :src="require('../../assets/image/logo_white.png')"></el-image>
@@ -65,7 +66,9 @@
       </el-col>
       <el-col :span="18" class="flex flex-direction">
         <div class="flex flex-twice margin-tb-xs">
-          <div class="flex-twice"></div>
+          <div class="flex-twice">
+            <my-building></my-building>
+          </div>
           <div class="flex flex-direction flex-sub">
             <div class="kanban-item margin-bottom-xs">
               <div class="item-title vertical purple">
@@ -114,6 +117,8 @@ import MyEchartPieDoughnut from "@/views/kanban/PieChart1";
 import MyEchartPie from "@/views/kanban/PieChart2";
 import MyEchartRadar from "@/views/kanban/RadarChart";
 import MyEchartMeter from "@/views/kanban/MeterChart";
+import MyBuilding from "@/views/kanban/Building";
+import MyLoading from "@/components/Loading/index";
 import {
   getHazardResult,
   getEventDoneRate,
@@ -160,7 +165,8 @@ export default {
         legend: ["安全评分"],
         xdata: [],
         ydata: []
-      }
+      },
+      loading: true
     };
   },
   watch: {
@@ -220,56 +226,41 @@ export default {
         }
       });
     },
-    getNormalEquipmentList() {
+    getNormalEquipmentList(data) {
       //设备故障事件中心
       let _this = this;
-      getNormalEquipment().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          let _arr1 = [];
-          let _arr2 = [];
-          _data.map((item, i) => {
-            let temp = {};
-            temp.text = item.name;
-            temp.max = item.countSum;
-            _arr1.push(temp);
-            _arr2.push(item.count);
-          });
-          _this.radarData.value.push(_arr2);
-          _this.radarData.indicator = _arr1;
-        }
+      let _arr1 = [];
+      let _arr2 = [];
+      data.map((item, i) => {
+        let temp = {};
+        temp.text = item.name;
+        temp.max = item.countSum;
+        _arr1.push(temp);
+        _arr2.push(item.count);
       });
+      _this.radarData.value.push(_arr2);
+      _this.radarData.indicator = _arr1;
     },
-    getOnlinePercentage() {
+    getOnlinePercentage(data) {
       //本周隐患及时处理率
       //本周故障及时处理率
-      getEventDoneRate().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          // this.gauge1.value = _datadangerPercentage * 1;
-        }
-      });
+      this.gauge1.value = data.dangerPercentage.dangerPercentage * 1;
     },
-    getOnlineRateList() {
+    getOnlineRateList(data) {
       //监控在线统计
       let _this = this;
-      getOnlineRate().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          let _arr = [];
-          _data.map((item, i) => {
-            let temp = {};
-            if (item.deviceStatus == 0) {
-              temp.name = "离线";
-            } else if (item.deviceStatus == 1) {
-              temp.name = "在线";
-            }
-            temp.value = item.count;
-            _arr.push(temp);
-          });
-          _this.pieData = _arr;
+      let _arr = [];
+      data.map((item, i) => {
+        let temp = {};
+        if (item.deviceStatus == 0) {
+          temp.name = "离线";
+        } else if (item.deviceStatus == 1) {
+          temp.name = "在线";
         }
+        temp.value = item.count;
+        _arr.push(temp);
       });
+      _this.pieData = _arr;
     },
     getErrRankList() {
       //监控在线统计
@@ -300,86 +291,97 @@ export default {
       let _this = this;
       _this.factoryId = command;
     },
-    getFactoryList() {
+    getFactoryList(data) {
       let _this = this;
-      listFactory().then(response => {
-        if (response.code == 200) {
-          let _data = response.rows;
-          let _arr = [];
-          _data.map((item, i) => {
-            let temp = {};
-            temp.id = item.factoryId;
-            temp.name = item.factoryName;
-            _arr.push(temp);
-          });
-          _this.factoryList = _arr;
-        }
+      let _arr = [];
+      data.map((item, i) => {
+        let temp = {};
+        temp.id = item.factoryId;
+        temp.name = item.factoryName;
+        _arr.push(temp);
       });
+      _this.factoryList = _arr;
     },
-    getHandleDetailList() {
+    getHandleDetailList(data) {
       //处理详情
       let _this = this;
-      getHandleDetail().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          console.log(_data);
-          _data.map((item, i) => {
-            this.rankData1.ydata[0][item.state] = item.count;
-            this.totalHazard = this.totalHazard + item.count;
-          });
-        }
+      data.map((item, i) => {
+        this.rankData1.ydata[0][item.state] = item.count;
+        this.totalHazard = this.totalHazard + item.count;
       });
     },
-    getHazardResultList() {
+    getHazardResultList(data) {
       let _this = this;
-      getHazardResult().then(response => {
-        if (response.code == 200) {
-          let _data = response.data;
-          let _xdata = [
-            "一月",
-            "二月",
-            "三月",
-            "四月",
-            "五月",
-            "六月",
-            "七月",
-            "八月",
-            "九月",
-            "十月",
-            "十一月",
-            "十二月"
-          ];
-          let _allList = [...Array(_xdata.length)].map(_ => 0);
-          let _doneList = [...Array(_xdata.length)].map(_ => 0);
-          _xdata.map((xitem, i) => {
-            _data.hiddenDangerSum.map((item, j) => {
-              let _month = item.yearly.split("-")[1] * 1;
-              if (i == _month) {
-                _allList[i] = item.count;
-              }
-            });
-            _data.hiddenDangerOverSum.map((item, j) => {
-              let _month = item.yearly.split("-")[1] * 1;
-              if (i == _month) {
-                _doneList[i] = item.count;
-              }
-            });
-          });
-          _this.yearData.xdata = _xdata;
-          _this.yearData.ydata[0] = _doneList;
-          _this.yearData.ydata[1] = _allList;
-          _this.yearKey++;
-        }
+      let _data = response.data;
+      let _xdata = [
+        "一月",
+        "二月",
+        "三月",
+        "四月",
+        "五月",
+        "六月",
+        "七月",
+        "八月",
+        "九月",
+        "十月",
+        "十一月",
+        "十二月"
+      ];
+      let _allList = [...Array(_xdata.length)].map(_ => 0);
+      let _doneList = [...Array(_xdata.length)].map(_ => 0);
+      _xdata.map((xitem, i) => {
+        data.hiddenDangerSum.map((item, j) => {
+          let _month = item.yearly.split("-")[1] * 1;
+          if (i == _month) {
+            _allList[i] = item.count;
+          }
+        });
+        data.hiddenDangerOverSum.map((item, j) => {
+          let _month = item.yearly.split("-")[1] * 1;
+          if (i == _month) {
+            _doneList[i] = item.count;
+          }
+        });
       });
+      _this.yearData.xdata = _xdata;
+      _this.yearData.ydata[0] = _doneList;
+      _this.yearData.ydata[1] = _allList;
+      _this.yearKey++;
     }
   },
   mounted() {
-    this.getNormalEquipmentList();
-    this.getOnlinePercentage();
-    this.getOnlineRateList();
-    this.getFactoryList();
-    this.getHandleDetailList();
-    this.getHazardResultList();
+    Promise.all([
+      getNormalEquipment(),
+      getEventDoneRate(),
+      getOnlineRate(),
+      listFactory(),
+      getHandleDetail(),
+      getHazardResult()
+    ])
+      .then(result => {
+        if (result[0].code == 200) {
+          this.getNormalEquipmentList(result[0].data);
+        }
+        if (result[1].code == 200) {
+          this.getOnlinePercentage(result[1].data);
+        }
+        if (result[2].code == 200) {
+          this.getOnlineRateList(result[2].data);
+        }
+        if (result[3].code == 200) {
+          this.getFactoryList(result[3].rows);
+        }
+        if (result[4].code == 200) {
+          this.getHandleDetailList(result[4].data);
+        }
+        if (result[5].code == 200) {
+          this.getHazardResultList(result[5].data);
+        }
+        this.loading = false;
+      })
+      .catch(error => {
+        this.loading = false;
+      });
   },
   components: {
     MyHorizontalBar,
@@ -387,7 +389,9 @@ export default {
     MyEchartPieDoughnut,
     MyEchartPie,
     MyEchartRadar,
-    MyEchartMeter
+    MyEchartMeter,
+    MyBuilding,
+    MyLoading
   }
 };
 </script>
