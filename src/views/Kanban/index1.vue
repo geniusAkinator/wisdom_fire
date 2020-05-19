@@ -67,7 +67,7 @@
       <el-col :span="18" class="flex flex-direction">
         <div class="flex flex-twice margin-tb-xs">
           <div class="flex-twice">
-            <my-building></my-building>
+            <my-building :data="blist"></my-building>
           </div>
           <div class="flex flex-direction flex-sub">
             <div class="kanban-item margin-bottom-xs">
@@ -89,12 +89,17 @@
         <div class="flex flex-sub">
           <div class="kanban-item bgBlack margin-right-xs flex-twice">
             <el-table :data="onlineData" class="kanban-table">
-              <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
-              <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
-              <el-table-column prop="type" label="状态" align="center"></el-table-column>
               <el-table-column prop="currdate" label="时间" align="center">
                 <template slot-scope="scope">
                   <span v-if="scope.row.currdate">{{ parseTime(scope.row.currdate,"{y}-{m}-{d}") }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
+              <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
+              <el-table-column prop="type" label="状态" align="center"></el-table-column>
+              <el-table-column prop="state" label="状态" align="center">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.state == 0 ? '正常':'异常' }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -127,7 +132,8 @@ import {
   getHandleDetail,
   getBuildingDetail,
   getHealthPoint,
-  getOnlineRate
+  getOnlineRate,
+  getBuildingGroup
 } from "@/api/platform/board";
 import { listFactory } from "@/api/main/factory";
 export default {
@@ -166,7 +172,8 @@ export default {
         xdata: [],
         ydata: []
       },
-      loading: true
+      loading: true,
+      blist:[]
     };
   },
   watch: {
@@ -186,6 +193,7 @@ export default {
         }
       });
       _this.getHealthPointList();
+      _this.getBuildingList();
     }
   },
   methods: {
@@ -347,6 +355,15 @@ export default {
       _this.yearData.ydata[0] = _doneList;
       _this.yearData.ydata[1] = _allList;
       _this.yearKey++;
+    },
+    getBuildingList() {
+      let _this = this;
+      getBuildingGroup({ factoryIds: _this.factoryId }).then(response => {
+        if (response.code == 200) {
+          console.log(response.data);
+          this.blist = response.data;
+        }
+      });
     }
   },
   mounted() {

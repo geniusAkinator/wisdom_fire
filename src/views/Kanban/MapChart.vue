@@ -64,8 +64,10 @@ export default {
         echarts.registerMap(mtype, geoData);
         _this.myCharts.setOption(_this.option);
         window.addEventListener("resize", _this.resizeChart);
+        this.myCharts.off('click');
         _this.myCharts.on("click", function(ev) {
           let key = ev.name;
+          console.log("dfasdf")
           if (_this.provinceData.has(key)) {
             _this.mapType = _this.provinceData.get(key);
             _this.resetOption(key);
@@ -86,7 +88,6 @@ export default {
           value: _arr.concat(100)
         });
       }
-      console.log(res);
       return res;
     },
     resetOption(name) {
@@ -235,6 +236,7 @@ export default {
                   let _key = "中国";
                   _this.mapType = _this.provinceData.get(_key);
                   _this.resetOption(_key);
+
                 }
               },
               {
@@ -349,8 +351,6 @@ export default {
               trigger: "item",
               formatter: function(params) {
                 var tipHtml = "";
-                console.log(data[params.dataIndex]);
-
                 tipHtml =
                   '<div style="width:280px;height:180px;background:rgba(22,80,158,0.8);border:1px solid rgba(7,166,255,0.7)">' +
                   '<div style="width:100%;height:40px;line-height:40px;border-bottom:2px solid rgba(7,166,255,0.7);padding:0 0">' +
@@ -387,7 +387,6 @@ export default {
                   "</span></p>" +
                   "</div>" +
                   "</div>";
-                // return params.name + ' : ' + params.value[2];
                 return tipHtml;
               }
             }
@@ -399,7 +398,6 @@ export default {
   },
   mounted() {
     let _this = this;
-    //手动set Map防止多音字和重名
     _this.initData();
   },
   components: {

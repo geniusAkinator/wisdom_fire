@@ -70,3 +70,24 @@ export function getHealthPoint(query) {
         params: query
     })
 }
+
+
+//查询楼宇楼层
+export function getBuildingGroup(query) {
+    return request({
+        url: '/system/bulletin/floorStatistics',
+        method: 'get',
+        params: query
+    })
+}
+
+//根据楼层id查询传感器信息
+export function getFloorDetail(query) {
+    return request({
+        url: '/system/bulletin/transducerDetail',
+        method: 'get',
+        params: query
+    })
+}
+
+

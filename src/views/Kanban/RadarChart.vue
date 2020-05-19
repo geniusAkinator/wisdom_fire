@@ -80,7 +80,10 @@ export default {
               color: "grey" //
             }
           },
-          indicator: _this.chartData.indicator
+          indicator: _this.chartData.indicator,
+          name: {
+            textStyle: { color: "#fff" }
+          }
         },
         series: [
           {

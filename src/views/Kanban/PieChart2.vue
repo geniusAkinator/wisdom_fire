@@ -38,13 +38,27 @@ export default {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
-        color: ["#3573fc", "#234bf2"],
+        color: ["#2B80FF", "#48C3FB"],
+        legend: {
+          orient: "vertical",
+          top: "center",
+          right:"20",
+          data: ["在线","离线"],
+          backgroundColor: "rgba(22,82,93,0.8)",
+          padding: 20,
+          borderRadius: 5,
+          icon: "circle",
+          textStyle: {
+            color: "#ffffff",
+            fontSize:"14"
+          },
+        },
         series: [
           {
             name: "访问来源",
             type: "pie",
             radius: "55%",
-            center: ["50%", "50%"],
+            center: ["30%", "50%"],
             data: _this.chartData,
             emphasis: {
               itemStyle: {
@@ -68,5 +82,4 @@ export default {
 </script>
 
 <style>
-
 </style>

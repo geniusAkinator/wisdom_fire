@@ -34,7 +34,7 @@
             <span>隐患处理情况</span>
           </div>
           <my-echart-line :chartData="yearData"></my-echart-line>
-        </div>s
+        </div>
         <div class="kanban-item bgBlack">
           <div class="item-title vertical purple">
             <span>设备故障事件中心</span>
@@ -149,6 +149,11 @@ export default {
     }
   },
   methods: {
+    resizeTable() {
+      let _table = document.querySelector(".kanban-table");
+      let _height = _table.offsetHeight - 40;
+      this.tableHeight = _height;
+    },
     getUnitsRankList(data) {
       //重大隐患单位排名
       let _list = [];
