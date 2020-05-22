@@ -42,11 +42,11 @@
           <el-table-column prop="factoryName" align="center" label="单位"></el-table-column>
           <el-table-column prop="sensorName" align="center" label="设备类型"></el-table-column>
           <el-table-column prop="type" align="center" label="故障类型">
-            <template slot-scope="scope">
+            <!-- <template slot-scope="scope">
               <span v-for="(item,index) in typeOptions" :key="index">
                 <template v-if="scope.row.type == item.dictValue">{{item.dictLabel}}</template>
               </span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="content"  align="center" label="故障内容"></el-table-column>
           <el-table-column prop="currlocation" align="center" label="点位描述"></el-table-column>

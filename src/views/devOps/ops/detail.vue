@@ -96,7 +96,7 @@
           <div class="not_found">暂无楼层图，请先到工厂管理中添加</div>
         </div>
       </el-col>
-      <el-col :span="12">
+      <!-- <el-col :span="12">
         <span class="subtitle">维修进度预览</span>
         <el-timeline>
           <el-timeline-item timestamp="2018/4/12" placement="top">
@@ -121,7 +121,7 @@
             </el-card>
           </el-timeline-item>
         </el-timeline>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>

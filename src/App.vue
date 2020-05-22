@@ -1127,4 +1127,10 @@ $color6: #db5b12;
   display: table-cell;
   vertical-align: text-bottom;
 }
+.building-carousel .el-carousel__container {
+  height: 100% !important
+}
+.building-carousel .el-carousel__mask{
+  opacity: 0 !important
+}
 </style>

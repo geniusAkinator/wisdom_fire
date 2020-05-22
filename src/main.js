@@ -30,6 +30,8 @@ import global from '@/utils/global'
 import VueClipboard from 'vue-clipboard2'
 import JsonExcel from 'vue-json-excel'
 import 'babel-polyfill'
+import VueKonva from 'vue-konva'
+
 
 // 全局方法挂载
 Vue.prototype.$layer = layer(Vue)
@@ -61,7 +63,7 @@ Vue.component('downloadExcel', JsonExcel)
 Vue.use(permission)
 Vue.use(common)
 Vue.use(VueClipboard)
-
+Vue.use(VueKonva)
 // Vue.use(vueJsonp)
 /**
  * If you don't want to use mock-server

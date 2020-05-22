@@ -123,11 +123,13 @@ export default {
       rankData: [],
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 0
+        value: 0,
+        rate: 0
       },
       gauge2: {
         label: "本周故障及时处理率",
-        value: 0
+        value: 0,
+        rate: 0
       },
       hazardTypeList: [], //隐患类型列表
       errTypeList: [],
@@ -183,7 +185,7 @@ export default {
       getErrEquipmentRank().then(response => {
         if (response.code == 200) {
           let _data = response.data;
-          let _rankList = this.fliterBarList(_data, this.errTypeList);
+          let _rankList = this.fliterBarList(_data);
           this.rankData1 = _rankList;
         }
       });
@@ -191,10 +193,13 @@ export default {
     getErrRankList(data) {
       //设备故障事件中心
       this.errData = data;
+      console.log(data);
     },
     getOnlinePercentage(data) {
       //本周隐患及时处理率
       //本周故障及时处理率
+      this.gauge1.rate = data.dangerPerIncrease; //隐患变化率
+      this.gauge2.rate = data.faultPerIncrease; //故障变化率
       this.gauge1.value = data.dangerPercentage.split("%")[0] * 1;
       this.gauge2.value = data.faultPercentage.split("%")[0] * 1;
     },
@@ -232,7 +237,7 @@ export default {
       this.yearData.ydata.push(_allList);
       this.yearData.ydata.push(_doneList);
     },
-    fliterBarList(data, typeList) {
+    fliterBarList(data) {
       let _data = {
         xdata: [],
         ydata: [[], []]
@@ -244,11 +249,15 @@ export default {
         let temp = {};
         _ydata[0].push(item.count);
         _count += item.count;
-        typeList.map((tItem, j) => {
-          if (tItem.dictValue == item.type) {
-            _xdata.push(tItem.dictLabel);
-          }
-        });
+        if (Array.isArray(arguments[1])) {
+          arguments[1].map((tItem, j) => {
+            if (tItem.dictValue == item.type) {
+              _xdata.push(tItem.dictLabel);
+            }
+          });
+        } else {
+          _xdata.push(item.type);
+        }
       });
       _ydata[1] = [...Array(_xdata.length)].map(_ => _count);
       _data.xdata = _xdata;

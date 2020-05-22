@@ -3,7 +3,10 @@
     <div class="rate-item flex flex-direction justify-center align-center">
       <div class="rate-title">{{chartData.label}}</div>
       <div class="rate-data">
-        <span class="rate-num">{{chartData.value}}</span>%&nbsp;&nbsp;&nbsp;&nbsp;+0%
+        <span class="rate-num">{{chartData.value}}</span>%&nbsp;&nbsp;&nbsp;&nbsp;
+        <template v-if="chartData.rate!=0">
+          <span title="增长率">{{chartData.rate}}%</span>
+        </template>
       </div>
     </div>
     <div :id="id" class="chart" style="width:125px;height:125px;margin:auto"></div>

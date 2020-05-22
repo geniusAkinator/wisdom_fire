@@ -59,7 +59,7 @@
         </div>
         <div class="kanban-item bgBlack">
           <div class="item-title vertical purple">
-            <span>设备故障事件中心</span>
+            <span>本月设备正常运行统计</span>
           </div>
           <my-echart-radar :chartData="radarData"></my-echart-radar>
         </div>
@@ -67,7 +67,7 @@
       <el-col :span="18" class="flex flex-direction">
         <div class="flex flex-twice margin-tb-xs">
           <div class="flex-twice">
-            <my-building :data="blist"></my-building>
+            <my-building :factoryName="factoryName" :data="blist"></my-building>
           </div>
           <div class="flex flex-direction flex-sub">
             <div class="kanban-item margin-bottom-xs">
@@ -164,7 +164,8 @@ export default {
       },
       gauge1: {
         label: "本周隐患及时处理率",
-        value: 0
+        value: 0,
+        rate: 0
       },
       factoryId: 0,
       yearlyPointData: {
@@ -173,7 +174,7 @@ export default {
         ydata: []
       },
       loading: true,
-      blist:[]
+      blist: []
     };
   },
   watch: {
@@ -239,6 +240,7 @@ export default {
       let _this = this;
       let _arr1 = [];
       let _arr2 = [];
+
       data.map((item, i) => {
         let temp = {};
         temp.text = item.name;
@@ -248,10 +250,12 @@ export default {
       });
       _this.radarData.value.push(_arr2);
       _this.radarData.indicator = _arr1;
+      console.log(_this.radarData);
     },
     getOnlinePercentage(data) {
       //本周隐患及时处理率
       //本周故障及时处理率
+      console.log(data,"========")
       this.gauge1.value = data.dangerPercentage.dangerPercentage * 1;
     },
     getOnlineRateList(data) {
@@ -319,6 +323,8 @@ export default {
       });
     },
     getHazardResultList(data) {
+      console.log("你骗我",data)
+      
       let _this = this;
       let _data = response.data;
       let _xdata = [
@@ -338,6 +344,7 @@ export default {
       let _allList = [...Array(_xdata.length)].map(_ => 0);
       let _doneList = [...Array(_xdata.length)].map(_ => 0);
       _xdata.map((xitem, i) => {
+        console.log(xitem)
         data.hiddenDangerSum.map((item, j) => {
           let _month = item.yearly.split("-")[1] * 1;
           if (i == _month) {
@@ -351,6 +358,8 @@ export default {
           }
         });
       });
+            console.log("你骗我",_doneList,_allList)
+
       _this.yearData.xdata = _xdata;
       _this.yearData.ydata[0] = _doneList;
       _this.yearData.ydata[1] = _allList;
