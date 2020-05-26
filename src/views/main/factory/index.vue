@@ -167,6 +167,7 @@ import MyBuildingAdd from "@/views/main/building/add";
 import MyBuildingEdit from "@/views/main/building/edit";
 import MyFloorAdd from "@/views/main/floor/add";
 import MyFloorEdit from "@/views/main/floor/edit";
+import utils from "@/utils/utils";
 export default {
   data() {
     return {
@@ -212,8 +213,20 @@ export default {
       nowBuildingId: null,
       factoryTotal: 0,
       buildingTotal: 0,
-      floorTotal: 0
+      floorTotal: 0,
+      layerId: "",
+      layerInitWidth: 0,
+      layerInitHeight: 0
     };
+  },
+  watch: {
+    layerId: function(newVal, oldVal) {
+      let layer = document.querySelector("#" + newVal);
+      if (layer != null) {
+        this.layerInitWidth = layer.offsetWidth;
+        this.layerInitHeight = layer.offsetHeight;
+      }
+    }
   },
   created() {
     this.getDicts("main_factory_type").then(response => {
@@ -222,6 +235,18 @@ export default {
       }
     });
     this.getFactoryList();
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      let _layerId = this.layerId;
+      if (_layerId == "") {
+        return;
+      }
+      let layer = document.querySelector("#" + _layerId);
+      if (layer != null) {
+        utils.resizeLayer(_layerId, this.layerInitWidth, this.layerInitHeight);
+      }
+    });
   },
   methods: {
     getFactoryList() {

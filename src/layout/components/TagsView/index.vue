@@ -132,7 +132,6 @@ export default {
           _this.nowTabIndex = i + "";
         }
       });
-      console.log(this.$route.path);
     },
     isActive(route) {
       return route.path === this.$route.path;

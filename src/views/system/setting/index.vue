@@ -404,7 +404,6 @@ export default {
     handleGenerate() {
       generateApiToken().then(response => {
         if (response.code == 200) {
-          console.log(response.data);
           this.apiForm.apiSecret = response.data.token;
         }
       });
@@ -463,7 +462,6 @@ export default {
           }
         });
       }
-      console.log(_activeName);
     },
     initForm() {
       let options = {
@@ -487,7 +485,6 @@ export default {
         this.getDicts("sys_theme_type").then(response => {
           if (response.code == 200) {
             this.themeOptions = response.data;
-            console.log(this.themeOptions);
           }
         });
         getTheme().then(response => {
@@ -545,7 +542,6 @@ export default {
         getApi().then(response => {
           if (response.code == 200) {
             let _data = response.data;
-            console.log(response.data);
             for (let key in _data) {
               this.apiForm[key] = _data[key];
             }

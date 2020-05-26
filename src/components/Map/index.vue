@@ -149,7 +149,6 @@ export default {
     },
     openInfoWindow(index) {
       let arr = this.list;
-      console.log(arr);
       for (let i = 0; i < arr.lenth; i++) {
         arr[i].show = false;
       }
@@ -171,7 +170,6 @@ export default {
         ? list.filter(this.createFilter(queryString))
         : list;
       // 调用 callback 返回建议列表的数据
-      console.log("results",results)
       cb(results);
     },
     createFilter(queryString) {

@@ -18,7 +18,7 @@
           <div class="fl text-white padding-xs text-xxl text-bold bg-">患</div>
           <div class="fl text-white padding-xs text-xxl text-bold">于</div>
           <div class="fl text-white padding-xs text-xxl text-bold">未</div>
-          <div class="fl text-white padding-xs text-xxl text-bold">然</div>
+          <div class="fl text-white padding-xs text-xxl text-bold">燃</div>
         </div>
         <div class="login_img1"></div>
       </el-col>

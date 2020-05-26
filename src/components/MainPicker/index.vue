@@ -96,7 +96,6 @@ export default {
       .then(response => {
         if (response.code === 200) {
           flist = response.rows;
-          console.log(flist);
           return listDept();
         }
       })

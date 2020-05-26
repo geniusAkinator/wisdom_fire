@@ -136,7 +136,7 @@ export default {
               normal: {
                 color: "#fff",
                 show: true,
-                position: [0, "-20px"],
+                position: [0, "-25px"],
                 textStyle: {
                   fontSize: 20
                 },

@@ -35,11 +35,11 @@
           </div>
           <my-echart-line :chartData="yearData"></my-echart-line>
         </div>
-        <div class="kanban-item bgBlack">
+        <div class="kanban-item bgBlack tableContent">
           <div class="item-title vertical purple">
             <span>设备故障事件中心</span>
           </div>
-          <el-table :data="errData" class="kanban-table">
+          <el-table :data="errData" class="kanban-table" :max-height="tableHeight">
             <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
             <el-table-column prop="currlocation" label="位置" align="center"></el-table-column>
             <el-table-column prop="type" label="状态" align="center"></el-table-column>
@@ -68,11 +68,11 @@
             </div>
             <my-horizontal-bar :chartData="rankData2"></my-horizontal-bar>
           </div>
-          <div class="kanban-item bgBlack">
+          <div class="kanban-item bgBlack tableContent">
             <div class="item-title vertical purple">
               <span>重大隐患单位排名</span>
             </div>
-            <el-table :data="rankData" class="kanban-table">
+            <el-table :data="rankData" class="kanban-table" :max-height="tableHeight">
               <el-table-column prop="factoryName" label="单位名称" align="center"></el-table-column>
               <el-table-column prop="count" label="隐患数量" align="center"></el-table-column>
             </el-table>
@@ -138,7 +138,8 @@ export default {
         chinaList: [],
         transducerCount: 0
       },
-      loading: true
+      loading: true,
+      tableHeight: "250"
     };
   },
   watch: {
@@ -152,8 +153,9 @@ export default {
   },
   methods: {
     resizeTable() {
-      let _table = document.querySelector(".kanban-table");
-      let _height = _table.offsetHeight - 40;
+      let _table = document.querySelector(".tableContent");
+      console.log(_table.offsetHeight);
+      let _height = _table.offsetHeight - 20;
       this.tableHeight = _height;
     },
     getUnitsRankList(data) {
@@ -323,6 +325,8 @@ export default {
       .catch(error => {
         this.loading = false;
       });
+    this.resizeTable();
+    window.addEventListener("resize", this.resizeTable);
   },
   components: {
     MyHorizontalBar,

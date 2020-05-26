@@ -95,7 +95,7 @@ import { listBanner, delBanner } from "@/api/system/banner";
 import MyBannerAdd from "@/views/system/banner/add";
 import MyBannerEdit from "@/views/system/banner/edit";
 import MySearchTool from "@/components/SearchTool/index";
-
+import utils from "@/utils/utils";
 export default {
   name: "Post",
   data() {
@@ -126,12 +126,11 @@ export default {
       // 表单参数
       form: {},
       eid: 0,
+      baseURL: process.env.VUE_APP_BASE_API,
       layerId: "",
-      baseURL: process.env.VUE_APP_BASE_API
+      layerInitWidth: 0,
+      layerInitHeight: 0
     };
-  },
-  created() {
-    this.getList();
   },
   methods: {
     /** 查询岗位列表 */
@@ -217,6 +216,30 @@ export default {
         })
         .catch(function() {});
     }
+  },
+  watch: {
+    layerId: function(newVal, oldVal) {
+      let layer = document.querySelector("#" + newVal);
+      if (layer != null) {
+        this.layerInitWidth = layer.offsetWidth;
+        this.layerInitHeight = layer.offsetHeight;
+      }
+    }
+  },
+  created() {
+    this.getList();
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      let _layerId = this.layerId;
+      if (_layerId == "") {
+        return;
+      }
+      let layer = document.querySelector("#" + _layerId);
+      if (layer != null) {
+        utils.resizeLayer(_layerId, this.layerInitWidth, this.layerInitHeight);
+      }
+    });
   },
   components: {
     MySearchTool

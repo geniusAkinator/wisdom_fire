@@ -96,7 +96,6 @@ export default {
       listEmployee(this.eform)
         .then(res => {
           if (res.code == 200) {
-            console.log(res.rows);
             let list = res.rows;
             if (list.length) {
               let arr = [];

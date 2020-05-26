@@ -35,7 +35,6 @@ export default {
           smooth: false
         });
       }
-      console.log(_series);
       let option = {
         legend: {
           data: _this.chartData.legend

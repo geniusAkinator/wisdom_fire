@@ -55,11 +55,11 @@
               <span>{{ parseTime(scope.row.currdate) }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="uptime" align="center" label="更新时间" width="160px">
+          <!-- <el-table-column prop="uptime" align="center" label="更新时间" width="160px">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.uptime) }}</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" align="center" fixed="right" width="80px">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
